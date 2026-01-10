@@ -1,0 +1,17 @@
+// Solid icons (actionable elements)
+export { default as IconBars } from './IconBars.vue'
+export { default as IconChevronLeft } from './IconChevronLeft.vue'
+export { default as IconChevronRight } from './IconChevronRight.vue'
+export { default as IconCircleCheck } from './IconCircleCheck.vue'
+export { default as IconCrown } from './IconCrown.vue'
+export { default as IconLock } from './IconLock.vue'
+export { default as IconLockOpen } from './IconLockOpen.vue'
+export { default as IconPlus } from './IconPlus.vue'
+export { default as IconTrash } from './IconTrash.vue'
+export { default as IconTrophy } from './IconTrophy.vue'
+export { default as IconXmark } from './IconXmark.vue'
+
+// Outline icons (state indicators)
+export { default as IconCircleOutline } from './IconCircleOutline.vue'
+export { default as IconForwardOutline } from './IconForwardOutline.vue'
+export { default as IconUserSlashOutline } from './IconUserSlashOutline.vue'

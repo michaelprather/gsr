@@ -1,0 +1,134 @@
+{
+  "generated": "2026-01-10T00:00:00.000Z",
+  "project": "gsr",
+  "stories": {
+    "001": {
+      "file": "001-mvp/001-project-foundation.md",
+      "story_id": "001",
+      "epic_id": "001",
+      "title": "Project Foundation",
+      "status": "ready"
+    },
+    "002": {
+      "file": "001-mvp/002-local-persistence.md",
+      "story_id": "002",
+      "epic_id": "001",
+      "title": "Local Persistence Layer",
+      "status": "ready"
+    },
+    "003": {
+      "file": "001-mvp/003-game-domain-model.md",
+      "story_id": "003",
+      "epic_id": "001",
+      "title": "Game Domain Model",
+      "status": "ready"
+    },
+    "004": {
+      "file": "001-mvp/004-game-service.md",
+      "story_id": "004",
+      "epic_id": "001",
+      "title": "Game Application Service",
+      "status": "ready"
+    },
+    "005": {
+      "file": "001-mvp/005-game-setup-view.md",
+      "story_id": "005",
+      "epic_id": "001",
+      "title": "Game Setup View",
+      "status": "ready"
+    },
+    "006": {
+      "file": "001-mvp/006-score-entry-view.md",
+      "story_id": "006",
+      "epic_id": "001",
+      "title": "Score Entry View",
+      "status": "ready"
+    },
+    "007": {
+      "file": "001-mvp/007-player-skip.md",
+      "story_id": "007",
+      "epic_id": "001",
+      "title": "Player Skip Functionality",
+      "status": "ready"
+    },
+    "008": {
+      "file": "001-mvp/008-round-management.md",
+      "story_id": "008",
+      "epic_id": "001",
+      "title": "Round Lock and Unlock",
+      "status": "ready"
+    },
+    "009": {
+      "file": "001-mvp/009-summary-view.md",
+      "story_id": "009",
+      "epic_id": "001",
+      "title": "Summary View",
+      "status": "ready"
+    },
+    "010": {
+      "file": "001-mvp/010-scorecard-view.md",
+      "story_id": "010",
+      "epic_id": "001",
+      "title": "Scorecard View",
+      "status": "ready"
+    },
+    "011": {
+      "file": "001-mvp/011-end-game.md",
+      "story_id": "011",
+      "epic_id": "001",
+      "title": "End Game Flow",
+      "status": "ready"
+    },
+    "012": {
+      "file": "001-mvp/012-offline-persistence.md",
+      "story_id": "012",
+      "epic_id": "001",
+      "title": "Offline Support and Resume",
+      "status": "ready"
+    },
+    "013": {
+      "file": "002-dot-one/013-visual-theme.md",
+      "story_id": "013",
+      "epic_id": "002",
+      "title": "Visual Theme and Color System",
+      "status": "ready"
+    },
+    "014": {
+      "file": "002-dot-one/014-animations.md",
+      "story_id": "014",
+      "epic_id": "002",
+      "title": "Animations and Transitions",
+      "status": "ready"
+    },
+    "015": {
+      "file": "002-dot-one/015-winner-celebration.md",
+      "story_id": "015",
+      "epic_id": "002",
+      "title": "Winner Celebration",
+      "status": "ready"
+    },
+    "016": {
+      "file": "002-dot-one/016-toast-notifications.md",
+      "story_id": "016",
+      "epic_id": "002",
+      "title": "Toast Notifications",
+      "status": "ready"
+    }
+  },
+  "epics": {
+    "001": {
+      "file": "001-mvp/_epic.md",
+      "epic_id": "001",
+      "title": "MVP",
+      "created": "2026-01-10",
+      "status": "active"
+    },
+    "002": {
+      "file": "002-dot-one/_epic.md",
+      "epic_id": "002",
+      "title": "Dot One",
+      "created": "2026-01-10",
+      "status": "active"
+    }
+  }
+}
