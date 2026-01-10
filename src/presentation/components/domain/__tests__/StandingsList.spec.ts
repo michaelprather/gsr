@@ -160,4 +160,60 @@ describe('StandingsList', () => {
     expect(totals[0]!.text()).toBe('0')
     expect(totals[1]!.text()).toBe('0')
   })
+
+  describe('winner emphasis', () => {
+    it('does not show winner styling when isEnded is false', () => {
+      let game = createGame(['Alice', 'Bob'])
+      game = setScore(game, 0, 0, 0)
+      game = setScore(game, 1, 0, 50)
+
+      const wrapper = mount(StandingsList, {
+        props: { game, isEnded: false },
+      })
+
+      const winnerRows = wrapper.findAll('.standings-list__row--winner')
+      expect(winnerRows).toHaveLength(0)
+    })
+
+    it('shows winner styling when isEnded is true', () => {
+      let game = createGame(['Alice', 'Bob'])
+      game = setScore(game, 0, 0, 0)
+      game = setScore(game, 1, 0, 50)
+
+      const wrapper = mount(StandingsList, {
+        props: { game, isEnded: true },
+      })
+
+      const winnerRows = wrapper.findAll('.standings-list__row--winner')
+      expect(winnerRows).toHaveLength(1)
+    })
+
+    it('shows trophy icon for winner when isEnded is true', () => {
+      let game = createGame(['Alice', 'Bob'])
+      game = setScore(game, 0, 0, 0)
+      game = setScore(game, 1, 0, 50)
+
+      const wrapper = mount(StandingsList, {
+        props: { game, isEnded: true },
+      })
+
+      const trophyIcons = wrapper.findAll('.standings-list__trophy-icon')
+      expect(trophyIcons).toHaveLength(1)
+    })
+
+    it('shows winner styling for all tied winners', () => {
+      let game = createGame(['Alice', 'Bob', 'Charlie'])
+      // Alice and Bob tie at 30, Charlie at 50
+      game = setScore(game, 0, 0, 30)
+      game = setScore(game, 1, 0, 30)
+      game = setScore(game, 2, 0, 50)
+
+      const wrapper = mount(StandingsList, {
+        props: { game, isEnded: true },
+      })
+
+      const winnerRows = wrapper.findAll('.standings-list__row--winner')
+      expect(winnerRows).toHaveLength(2)
+    })
+  })
 })

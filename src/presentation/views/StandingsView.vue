@@ -20,6 +20,8 @@ const game = ref<Game | null>(null)
 const isLoading = ref(true)
 const loadError = ref<string | null>(null)
 
+const isEnded = computed(() => game.value?.isEnded ?? false)
+
 const currentRoundNumber = computed(() => {
   if (!game.value) return 1
 
@@ -42,7 +44,7 @@ const totalRounds = computed(() => {
 onMounted(async () => {
   try {
     const loadedGame = await service.loadGame()
-    if (!loadedGame || loadedGame.isEnded) {
+    if (!loadedGame) {
       router.replace({ name: 'setup' })
       return
     }
@@ -57,6 +59,20 @@ onMounted(async () => {
 function goBack() {
   router.push({ name: 'game' })
 }
+
+async function handleEditScores() {
+  if (!game.value?.isEnded) {
+    goBack()
+    return
+  }
+
+  try {
+    await service.reopenGame()
+    router.push({ name: 'game' })
+  } catch {
+    // Error handling - could show toast
+  }
+}
 </script>
 
 <template>
@@ -66,14 +82,22 @@ function goBack() {
 
   <main v-else-if="game" class="standings-view" :class="`standings-view--${orientation}`">
     <header class="standings-view__header">
-      <UiButton variant="ghost" size="icon" aria-label="Back to score entry" @click="goBack">
+      <UiButton
+        variant="ghost"
+        size="icon"
+        :aria-label="isEnded ? 'Edit scores' : 'Back to score entry'"
+        @click="handleEditScores"
+      >
         <IconChevronLeft />
       </UiButton>
 
       <div class="standings-view__title-area">
-        <h1 class="standings-view__title">Standings</h1>
-        <span class="standings-view__round-indicator">
+        <h1 class="standings-view__title">{{ isEnded ? 'Final Results' : 'Standings' }}</h1>
+        <span v-if="!isEnded" class="standings-view__round-indicator">
           Round {{ currentRoundNumber }} of {{ totalRounds }}
+        </span>
+        <span v-else class="standings-view__round-indicator">
+          Game Complete
         </span>
       </div>
 
@@ -81,7 +105,7 @@ function goBack() {
     </header>
 
     <section class="standings-view__content" :class="{ 'standings-view__content--landscape': orientation === 'landscape' }">
-      <StandingsList v-if="orientation === 'portrait'" :game="game" />
+      <StandingsList v-if="orientation === 'portrait'" :game="game" :is-ended="isEnded" />
       <GameScorecard v-else :game="game" />
     </section>
   </main>

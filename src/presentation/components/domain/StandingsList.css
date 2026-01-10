@@ -28,6 +28,13 @@
   border-radius: var(--standings-list-row-radius);
 }
 
+.standings-list__row--winner {
+  --standings-list-row-bg: var(--success-muted);
+  --standings-list-row-border: var(--success);
+  --standings-list-rank-bg: var(--success);
+  --standings-list-rank-color: var(--text-on-interactive);
+}
+
 .standings-list__rank {
   display: flex;
   align-items: center;
@@ -40,6 +47,11 @@
   background: var(--standings-list-rank-bg);
   border-radius: var(--radius-full);
   flex-shrink: 0;
+}
+
+.standings-list__trophy-icon {
+  width: var(--icon-sm);
+  height: var(--icon-sm);
 }
 
 .standings-list__player-info {

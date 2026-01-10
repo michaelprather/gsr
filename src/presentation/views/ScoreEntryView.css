@@ -44,6 +44,57 @@
   height: var(--icon-lg);
 }
 
+.score-entry-view__nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex: 1;
+  gap: var(--space-2);
+}
+
+.score-entry-view__menu-wrapper {
+  position: relative;
+}
+
+.score-entry-view__menu {
+  --score-entry-view-menu-bg: var(--surface-raised);
+  --score-entry-view-menu-border: var(--border);
+  --score-entry-view-menu-shadow: var(--shadow-md);
+
+  position: absolute;
+  top: 100%;
+  right: 0;
+  z-index: 20;
+  min-width: var(--size-40);
+  margin-top: var(--space-1);
+  padding: var(--space-1);
+  background: var(--score-entry-view-menu-bg);
+  border: 1px solid var(--score-entry-view-menu-border);
+  border-radius: var(--radius-md);
+  box-shadow: var(--score-entry-view-menu-shadow);
+}
+
+.score-entry-view__menu-item {
+  --score-entry-view-menu-item-color: var(--text);
+  --score-entry-view-menu-item-hover-bg: var(--surface);
+
+  display: block;
+  width: 100%;
+  padding: var(--space-2) var(--space-3);
+  font-size: var(--text-sm);
+  color: var(--score-entry-view-menu-item-color);
+  text-align: left;
+  cursor: pointer;
+  background: transparent;
+  border: none;
+  border-radius: var(--radius-sm);
+  transition: background-color 0.15s ease;
+}
+
+.score-entry-view__menu-item:hover {
+  background: var(--score-entry-view-menu-item-hover-bg);
+}
+
 .score-entry-view__round-info {
   flex: 1;
   text-align: center;
@@ -139,26 +190,19 @@
   font-size: var(--text-xl);
 }
 
-.score-entry-view__player-skipped {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: var(--space-2);
+.score-entry-view__skipped-placeholder {
+  flex: 1;
   padding: var(--space-3);
-  font-size: var(--text-md);
+  font-size: var(--text-xl);
   color: var(--text-muted);
   text-align: center;
   background: var(--surface);
+  border: 1px solid var(--border);
   border-radius: var(--radius-md);
 }
 
-.score-entry-view__skipped-icon {
-  width: var(--icon-md);
-  height: var(--icon-md);
-}
-
-.score-entry-view__unskip-button {
-  margin-top: var(--space-2);
+.score-entry-view__skip-button--active {
+  color: var(--warning);
 }
 
 .score-entry-view__hint {
@@ -169,6 +213,28 @@
   background: var(--score-entry-view-hint-bg);
   border: 1px solid var(--score-entry-view-hint-border);
   border-radius: var(--radius-md);
+}
+
+.score-entry-view__errors {
+  --score-entry-view-errors-bg: var(--error-muted);
+  --score-entry-view-errors-color: var(--error);
+  --score-entry-view-errors-border: var(--error);
+
+  margin-top: var(--space-4);
+  padding: var(--space-3) var(--space-4);
+  font-size: var(--text-sm);
+  color: var(--score-entry-view-errors-color);
+  background: var(--score-entry-view-errors-bg);
+  border: 1px solid var(--score-entry-view-errors-border);
+  border-radius: var(--radius-md);
+}
+
+.score-entry-view__errors p {
+  margin: 0;
+}
+
+.score-entry-view__errors p + p {
+  margin-top: var(--space-1);
 }
 
 .score-entry-view__loading,
