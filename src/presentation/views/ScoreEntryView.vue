@@ -14,6 +14,7 @@ import {
   IconUserSlashOutline,
 } from '../components/icons'
 import { UiButton, UiConfirmDialog, UiInput } from '../components/ui'
+import { AppBrand } from '../components/layout'
 import { RoundPicker, SkipPlayerDialog } from '../components/domain'
 
 const router = useRouter()
@@ -421,7 +422,7 @@ function openNewGameDialog() {
   <main v-else-if="game && currentRound" class="score-entry-view">
     <header class="score-entry-view__header">
       <div class="score-entry-view__title-bar">
-        <span class="score-entry-view__game-name">George Street Rummy</span>
+        <AppBrand size="small" />
         <UiButton
           variant="ghost"
           size="icon"

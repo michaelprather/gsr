@@ -28,13 +28,6 @@
   gap: var(--space-2);
 }
 
-.setup-view__title {
-  margin: 0;
-  font-size: var(--text-2xl);
-  font-weight: var(--font-semibold);
-  color: var(--setup-view-title-color);
-}
-
 .setup-view__theme-button {
   color: var(--interactive);
 }
@@ -71,6 +64,7 @@
   background: var(--setup-view-player-bg);
   border: 1px solid var(--setup-view-player-border);
   border-radius: var(--setup-view-player-radius);
+  box-shadow: var(--elevation-1);
 }
 
 .setup-view__player-name {

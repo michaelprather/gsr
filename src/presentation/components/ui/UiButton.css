@@ -1,7 +1,7 @@
 .ui-button {
   --ui-button-height: var(--size-12);
-  --ui-button-padding: var(--space-4);
-  --ui-button-radius: var(--radius-md);
+  --ui-button-padding: var(--space-5);
+  --ui-button-radius: var(--radius-lg);
   --ui-button-font-size: var(--text-base);
   --ui-button-font-weight: var(--font-semibold);
 
@@ -10,6 +10,8 @@
   --ui-button-color: var(--text-on-interactive);
   --ui-button-bg-disabled: var(--interactive-muted);
   --ui-button-color-disabled: var(--text-subtle);
+  --ui-button-shadow: none;
+  --ui-button-shadow-hover: var(--elevation-1);
 
   display: inline-flex;
   align-items: center;
@@ -22,18 +24,22 @@
   color: var(--ui-button-color);
   background: var(--ui-button-bg);
   border-radius: var(--ui-button-radius);
+  box-shadow: var(--ui-button-shadow);
   transition:
     background-color var(--duration-fast) var(--ease-out),
-    color var(--duration-fast) var(--ease-out),
+    box-shadow var(--duration-fast) var(--ease-out),
     transform var(--duration-instant) var(--ease-out);
 }
 
 .ui-button:hover:not(:disabled) {
   background: var(--ui-button-bg-hover);
+  box-shadow: var(--ui-button-shadow-hover);
+  transform: translateY(-1px);
 }
 
 .ui-button:active:not(:disabled) {
-  transform: scale(0.97);
+  transform: translateY(0) scale(0.98);
+  box-shadow: none;
 }
 
 .ui-button:disabled {
@@ -45,6 +51,7 @@
 .ui-button:focus-visible {
   outline: 2px solid var(--interactive);
   outline-offset: 2px;
+  box-shadow: 0 0 0 4px var(--primary-muted);
 }
 
 /* Variants */
@@ -52,6 +59,7 @@
   --ui-button-bg: var(--interactive-muted);
   --ui-button-bg-hover: var(--interactive-muted-hover);
   --ui-button-color: var(--text);
+  --ui-button-shadow-hover: var(--shadow-xs);
 }
 
 .ui-button--ghost {
@@ -59,10 +67,12 @@
   --ui-button-bg-hover: var(--surface-raised);
   --ui-button-color: var(--text-muted);
   --ui-button-font-weight: var(--font-medium);
+  --ui-button-shadow-hover: none;
 }
 
 .ui-button--ghost:hover:not(:disabled) {
   --ui-button-color: var(--text);
+  transform: none;
 }
 
 .ui-button--ghost:disabled {
@@ -79,12 +89,13 @@
 /* Sizes */
 .ui-button--icon {
   --ui-button-padding: 0;
+  --ui-button-radius: var(--radius-md);
   width: var(--ui-button-height);
 }
 
 .ui-button--small {
   --ui-button-height: var(--size-10);
-  --ui-button-padding: var(--space-3);
+  --ui-button-padding: var(--space-4);
   --ui-button-font-size: var(--text-sm);
 }
 

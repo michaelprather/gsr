@@ -1,3 +1,6 @@
+// Logo
+export { default as IconLogo } from './IconLogo.vue'
+
 // Solid icons (actionable elements)
 export { default as IconChevronLeft } from './IconChevronLeft.vue'
 export { default as IconChevronRight } from './IconChevronRight.vue'

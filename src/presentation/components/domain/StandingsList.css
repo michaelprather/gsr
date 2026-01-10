@@ -26,6 +26,7 @@
   background: var(--standings-list-row-bg);
   border: 1px solid var(--standings-list-row-border);
   border-radius: var(--standings-list-row-radius);
+  box-shadow: var(--elevation-1);
 }
 
 .standings-list__row--winner {
@@ -86,8 +87,8 @@
 }
 
 .standings-list__total {
-  font-size: var(--text-lg);
-  font-weight: var(--font-semibold);
+  font-size: var(--text-xl);
+  font-weight: var(--font-bold);
   color: var(--standings-list-total-color);
   flex-shrink: 0;
 }

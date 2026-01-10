@@ -44,13 +44,6 @@
   justify-content: space-between;
 }
 
-.score-entry-view__game-name {
-  --score-entry-view-game-name-color: var(--text-muted);
-
-  font-size: var(--text-sm);
-  font-weight: var(--font-medium);
-  color: var(--score-entry-view-game-name-color);
-}
 
 .score-entry-view__title-bar .ui-button svg {
   width: var(--icon-md);
@@ -133,6 +126,7 @@
   background: var(--score-entry-view-player-bg);
   border: 1px solid var(--score-entry-view-player-border);
   border-radius: var(--score-entry-view-player-radius);
+  box-shadow: var(--elevation-1);
 }
 
 .score-entry-view__player-card--saved {
@@ -179,7 +173,8 @@
 }
 
 .score-entry-view__score-row .ui-input__field {
-  font-size: var(--text-xl);
+  font-size: var(--text-2xl);
+  font-weight: var(--font-bold);
 }
 
 .score-entry-view__skipped-placeholder {

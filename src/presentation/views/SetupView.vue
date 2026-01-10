@@ -5,6 +5,7 @@ import { GameService } from '@/application'
 import { IndexedDBGameRepository } from '@/infrastructure'
 import { useAction, useTheme } from '../composables'
 import { UiButton, UiConfirmDialog, UiInput } from '../components/ui'
+import { AppBrand } from '../components/layout'
 import { IconPalette, IconPlus, IconTrash } from '../components/icons'
 
 const router = useRouter()
@@ -79,7 +80,7 @@ function cancelNewGame() {
   <main class="setup-view">
     <header class="setup-view__header">
       <div class="setup-view__title-row">
-        <h1 class="setup-view__title">George Street Rummy</h1>
+        <AppBrand />
         <UiButton
           variant="ghost"
           size="small"

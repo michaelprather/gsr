@@ -8,6 +8,7 @@ import { IndexedDBGameRepository } from '@/infrastructure'
 import { useOrientation } from '../composables'
 import { IconChevronLeft, IconPlus } from '../components/icons'
 import { UiButton, UiConfirmDialog } from '../components/ui'
+import { AppBrand } from '../components/layout'
 import { GameScorecard, StandingsList } from '../components/domain'
 
 const router = useRouter()
@@ -94,7 +95,7 @@ async function handleNewGame() {
   <main v-else-if="game" class="standings-view" :class="`standings-view--${orientation}`">
     <header class="standings-view__header">
       <div class="standings-view__title-bar">
-        <span class="standings-view__game-name">George Street Rummy</span>
+        <AppBrand size="small" />
         <UiButton
           variant="ghost"
           size="icon"

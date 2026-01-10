@@ -1,6 +1,6 @@
 import { ref, readonly, onMounted, type DeepReadonly, type Ref } from 'vue'
 
-export type Theme = 'blue' | 'contrast'
+export type Theme = 'violet' | 'blue' | 'contrast'
 
 export interface UseThemeReturn {
   current: DeepReadonly<Ref<Theme>>
@@ -10,8 +10,8 @@ export interface UseThemeReturn {
 }
 
 const STORAGE_KEY = 'gsr-theme'
-const DEFAULT_THEME: Theme = 'blue'
-const THEMES: readonly Theme[] = ['blue', 'contrast'] as const
+const DEFAULT_THEME: Theme = 'violet'
+const THEMES: readonly Theme[] = ['violet', 'blue', 'contrast'] as const
 
 const current = ref<Theme>(DEFAULT_THEME)
 let initialized = false

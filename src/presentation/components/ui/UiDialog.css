@@ -2,8 +2,7 @@
   --ui-dialog-backdrop: var(--overlay);
   --ui-dialog-bg: var(--surface-overlay);
   --ui-dialog-border: var(--border);
-  --ui-dialog-shadow: var(--shadow-lg);
-  --ui-dialog-padding: var(--space-4);
+  --ui-dialog-padding: var(--space-5);
   --ui-dialog-radius: var(--radius-lg);
   --ui-dialog-max-width: var(--size-96);
 
@@ -17,6 +16,8 @@
   justify-content: center;
   padding: var(--space-4);
   background: var(--ui-dialog-backdrop);
+  backdrop-filter: blur(var(--overlay-blur));
+  -webkit-backdrop-filter: blur(var(--overlay-blur));
 }
 
 .ui-dialog__panel {
@@ -26,7 +27,7 @@
   background: var(--ui-dialog-bg);
   border: 1px solid var(--ui-dialog-border);
   border-radius: var(--ui-dialog-radius);
-  box-shadow: var(--ui-dialog-shadow);
+  box-shadow: var(--elevation-3);
 }
 
 .ui-dialog__title {
