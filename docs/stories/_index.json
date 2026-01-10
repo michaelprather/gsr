@@ -31,7 +31,8 @@
       "story_id": "004",
       "epic_id": "001",
       "title": "Game Application Service",
-      "status": "ready"
+      "status": "completed",
+      "completed_date": "2026-01-10"
     },
     "005": {
       "file": "001-mvp/005-game-setup-view.md",

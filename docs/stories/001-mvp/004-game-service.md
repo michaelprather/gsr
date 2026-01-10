@@ -2,7 +2,8 @@
 story_id: "004"
 epic_id: "001"
 title: Game Application Service
-status: in-progress
+status: completed
+completed_date: 2026-01-10
 ---
 
 # Game Application Service
