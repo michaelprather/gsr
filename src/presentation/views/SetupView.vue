@@ -4,7 +4,7 @@ import { useRouter } from 'vue-router'
 import { GameService } from '@/application'
 import { IndexedDBGameRepository } from '@/infrastructure'
 import { useAction } from '../composables'
-import { UiConfirmDialog } from '../components/ui'
+import { UiButton, UiConfirmDialog, UiInput } from '../components/ui'
 import { IconPlus, IconTrash } from '../components/icons'
 
 const router = useRouter()
@@ -15,10 +15,10 @@ const service = new GameService(repo)
 const playerNames = ref<string[]>([])
 const newPlayerName = ref('')
 const showNewGameConfirm = ref(false)
-const nameInputRef = ref<HTMLInputElement | null>(null)
 
 const startGameAction = useAction(() => service.startGame(playerNames.value))
 
+const canAddPlayer = computed(() => newPlayerName.value.trim().length > 0)
 const canStartGame = computed(() => playerNames.value.length >= 2)
 
 onMounted(async () => {
@@ -27,7 +27,6 @@ onMounted(async () => {
     router.replace({ name: 'game' })
     return
   }
-  nameInputRef.value?.focus()
 })
 
 function addPlayer() {
@@ -41,7 +40,6 @@ function addPlayer() {
 
   playerNames.value.push(name)
   newPlayerName.value = ''
-  nameInputRef.value?.focus()
 }
 
 function removePlayer(index: number) {
@@ -65,7 +63,6 @@ async function confirmNewGame() {
   await service.clearGame()
   playerNames.value = []
   showNewGameConfirm.value = false
-  nameInputRef.value?.focus()
 }
 
 function cancelNewGame() {
@@ -80,25 +77,22 @@ function cancelNewGame() {
     </header>
 
     <section class="setup-view__content">
-      <div class="setup-view__input-group">
-        <input
-          ref="nameInputRef"
+      <div class="setup-view__input-group" @keydown="handleKeydown">
+        <UiInput
           v-model="newPlayerName"
-          type="text"
-          class="setup-view__input"
+          label="Player name"
+          :hide-label="true"
           placeholder="Enter player name"
-          maxlength="20"
-          @keydown="handleKeydown"
+          :maxlength="20"
         />
-        <button
-          type="button"
-          class="setup-view__add-button"
-          :disabled="!newPlayerName.trim()"
+        <UiButton
+          size="icon"
+          :disabled="!canAddPlayer"
           aria-label="Add player"
           @click="addPlayer"
         >
           <IconPlus />
-        </button>
+        </UiButton>
       </div>
 
       <ul v-if="playerNames.length > 0" class="setup-view__player-list">
@@ -108,14 +102,14 @@ function cancelNewGame() {
           class="setup-view__player-item"
         >
           <span class="setup-view__player-name">{{ name }}</span>
-          <button
-            type="button"
-            class="setup-view__remove-button"
+          <UiButton
+            variant="ghost"
+            size="icon"
             :aria-label="`Remove ${name}`"
             @click="removePlayer(index)"
           >
             <IconTrash />
-          </button>
+          </UiButton>
         </li>
       </ul>
 
@@ -126,20 +120,21 @@ function cancelNewGame() {
       <div
         v-if="startGameAction.state.value.isInvalid"
         class="setup-view__error"
+        role="alert"
       >
         {{ startGameAction.state.value.feedback?.get('players')?.[0] }}
       </div>
     </section>
 
     <footer class="setup-view__footer">
-      <button
-        type="button"
-        class="setup-view__start-button"
-        :disabled="!canStartGame || startGameAction.state.value.isPending"
+      <UiButton
+        block
+        :disabled="!canStartGame"
+        :loading="startGameAction.state.value.isPending"
         @click="handleStartGame"
       >
         {{ startGameAction.state.value.isPending ? 'Starting...' : 'Start Game' }}
-      </button>
+      </UiButton>
     </footer>
 
     <UiConfirmDialog

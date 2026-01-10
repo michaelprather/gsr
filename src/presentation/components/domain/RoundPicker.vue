@@ -1,21 +1,24 @@
 <script setup lang="ts">
+import { useId } from 'vue'
 import type { Round } from '@/domain'
-import { IconLock } from '../../components/icons'
+import { IconLock } from '../icons'
 
-export interface UiRoundPickerProps {
+export interface RoundPickerProps {
   open: boolean
   rounds: readonly Round[]
   currentIndex: number
 }
 
-export interface UiRoundPickerEmits {
+export interface RoundPickerEmits {
   (e: 'select', index: number): void
   (e: 'close'): void
 }
 
-const { open, rounds, currentIndex } = defineProps<UiRoundPickerProps>()
+const { open, rounds, currentIndex } = defineProps<RoundPickerProps>()
 
-const emit = defineEmits<UiRoundPickerEmits>()
+const emit = defineEmits<RoundPickerEmits>()
+
+const titleId = useId()
 
 function handleSelect(index: number) {
   emit('select', index)
@@ -38,32 +41,36 @@ function handleKeydown(event: KeyboardEvent) {
   <Teleport to="body">
     <div
       v-if="open"
-      class="ui-round-picker"
+      class="round-picker"
       role="dialog"
       aria-modal="true"
-      aria-labelledby="round-picker-title"
+      :aria-labelledby="titleId"
       @click="handleBackdropClick"
       @keydown="handleKeydown"
     >
-      <div class="ui-round-picker__panel">
-        <h2 id="round-picker-title" class="ui-round-picker__title">Select Round</h2>
+      <div class="round-picker__panel">
+        <h2 :id="titleId" class="round-picker__title">Select Round</h2>
 
-        <div class="ui-round-picker__list" role="listbox">
+        <div class="round-picker__list" role="listbox" :aria-label="'Available rounds'">
           <button
             v-for="(round, index) in rounds"
             :key="index"
             type="button"
-            class="ui-round-picker__item"
-            :class="{ 'ui-round-picker__item--active': index === currentIndex }"
+            class="round-picker__item"
+            :class="{ 'round-picker__item--active': index === currentIndex }"
             role="option"
             :aria-selected="index === currentIndex"
             @click="handleSelect(index)"
           >
-            <div class="ui-round-picker__item-main">
-              <span class="ui-round-picker__item-type">{{ round.type.displayName }}</span>
-              <span class="ui-round-picker__item-number">Round {{ index + 1 }}</span>
+            <div class="round-picker__item-main">
+              <span class="round-picker__item-type">{{ round.type.displayName }}</span>
+              <span class="round-picker__item-number">Round {{ index + 1 }}</span>
             </div>
-            <span v-if="round.isLocked" class="ui-round-picker__item-status">
+            <span
+              v-if="round.isLocked"
+              class="round-picker__item-status"
+              aria-label="Locked"
+            >
               <IconLock />
             </span>
           </button>
@@ -73,4 +80,4 @@ function handleKeydown(event: KeyboardEvent) {
   </Teleport>
 </template>
 
-<style src="./UiRoundPicker.css"></style>
+<style src="./RoundPicker.css"></style>

@@ -1,4 +1,7 @@
 <script setup lang="ts">
+import { useId } from 'vue'
+import UiButton from './UiButton.vue'
+
 export interface UiConfirmDialogProps {
   open: boolean
   title: string
@@ -23,6 +26,8 @@ const {
 } = defineProps<UiConfirmDialogProps>()
 
 const emit = defineEmits<UiConfirmDialogEmits>()
+
+const titleId = useId()
 
 function handleConfirm() {
   emit('confirm')
@@ -52,29 +57,23 @@ function handleKeydown(event: KeyboardEvent) {
       class="ui-confirm-dialog"
       role="dialog"
       aria-modal="true"
-      :aria-labelledby="'dialog-title'"
+      :aria-labelledby="titleId"
       @click="handleBackdropClick"
       @keydown="handleKeydown"
     >
       <div class="ui-confirm-dialog__panel">
-        <h2 id="dialog-title" class="ui-confirm-dialog__title">{{ title }}</h2>
+        <h2 :id="titleId" class="ui-confirm-dialog__title">{{ title }}</h2>
         <p class="ui-confirm-dialog__message">{{ message }}</p>
         <div class="ui-confirm-dialog__actions">
-          <button
-            type="button"
-            class="ui-confirm-dialog__button ui-confirm-dialog__button--cancel"
-            @click="handleCancel"
-          >
+          <UiButton variant="secondary" @click="handleCancel">
             {{ cancelLabel }}
-          </button>
-          <button
-            type="button"
-            class="ui-confirm-dialog__button ui-confirm-dialog__button--confirm"
-            :class="{ 'ui-confirm-dialog__button--destructive': destructive }"
+          </UiButton>
+          <UiButton
+            :variant="destructive ? 'destructive' : 'primary'"
             @click="handleConfirm"
           >
             {{ confirmLabel }}
-          </button>
+          </UiButton>
         </div>
       </div>
     </div>

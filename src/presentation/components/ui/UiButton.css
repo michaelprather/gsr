@@ -1,0 +1,105 @@
+.ui-button {
+  --ui-button-height: 3rem;
+  --ui-button-padding: var(--space-4);
+  --ui-button-radius: var(--radius-md);
+  --ui-button-font-size: 1rem;
+  --ui-button-font-weight: 600;
+
+  --ui-button-bg: var(--interactive);
+  --ui-button-bg-hover: var(--interactive-hover);
+  --ui-button-color: var(--text-inverse);
+  --ui-button-bg-disabled: var(--interactive-muted);
+  --ui-button-color-disabled: var(--text-subtle);
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  min-height: var(--ui-button-height);
+  padding: 0 var(--ui-button-padding);
+  font-size: var(--ui-button-font-size);
+  font-weight: var(--ui-button-font-weight);
+  color: var(--ui-button-color);
+  background: var(--ui-button-bg);
+  border-radius: var(--ui-button-radius);
+  transition:
+    background-color 0.15s ease,
+    color 0.15s ease;
+}
+
+.ui-button:hover:not(:disabled) {
+  background: var(--ui-button-bg-hover);
+}
+
+.ui-button:disabled {
+  background: var(--ui-button-bg-disabled);
+  color: var(--ui-button-color-disabled);
+  cursor: not-allowed;
+}
+
+.ui-button:focus-visible {
+  outline: 2px solid var(--interactive);
+  outline-offset: 2px;
+}
+
+/* Variants */
+.ui-button--secondary {
+  --ui-button-bg: var(--interactive-muted);
+  --ui-button-bg-hover: var(--interactive-muted-hover);
+  --ui-button-color: var(--text);
+}
+
+.ui-button--ghost {
+  --ui-button-bg: transparent;
+  --ui-button-bg-hover: var(--surface-raised);
+  --ui-button-color: var(--text-muted);
+  --ui-button-font-weight: 500;
+}
+
+.ui-button--ghost:hover:not(:disabled) {
+  --ui-button-color: var(--text);
+}
+
+.ui-button--ghost:disabled {
+  --ui-button-bg: transparent;
+  --ui-button-color: var(--border);
+}
+
+.ui-button--destructive {
+  --ui-button-bg: #dc2626;
+  --ui-button-bg-hover: #b91c1c;
+  --ui-button-color: #ffffff;
+}
+
+/* Sizes */
+.ui-button--icon {
+  --ui-button-padding: 0;
+  width: var(--ui-button-height);
+}
+
+.ui-button--small {
+  --ui-button-height: 2.5rem;
+  --ui-button-padding: var(--space-3);
+  --ui-button-font-size: 0.875rem;
+}
+
+.ui-button--small.ui-button--icon {
+  width: 2.5rem;
+}
+
+/* Full width */
+.ui-button--block {
+  width: 100%;
+}
+
+/* Icon sizing */
+.ui-button svg {
+  width: 1.25rem;
+  height: 1.25rem;
+  flex-shrink: 0;
+}
+
+.ui-button--small svg {
+  width: 1rem;
+  height: 1rem;
+}

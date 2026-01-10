@@ -6,23 +6,12 @@
   --score-entry-view-round-type-color: var(--text);
   --score-entry-view-round-indicator-color: var(--text-muted);
 
-  --score-entry-view-nav-button-color: var(--text-muted);
-  --score-entry-view-nav-button-color-hover: var(--text);
-  --score-entry-view-nav-button-color-disabled: var(--border);
-
   --score-entry-view-player-bg: var(--surface-raised);
   --score-entry-view-player-border: var(--border);
   --score-entry-view-player-radius: var(--radius-md);
 
-  --score-entry-view-input-bg: var(--surface);
-  --score-entry-view-input-border: var(--border);
-  --score-entry-view-input-border-focus: var(--interactive);
-  --score-entry-view-input-border-error: #dc2626;
-  --score-entry-view-input-height: 3rem;
-  --score-entry-view-input-radius: var(--radius-md);
-
   --score-entry-view-total-color: var(--text-muted);
-  --score-entry-view-error-color: #dc2626;
+
   --score-entry-view-hint-bg: rgba(234, 179, 8, 0.1);
   --score-entry-view-hint-color: #ca8a04;
   --score-entry-view-hint-border: #ca8a04;
@@ -45,27 +34,7 @@
   border-bottom: 1px solid var(--border);
 }
 
-.score-entry-view__nav-button {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 2.75rem;
-  height: 2.75rem;
-  color: var(--score-entry-view-nav-button-color);
-  border-radius: var(--radius-md);
-  transition: color 0.15s ease;
-}
-
-.score-entry-view__nav-button:hover:not(:disabled) {
-  color: var(--score-entry-view-nav-button-color-hover);
-}
-
-.score-entry-view__nav-button:disabled {
-  color: var(--score-entry-view-nav-button-color-disabled);
-  cursor: not-allowed;
-}
-
-.score-entry-view__nav-button svg {
+.score-entry-view__header .ui-button svg {
   width: 1.5rem;
   height: 1.5rem;
 }
@@ -97,6 +66,11 @@
 
 .score-entry-view__round-indicator:hover {
   background: var(--surface-raised);
+}
+
+.score-entry-view__round-indicator:focus-visible {
+  outline: 2px solid var(--interactive);
+  outline-offset: 2px;
 }
 
 .score-entry-view__content {
@@ -138,41 +112,8 @@
   color: var(--score-entry-view-total-color);
 }
 
-.score-entry-view__score-input-wrapper {
-  position: relative;
-}
-
-.score-entry-view__score-input {
-  width: 100%;
-  height: var(--score-entry-view-input-height);
-  padding: 0 var(--space-4);
+.score-entry-view__player-card .ui-input__field {
   font-size: 1.25rem;
-  font-weight: 500;
-  text-align: center;
-  color: var(--text);
-  background: var(--score-entry-view-input-bg);
-  border: 1px solid var(--score-entry-view-input-border);
-  border-radius: var(--score-entry-view-input-radius);
-}
-
-.score-entry-view__score-input:focus {
-  outline: none;
-  border-color: var(--score-entry-view-input-border-focus);
-}
-
-.score-entry-view__score-input--error {
-  border-color: var(--score-entry-view-input-border-error);
-}
-
-.score-entry-view__score-input::placeholder {
-  color: var(--text-subtle);
-  font-weight: 400;
-}
-
-.score-entry-view__score-error {
-  margin-top: var(--space-2);
-  font-size: 0.8125rem;
-  color: var(--score-entry-view-error-color);
 }
 
 .score-entry-view__player-skipped {
@@ -181,7 +122,7 @@
   color: var(--text-muted);
   text-align: center;
   background: var(--surface);
-  border-radius: var(--score-entry-view-input-radius);
+  border-radius: var(--radius-md);
 }
 
 .score-entry-view__hint {

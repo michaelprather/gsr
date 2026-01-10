@@ -4,30 +4,9 @@
 
   --setup-view-title-color: var(--text);
 
-  --setup-view-input-bg: var(--surface);
-  --setup-view-input-border: var(--border);
-  --setup-view-input-border-focus: var(--interactive);
-  --setup-view-input-height: 3rem;
-  --setup-view-input-radius: var(--radius-md);
-
-  --setup-view-add-button-bg: var(--interactive);
-  --setup-view-add-button-bg-hover: var(--interactive-hover);
-  --setup-view-add-button-color: var(--text-inverse);
-  --setup-view-add-button-bg-disabled: var(--interactive-muted);
-  --setup-view-add-button-color-disabled: var(--text-subtle);
-
   --setup-view-player-bg: var(--surface-raised);
   --setup-view-player-border: var(--border);
   --setup-view-player-radius: var(--radius-md);
-
-  --setup-view-remove-button-color: var(--text-muted);
-  --setup-view-remove-button-color-hover: var(--text);
-
-  --setup-view-start-button-bg: var(--interactive);
-  --setup-view-start-button-bg-hover: var(--interactive-hover);
-  --setup-view-start-button-color: var(--text-inverse);
-  --setup-view-start-button-bg-disabled: var(--interactive-muted);
-  --setup-view-start-button-color-disabled: var(--text-subtle);
 
   --setup-view-error-color: #dc2626;
 
@@ -58,55 +37,13 @@
 
 .setup-view__input-group {
   display: flex;
+  align-items: flex-start;
   gap: var(--space-2);
   margin-bottom: var(--space-4);
 }
 
-.setup-view__input {
+.setup-view__input-group .ui-input {
   flex: 1;
-  height: var(--setup-view-input-height);
-  padding: 0 var(--space-4);
-  font-size: 1rem;
-  color: var(--text);
-  background: var(--setup-view-input-bg);
-  border: 1px solid var(--setup-view-input-border);
-  border-radius: var(--setup-view-input-radius);
-}
-
-.setup-view__input:focus {
-  outline: none;
-  border-color: var(--setup-view-input-border-focus);
-}
-
-.setup-view__input::placeholder {
-  color: var(--text-subtle);
-}
-
-.setup-view__add-button {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: var(--setup-view-input-height);
-  height: var(--setup-view-input-height);
-  background: var(--setup-view-add-button-bg);
-  color: var(--setup-view-add-button-color);
-  border-radius: var(--setup-view-input-radius);
-  transition: background-color 0.15s ease;
-}
-
-.setup-view__add-button:hover:not(:disabled) {
-  background: var(--setup-view-add-button-bg-hover);
-}
-
-.setup-view__add-button:disabled {
-  background: var(--setup-view-add-button-bg-disabled);
-  color: var(--setup-view-add-button-color-disabled);
-  cursor: not-allowed;
-}
-
-.setup-view__add-button svg {
-  width: 1.25rem;
-  height: 1.25rem;
 }
 
 .setup-view__player-list {
@@ -131,26 +68,6 @@
   color: var(--text);
 }
 
-.setup-view__remove-button {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 2.75rem;
-  height: 2.75rem;
-  color: var(--setup-view-remove-button-color);
-  border-radius: var(--radius-md);
-  transition: color 0.15s ease;
-}
-
-.setup-view__remove-button:hover {
-  color: var(--setup-view-remove-button-color-hover);
-}
-
-.setup-view__remove-button svg {
-  width: 1.25rem;
-  height: 1.25rem;
-}
-
 .setup-view__empty-state {
   padding: var(--space-8) var(--space-4);
   text-align: center;
@@ -172,25 +89,4 @@
   max-width: var(--setup-view-max-width);
   margin: 0 auto;
   padding: var(--space-4) 0;
-}
-
-.setup-view__start-button {
-  width: 100%;
-  height: 3rem;
-  font-size: 1rem;
-  font-weight: 600;
-  color: var(--setup-view-start-button-color);
-  background: var(--setup-view-start-button-bg);
-  border-radius: var(--radius-md);
-  transition: background-color 0.15s ease;
-}
-
-.setup-view__start-button:hover:not(:disabled) {
-  background: var(--setup-view-start-button-bg-hover);
-}
-
-.setup-view__start-button:disabled {
-  background: var(--setup-view-start-button-bg-disabled);
-  color: var(--setup-view-start-button-color-disabled);
-  cursor: not-allowed;
 }

@@ -6,7 +6,8 @@ import { RoundScore, validateScore } from '@/domain'
 import { GameService } from '@/application'
 import { IndexedDBGameRepository } from '@/infrastructure'
 import { IconChevronLeft, IconChevronRight } from '../components/icons'
-import { UiRoundPicker } from '../components/ui'
+import { UiButton, UiInput } from '../components/ui'
+import { RoundPicker } from '../components/domain'
 
 const router = useRouter()
 
@@ -199,15 +200,15 @@ function isSkipped(player: Player): boolean {
 
   <main v-else-if="game && currentRound" class="score-entry-view">
     <header class="score-entry-view__header">
-      <button
-        type="button"
-        class="score-entry-view__nav-button"
+      <UiButton
+        variant="ghost"
+        size="icon"
         :disabled="!canGoPrev"
         aria-label="Previous round"
         @click="goPrev"
       >
         <IconChevronLeft />
-      </button>
+      </UiButton>
 
       <div class="score-entry-view__round-info">
         <h1 class="score-entry-view__round-type">{{ currentRound.type.displayName }}</h1>
@@ -221,15 +222,15 @@ function isSkipped(player: Player): boolean {
         </button>
       </div>
 
-      <button
-        type="button"
-        class="score-entry-view__nav-button"
+      <UiButton
+        variant="ghost"
+        size="icon"
         :disabled="!canGoNext"
         aria-label="Next round"
         @click="goNext"
       >
         <IconChevronRight />
-      </button>
+      </UiButton>
     </header>
 
     <section class="score-entry-view__content">
@@ -248,32 +249,28 @@ function isSkipped(player: Player): boolean {
 
           <div v-if="isSkipped(player)" class="score-entry-view__player-skipped">Skipped</div>
 
-          <div v-else class="score-entry-view__score-input-wrapper">
-            <input
-              v-model="scoreInputs[player.id.value]"
-              type="number"
-              inputmode="numeric"
-              pattern="[0-9]*"
-              class="score-entry-view__score-input"
-              :class="{ 'score-entry-view__score-input--error': scoreErrors[player.id.value] }"
-              placeholder="—"
-              :disabled="currentRound.isLocked"
-              :aria-label="`Score for ${player.name}`"
-              @blur="handleScoreBlur(player.id.value)"
-            />
-            <p v-if="scoreErrors[player.id.value]" class="score-entry-view__score-error">
-              {{ scoreErrors[player.id.value] }}
-            </p>
-          </div>
+          <UiInput
+            v-else
+            v-model="scoreInputs[player.id.value]"
+            :label="`Score for ${player.name}`"
+            :hide-label="true"
+            type="number"
+            inputmode="numeric"
+            placeholder="—"
+            :disabled="currentRound.isLocked"
+            :error="scoreErrors[player.id.value]"
+            :center="true"
+            @blur="handleScoreBlur(player.id.value)"
+          />
         </div>
       </div>
 
-      <div v-if="showWinnerHint" class="score-entry-view__hint">
+      <div v-if="showWinnerHint" class="score-entry-view__hint" role="alert">
         One player must have a score of 0 (round winner)
       </div>
     </section>
 
-    <UiRoundPicker
+    <RoundPicker
       :open="showRoundPicker"
       :rounds="game.rounds"
       :current-index="currentRoundIndex"
