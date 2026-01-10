@@ -166,7 +166,6 @@ describe('findFirstInvalidRoundIndex', () => {
   it('treats partial skip as invalid when remaining players have no scores', () => {
     const game = Game.create(['Alice', 'Bob', 'Charlie'])
     const alice = game.players[0]!
-    const bob = game.players[1]!
 
     // Alice is skipped, Bob and Charlie have no scores
     let updated = game

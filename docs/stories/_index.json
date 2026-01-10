@@ -1,5 +1,5 @@
 {
-  "generated": "2026-01-10T15:50:00.000Z",
+  "generated": "2026-01-10T17:15:00.000Z",
   "project": "gsr",
   "stories": {
     "001": {
@@ -115,14 +115,15 @@
       "story_id": "015",
       "epic_id": "002",
       "title": "Winner Celebration",
-      "status": "ready"
+      "status": "completed",
+      "completed_date": "2026-01-10"
     },
     "016": {
       "file": "002-dot-one/016-toast-notifications.md",
       "story_id": "016",
       "epic_id": "002",
       "title": "Toast Notifications",
-      "status": "ready"
+      "status": "in-progress"
     },
     "017": {
       "file": "002-dot-one/017-app-icon-and-favicon.md",
@@ -168,7 +169,7 @@
       "total_estimated_hours": 0,
       "completed_hours": 0,
       "story_count": 7,
-      "stories_completed": 1,
+      "stories_completed": 2,
       "last_updated": "2026-01-10"
     }
   }

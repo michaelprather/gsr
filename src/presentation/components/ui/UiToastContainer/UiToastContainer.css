@@ -1,0 +1,63 @@
+.ui-toast-container {
+  --ui-toast-container-gap: var(--space-3);
+  --ui-toast-container-inset: var(--space-4);
+
+  position: fixed;
+  z-index: 1100;
+  display: flex;
+  flex-direction: column;
+  gap: var(--ui-toast-container-gap);
+  pointer-events: none;
+
+  /* Mobile: top-center, newest at top */
+  top: var(--ui-toast-container-inset);
+  left: var(--ui-toast-container-inset);
+  right: var(--ui-toast-container-inset);
+  align-items: center;
+}
+
+.ui-toast-container > * {
+  pointer-events: auto;
+}
+
+/* Desktop: bottom-right, newest at bottom */
+@media (min-width: 640px) {
+  .ui-toast-container {
+    top: auto;
+    bottom: var(--ui-toast-container-inset);
+    left: auto;
+    right: var(--ui-toast-container-inset);
+    align-items: flex-end;
+    flex-direction: column-reverse;
+  }
+}
+
+/* Toast transitions */
+.toast-enter-active,
+.toast-leave-active {
+  transition:
+    opacity var(--duration-normal) var(--ease-out),
+    transform var(--duration-normal) var(--ease-out);
+}
+
+.toast-enter-from {
+  opacity: 0;
+  transform: translateY(-8px);
+}
+
+.toast-leave-to {
+  opacity: 0;
+  transform: translateX(16px);
+}
+
+/* Desktop: enter from bottom */
+@media (min-width: 640px) {
+  .toast-enter-from {
+    transform: translateY(8px);
+  }
+}
+
+/* Handle list reordering smoothly */
+.toast-move {
+  transition: transform var(--duration-normal) var(--ease-out);
+}

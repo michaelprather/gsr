@@ -2,6 +2,7 @@
 import { RouterView } from 'vue-router'
 import { useOnlineStatus, useTheme } from '@/presentation/composables'
 import { IconWifiOffOutline } from '@/presentation/components/icons'
+import { UiToastContainer } from '@/presentation/components/ui'
 
 const { isOnline } = useOnlineStatus()
 
@@ -19,6 +20,7 @@ useTheme()
       <component :is="Component" />
     </Transition>
   </RouterView>
+  <UiToastContainer />
 </template>
 
 <style>
