@@ -311,8 +311,8 @@ async function handleSkipEntireRound() {
   }
 }
 
-function goToSummary() {
-  router.push({ name: 'summary' })
+function goToStandings() {
+  router.push({ name: 'standings' })
 }
 </script>
 
@@ -435,7 +435,7 @@ function goToSummary() {
         >
           Skip Round
         </UiButton>
-        <UiButton variant="primary" @click="goToSummary">Standings</UiButton>
+        <UiButton variant="primary" @click="goToStandings">Standings</UiButton>
       </div>
     </footer>
 

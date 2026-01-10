@@ -2,8 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 
 import SetupView from '../views/SetupView.vue'
 import ScoreEntryView from '../views/ScoreEntryView.vue'
-import SummaryView from '../views/SummaryView.vue'
-import ScorecardView from '../views/ScorecardView.vue'
+import StandingsView from '../views/StandingsView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -23,14 +22,9 @@ const router = createRouter({
       component: ScoreEntryView,
     },
     {
-      path: '/summary',
-      name: 'summary',
-      component: SummaryView,
-    },
-    {
-      path: '/scorecard',
-      name: 'scorecard',
-      component: ScorecardView,
+      path: '/standings',
+      name: 'standings',
+      component: StandingsView,
     },
   ],
 })

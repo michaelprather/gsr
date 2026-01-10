@@ -1,0 +1,81 @@
+.standings-list {
+  --standings-list-rank-color: var(--text-muted);
+  --standings-list-rank-bg: var(--surface);
+  --standings-list-rank-size: var(--size-10);
+
+  --standings-list-row-bg: var(--surface-raised);
+  --standings-list-row-border: var(--border);
+  --standings-list-row-radius: var(--radius-md);
+
+  --standings-list-total-color: var(--text);
+  --standings-list-skipped-color: var(--text-muted);
+
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.standings-list__row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-4);
+  background: var(--standings-list-row-bg);
+  border: 1px solid var(--standings-list-row-border);
+  border-radius: var(--standings-list-row-radius);
+}
+
+.standings-list__rank {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--standings-list-rank-size);
+  height: var(--standings-list-rank-size);
+  font-size: var(--text-sm);
+  font-weight: var(--font-semibold);
+  color: var(--standings-list-rank-color);
+  background: var(--standings-list-rank-bg);
+  border-radius: var(--radius-full);
+  flex-shrink: 0;
+}
+
+.standings-list__player-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.standings-list__player-name {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: var(--text-base);
+  font-weight: var(--font-medium);
+  color: var(--text);
+}
+
+.standings-list__skipped-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  padding: var(--space-1) var(--space-2);
+  font-size: var(--text-xs);
+  font-weight: var(--font-normal);
+  color: var(--standings-list-skipped-color);
+  background: var(--surface);
+  border-radius: var(--radius-sm);
+}
+
+.standings-list__skipped-icon {
+  width: var(--icon-xs);
+  height: var(--icon-xs);
+}
+
+.standings-list__total {
+  font-size: var(--text-lg);
+  font-weight: var(--font-semibold);
+  color: var(--standings-list-total-color);
+  flex-shrink: 0;
+}
