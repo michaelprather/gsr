@@ -23,7 +23,8 @@
       "story_id": "003",
       "epic_id": "001",
       "title": "Game Domain Model",
-      "status": "ready"
+      "status": "completed",
+      "completed_date": "2026-01-10"
     },
     "004": {
       "file": "001-mvp/004-game-service.md",
