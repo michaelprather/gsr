@@ -2,7 +2,7 @@
 story_id: "001"
 epic_id: "001"
 title: Project Foundation
-status: ready
+status: in-progress
 ---
 
 # Project Foundation
