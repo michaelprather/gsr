@@ -8,9 +8,18 @@ describe('SkipPlayerDialog', () => {
     playerName: 'Alice',
   }
 
+  const mountOptions = {
+    global: {
+      stubs: {
+        Teleport: true,
+      },
+    },
+  }
+
   it('renders when open is true', () => {
     const wrapper = mount(SkipPlayerDialog, {
       props: defaultProps,
+      ...mountOptions,
     })
 
     expect(wrapper.find('.ui-dialog').exists()).toBe(true)
@@ -22,6 +31,7 @@ describe('SkipPlayerDialog', () => {
         ...defaultProps,
         open: false,
       },
+      ...mountOptions,
     })
 
     expect(wrapper.find('.ui-dialog').exists()).toBe(false)
@@ -30,6 +40,7 @@ describe('SkipPlayerDialog', () => {
   it('displays title with player name', () => {
     const wrapper = mount(SkipPlayerDialog, {
       props: defaultProps,
+      ...mountOptions,
     })
 
     expect(wrapper.find('.ui-dialog__title').text()).toBe('Skip Alice')
@@ -38,6 +49,7 @@ describe('SkipPlayerDialog', () => {
   it('displays skip this round option', () => {
     const wrapper = mount(SkipPlayerDialog, {
       props: defaultProps,
+      ...mountOptions,
     })
 
     const options = wrapper.findAll('.skip-player-dialog__option')
@@ -47,6 +59,7 @@ describe('SkipPlayerDialog', () => {
   it('displays skip rest of game option', () => {
     const wrapper = mount(SkipPlayerDialog, {
       props: defaultProps,
+      ...mountOptions,
     })
 
     const options = wrapper.findAll('.skip-player-dialog__option')
@@ -56,6 +69,7 @@ describe('SkipPlayerDialog', () => {
   it('emits skip-round when skip this round is clicked', async () => {
     const wrapper = mount(SkipPlayerDialog, {
       props: defaultProps,
+      ...mountOptions,
     })
 
     const options = wrapper.findAll('.skip-player-dialog__option')
@@ -67,6 +81,7 @@ describe('SkipPlayerDialog', () => {
   it('emits skip-all when skip rest of game is clicked', async () => {
     const wrapper = mount(SkipPlayerDialog, {
       props: defaultProps,
+      ...mountOptions,
     })
 
     const options = wrapper.findAll('.skip-player-dialog__option')
@@ -78,6 +93,7 @@ describe('SkipPlayerDialog', () => {
   it('emits close when cancel button is clicked', async () => {
     const wrapper = mount(SkipPlayerDialog, {
       props: defaultProps,
+      ...mountOptions,
     })
 
     await wrapper.find('.ui-button--secondary').trigger('click')
@@ -88,6 +104,7 @@ describe('SkipPlayerDialog', () => {
   it('emits close when backdrop is clicked', async () => {
     const wrapper = mount(SkipPlayerDialog, {
       props: defaultProps,
+      ...mountOptions,
     })
 
     await wrapper.find('.ui-dialog').trigger('click')
@@ -98,6 +115,7 @@ describe('SkipPlayerDialog', () => {
   it('does not emit close when panel is clicked', async () => {
     const wrapper = mount(SkipPlayerDialog, {
       props: defaultProps,
+      ...mountOptions,
     })
 
     await wrapper.find('.ui-dialog__panel').trigger('click')
@@ -108,6 +126,7 @@ describe('SkipPlayerDialog', () => {
   it('emits close when Escape key is pressed', async () => {
     const wrapper = mount(SkipPlayerDialog, {
       props: defaultProps,
+      ...mountOptions,
     })
 
     await wrapper.find('.ui-dialog').trigger('keydown', { key: 'Escape' })
@@ -118,6 +137,7 @@ describe('SkipPlayerDialog', () => {
   it('has proper accessibility attributes on dialog', () => {
     const wrapper = mount(SkipPlayerDialog, {
       props: defaultProps,
+      ...mountOptions,
     })
 
     const dialog = wrapper.find('.ui-dialog')
@@ -129,6 +149,7 @@ describe('SkipPlayerDialog', () => {
   it('associates aria-labelledby with title', () => {
     const wrapper = mount(SkipPlayerDialog, {
       props: defaultProps,
+      ...mountOptions,
     })
 
     const dialog = wrapper.find('.ui-dialog')

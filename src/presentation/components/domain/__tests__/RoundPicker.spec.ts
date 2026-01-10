@@ -14,9 +14,18 @@ describe('RoundPicker', () => {
     currentIndex: 0,
   }
 
+  const mountOptions = {
+    global: {
+      stubs: {
+        Teleport: true,
+      },
+    },
+  }
+
   it('renders when open is true', () => {
     const wrapper = mount(RoundPicker, {
       props: defaultProps,
+      ...mountOptions,
     })
 
     expect(wrapper.find('.round-picker').exists()).toBe(true)
@@ -28,6 +37,7 @@ describe('RoundPicker', () => {
         ...defaultProps,
         open: false,
       },
+      ...mountOptions,
     })
 
     expect(wrapper.find('.round-picker').exists()).toBe(false)
@@ -36,6 +46,7 @@ describe('RoundPicker', () => {
   it('displays title', () => {
     const wrapper = mount(RoundPicker, {
       props: defaultProps,
+      ...mountOptions,
     })
 
     expect(wrapper.find('.round-picker__title').text()).toBe('Select Round')
@@ -44,6 +55,7 @@ describe('RoundPicker', () => {
   it('renders all 7 rounds', () => {
     const wrapper = mount(RoundPicker, {
       props: defaultProps,
+      ...mountOptions,
     })
 
     const items = wrapper.findAll('.round-picker__item')
@@ -53,6 +65,7 @@ describe('RoundPicker', () => {
   it('displays round type name for each round', () => {
     const wrapper = mount(RoundPicker, {
       props: defaultProps,
+      ...mountOptions,
     })
 
     const types = wrapper.findAll('.round-picker__item-type')
@@ -64,6 +77,7 @@ describe('RoundPicker', () => {
   it('displays round number for each round', () => {
     const wrapper = mount(RoundPicker, {
       props: defaultProps,
+      ...mountOptions,
     })
 
     const numbers = wrapper.findAll('.round-picker__item-number')
@@ -77,6 +91,7 @@ describe('RoundPicker', () => {
         ...defaultProps,
         currentIndex: 2,
       },
+      ...mountOptions,
     })
 
     const items = wrapper.findAll('.round-picker__item')
@@ -87,6 +102,7 @@ describe('RoundPicker', () => {
   it('emits select with index when round is clicked', async () => {
     const wrapper = mount(RoundPicker, {
       props: defaultProps,
+      ...mountOptions,
     })
 
     const items = wrapper.findAll('.round-picker__item')
@@ -99,6 +115,7 @@ describe('RoundPicker', () => {
   it('emits close when backdrop is clicked', async () => {
     const wrapper = mount(RoundPicker, {
       props: defaultProps,
+      ...mountOptions,
     })
 
     await wrapper.find('.round-picker').trigger('click')
@@ -109,6 +126,7 @@ describe('RoundPicker', () => {
   it('does not emit close when panel is clicked', async () => {
     const wrapper = mount(RoundPicker, {
       props: defaultProps,
+      ...mountOptions,
     })
 
     await wrapper.find('.round-picker__panel').trigger('click')
@@ -119,6 +137,7 @@ describe('RoundPicker', () => {
   it('emits close when Escape key is pressed', async () => {
     const wrapper = mount(RoundPicker, {
       props: defaultProps,
+      ...mountOptions,
     })
 
     await wrapper.find('.round-picker').trigger('keydown', { key: 'Escape' })
@@ -135,6 +154,7 @@ describe('RoundPicker', () => {
         ...defaultProps,
         rounds: lockedRounds,
       },
+      ...mountOptions,
     })
 
     const statusIcons = wrapper.findAll('.round-picker__item-status')
@@ -144,6 +164,7 @@ describe('RoundPicker', () => {
   it('has proper accessibility attributes on dialog', () => {
     const wrapper = mount(RoundPicker, {
       props: defaultProps,
+      ...mountOptions,
     })
 
     const dialog = wrapper.find('.round-picker')
@@ -155,6 +176,7 @@ describe('RoundPicker', () => {
   it('has proper accessibility attributes on list', () => {
     const wrapper = mount(RoundPicker, {
       props: defaultProps,
+      ...mountOptions,
     })
 
     const list = wrapper.find('.round-picker__list')
@@ -167,6 +189,7 @@ describe('RoundPicker', () => {
         ...defaultProps,
         currentIndex: 1,
       },
+      ...mountOptions,
     })
 
     const items = wrapper.findAll('.round-picker__item')

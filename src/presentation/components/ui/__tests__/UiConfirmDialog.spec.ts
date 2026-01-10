@@ -9,9 +9,18 @@ describe('UiConfirmDialog', () => {
     message: 'Are you sure you want to proceed?',
   }
 
+  const mountOptions = {
+    global: {
+      stubs: {
+        Teleport: true,
+      },
+    },
+  }
+
   it('renders when open is true', () => {
     const wrapper = mount(UiConfirmDialog, {
       props: defaultProps,
+      ...mountOptions,
     })
 
     expect(wrapper.find('.ui-dialog').exists()).toBe(true)
@@ -23,6 +32,7 @@ describe('UiConfirmDialog', () => {
         ...defaultProps,
         open: false,
       },
+      ...mountOptions,
     })
 
     expect(wrapper.find('.ui-dialog').exists()).toBe(false)
@@ -31,6 +41,7 @@ describe('UiConfirmDialog', () => {
   it('displays title', () => {
     const wrapper = mount(UiConfirmDialog, {
       props: defaultProps,
+      ...mountOptions,
     })
 
     expect(wrapper.find('.ui-dialog__title').text()).toBe('Confirm Action')
@@ -39,6 +50,7 @@ describe('UiConfirmDialog', () => {
   it('displays message', () => {
     const wrapper = mount(UiConfirmDialog, {
       props: defaultProps,
+      ...mountOptions,
     })
 
     expect(wrapper.find('.ui-confirm-dialog__message').text()).toBe(
@@ -49,6 +61,7 @@ describe('UiConfirmDialog', () => {
   it('uses default button labels', () => {
     const wrapper = mount(UiConfirmDialog, {
       props: defaultProps,
+      ...mountOptions,
     })
 
     const buttons = wrapper.findAll('button')
@@ -63,6 +76,7 @@ describe('UiConfirmDialog', () => {
         confirmLabel: 'Delete',
         cancelLabel: 'Keep',
       },
+      ...mountOptions,
     })
 
     const buttons = wrapper.findAll('button')
@@ -73,6 +87,7 @@ describe('UiConfirmDialog', () => {
   it('emits confirm when confirm button is clicked', async () => {
     const wrapper = mount(UiConfirmDialog, {
       props: defaultProps,
+      ...mountOptions,
     })
 
     const buttons = wrapper.findAll('button')
@@ -84,6 +99,7 @@ describe('UiConfirmDialog', () => {
   it('emits cancel when cancel button is clicked', async () => {
     const wrapper = mount(UiConfirmDialog, {
       props: defaultProps,
+      ...mountOptions,
     })
 
     const buttons = wrapper.findAll('button')
@@ -95,6 +111,7 @@ describe('UiConfirmDialog', () => {
   it('emits cancel when backdrop is clicked', async () => {
     const wrapper = mount(UiConfirmDialog, {
       props: defaultProps,
+      ...mountOptions,
     })
 
     await wrapper.find('.ui-dialog').trigger('click')
@@ -105,6 +122,7 @@ describe('UiConfirmDialog', () => {
   it('does not emit cancel when panel is clicked', async () => {
     const wrapper = mount(UiConfirmDialog, {
       props: defaultProps,
+      ...mountOptions,
     })
 
     await wrapper.find('.ui-dialog__panel').trigger('click')
@@ -115,6 +133,7 @@ describe('UiConfirmDialog', () => {
   it('emits cancel when Escape key is pressed', async () => {
     const wrapper = mount(UiConfirmDialog, {
       props: defaultProps,
+      ...mountOptions,
     })
 
     await wrapper.find('.ui-dialog').trigger('keydown', { key: 'Escape' })
@@ -125,6 +144,7 @@ describe('UiConfirmDialog', () => {
   it('has proper accessibility attributes', () => {
     const wrapper = mount(UiConfirmDialog, {
       props: defaultProps,
+      ...mountOptions,
     })
 
     const dialog = wrapper.find('.ui-dialog')
@@ -136,6 +156,7 @@ describe('UiConfirmDialog', () => {
   it('associates aria-labelledby with title', () => {
     const wrapper = mount(UiConfirmDialog, {
       props: defaultProps,
+      ...mountOptions,
     })
 
     const dialog = wrapper.find('.ui-dialog')
@@ -150,6 +171,7 @@ describe('UiConfirmDialog', () => {
         ...defaultProps,
         destructive: true,
       },
+      ...mountOptions,
     })
 
     const confirmButton = wrapper.findAll('button')[1]!
@@ -162,6 +184,7 @@ describe('UiConfirmDialog', () => {
         ...defaultProps,
         destructive: false,
       },
+      ...mountOptions,
     })
 
     const confirmButton = wrapper.findAll('button')[1]!

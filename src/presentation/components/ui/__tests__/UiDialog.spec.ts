@@ -8,12 +8,21 @@ describe('UiDialog', () => {
     title: 'Dialog Title',
   }
 
+  const mountOptions = {
+    global: {
+      stubs: {
+        Teleport: true,
+      },
+    },
+  }
+
   it('renders when open is true', () => {
     const wrapper = mount(UiDialog, {
       props: defaultProps,
       slots: {
         default: 'Dialog content',
       },
+      ...mountOptions,
     })
 
     expect(wrapper.find('.ui-dialog').exists()).toBe(true)
@@ -28,6 +37,7 @@ describe('UiDialog', () => {
       slots: {
         default: 'Dialog content',
       },
+      ...mountOptions,
     })
 
     expect(wrapper.find('.ui-dialog').exists()).toBe(false)
@@ -39,6 +49,7 @@ describe('UiDialog', () => {
       slots: {
         default: 'Dialog content',
       },
+      ...mountOptions,
     })
 
     expect(wrapper.find('.ui-dialog__title').text()).toBe('Dialog Title')
@@ -50,6 +61,7 @@ describe('UiDialog', () => {
       slots: {
         default: '<p class="test-content">Test content</p>',
       },
+      ...mountOptions,
     })
 
     expect(wrapper.find('.test-content').text()).toBe('Test content')
@@ -62,6 +74,7 @@ describe('UiDialog', () => {
         default: 'Content',
         actions: '<button class="test-action">Action</button>',
       },
+      ...mountOptions,
     })
 
     expect(wrapper.find('.ui-dialog__actions').exists()).toBe(true)
@@ -74,6 +87,7 @@ describe('UiDialog', () => {
       slots: {
         default: 'Content',
       },
+      ...mountOptions,
     })
 
     expect(wrapper.find('.ui-dialog__actions').exists()).toBe(false)
@@ -85,6 +99,7 @@ describe('UiDialog', () => {
       slots: {
         default: 'Content',
       },
+      ...mountOptions,
     })
 
     await wrapper.find('.ui-dialog').trigger('click')
@@ -98,6 +113,7 @@ describe('UiDialog', () => {
       slots: {
         default: 'Content',
       },
+      ...mountOptions,
     })
 
     await wrapper.find('.ui-dialog__panel').trigger('click')
@@ -111,6 +127,7 @@ describe('UiDialog', () => {
       slots: {
         default: 'Content',
       },
+      ...mountOptions,
     })
 
     await wrapper.find('.ui-dialog').trigger('keydown', { key: 'Escape' })
@@ -124,6 +141,7 @@ describe('UiDialog', () => {
       slots: {
         default: 'Content',
       },
+      ...mountOptions,
     })
 
     const dialog = wrapper.find('.ui-dialog')
@@ -138,6 +156,7 @@ describe('UiDialog', () => {
       slots: {
         default: 'Content',
       },
+      ...mountOptions,
     })
 
     const dialog = wrapper.find('.ui-dialog')
