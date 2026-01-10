@@ -29,9 +29,8 @@
   top: 0;
   left: 0;
   bottom: 0;
-  width: 4px;
+  width: 6px;
   background: var(--ui-toast-accent);
-  border-radius: var(--ui-toast-radius) 0 0 var(--ui-toast-radius);
 }
 
 .ui-toast__icon {
