@@ -2,7 +2,8 @@
 story_id: "014"
 epic_id: "002"
 title: Animations and Transitions
-status: ready
+status: completed
+completed_date: 2026-01-10
 ---
 
 # Animations and Transitions

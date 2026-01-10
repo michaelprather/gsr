@@ -1,5 +1,5 @@
 {
-  "generated": "2026-01-10T15:00:00.000Z",
+  "generated": "2026-01-10T15:50:00.000Z",
   "project": "gsr",
   "stories": {
     "001": {
@@ -107,7 +107,8 @@
       "story_id": "014",
       "epic_id": "002",
       "title": "Animations and Transitions",
-      "status": "ready"
+      "status": "completed",
+      "completed_date": "2026-01-10"
     },
     "015": {
       "file": "002-dot-one/015-winner-celebration.md",
@@ -167,7 +168,7 @@
       "total_estimated_hours": 0,
       "completed_hours": 0,
       "story_count": 7,
-      "stories_completed": 0,
+      "stories_completed": 1,
       "last_updated": "2026-01-10"
     }
   }
