@@ -101,3 +101,25 @@
   margin: 0 auto;
   padding: var(--space-4) 0;
 }
+
+/* List transitions */
+.list-enter-active,
+.list-leave-active {
+  transition:
+    opacity var(--duration-normal) var(--ease-out),
+    transform var(--duration-normal) var(--ease-out);
+}
+
+.list-enter-from {
+  opacity: 0;
+  transform: translateX(-8px);
+}
+
+.list-leave-to {
+  opacity: 0;
+  transform: translateX(8px);
+}
+
+.list-move {
+  transition: transform var(--duration-normal) var(--ease-out);
+}

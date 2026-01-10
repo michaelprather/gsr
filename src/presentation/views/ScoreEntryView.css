@@ -135,6 +135,21 @@
   border-radius: var(--score-entry-view-player-radius);
 }
 
+.score-entry-view__player-card--saved {
+  animation: score-saved var(--duration-slow) var(--ease-out);
+}
+
+@keyframes score-saved {
+  0% {
+    border-color: var(--success);
+    box-shadow: 0 0 0 2px var(--success-muted);
+  }
+  100% {
+    border-color: var(--score-entry-view-player-border);
+    box-shadow: none;
+  }
+}
+
 .score-entry-view__player-header {
   display: flex;
   align-items: center;

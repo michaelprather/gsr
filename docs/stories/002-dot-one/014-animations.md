@@ -18,7 +18,6 @@ Subtle animations improve perceived quality and help users understand state chan
 - Page/view transitions
 - List item animations (add/remove players)
 - Score update feedback
-- Lock/unlock state transitions
 - Loading states
 - Button press feedback
 
@@ -41,10 +40,6 @@ Subtle animations improve perceived quality and help users understand state chan
 **When** the value commits
 **Then** subtle feedback confirms the action
 
-**Given** a round is locked
-**When** the state changes
-**Then** a visual transition indicates the lock
-
 **Given** animations enabled
 **When** using the app
 **Then** interactions feel responsive (animations < 300ms)
@@ -61,7 +56,6 @@ Subtle animations improve perceived quality and help users understand state chan
 3. Implement micro-interactions:
    - Button press scale
    - Input focus transitions
-   - Lock icon rotation
 4. Respect `prefers-reduced-motion` media query
 
 ## Constraints

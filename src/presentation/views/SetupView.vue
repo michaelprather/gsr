@@ -113,10 +113,15 @@ function cancelNewGame() {
         </UiButton>
       </div>
 
-      <ul v-if="playerNames.length > 0" class="setup-view__player-list">
+      <TransitionGroup
+        v-if="playerNames.length > 0"
+        tag="ul"
+        name="list"
+        class="setup-view__player-list"
+      >
         <li
           v-for="(name, index) in playerNames"
-          :key="index"
+          :key="name"
           class="setup-view__player-item"
         >
           <span class="setup-view__player-name">{{ name }}</span>
@@ -129,7 +134,7 @@ function cancelNewGame() {
             <IconTrash />
           </UiButton>
         </li>
-      </ul>
+      </TransitionGroup>
 
       <p v-else class="setup-view__empty-state">
         Add at least 2 players to start

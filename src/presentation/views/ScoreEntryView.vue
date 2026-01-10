@@ -47,6 +47,7 @@ useSwipe(contentRef, {
 // Local form state for each player's score input
 const scoreInputs = ref<Record<string, string>>({})
 const scoreErrors = ref<Record<string, string | null>>({})
+const recentlySaved = ref<Set<string>>(new Set())
 
 const currentRound = computed<Round | null>(() => {
   if (!game.value) return null
@@ -288,9 +289,17 @@ async function handleScoreBlur(playerId: string) {
   try {
     const updatedGame = await service.setScore(playerId, currentRoundIndex.value, numericValue)
     game.value = updatedGame
+    showSaveFeedback(playerId)
   } catch {
     scoreErrors.value[playerId] = 'Failed to save score'
   }
+}
+
+function showSaveFeedback(playerId: string) {
+  recentlySaved.value.add(playerId)
+  setTimeout(() => {
+    recentlySaved.value.delete(playerId)
+  }, 300)
 }
 
 // Check if player is skipped for current round
@@ -473,7 +482,10 @@ function openNewGameDialog() {
         <div
           v-for="player in game.players"
           :key="player.id.value"
-          class="score-entry-view__player-card"
+          :class="[
+            'score-entry-view__player-card',
+            { 'score-entry-view__player-card--saved': recentlySaved.has(player.id.value) }
+          ]"
         >
           <div class="score-entry-view__player-header">
             <span class="score-entry-view__player-name">{{ player.name }}</span>

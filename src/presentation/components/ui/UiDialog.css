@@ -50,3 +50,27 @@
   gap: var(--space-3);
   justify-content: flex-end;
 }
+
+/* Dialog transitions */
+.dialog-enter-active,
+.dialog-leave-active {
+  transition: opacity var(--duration-normal) var(--ease-out);
+}
+
+.dialog-enter-active .ui-dialog__panel,
+.dialog-leave-active .ui-dialog__panel {
+  transition:
+    opacity var(--duration-normal) var(--ease-out),
+    transform var(--duration-normal) var(--ease-out);
+}
+
+.dialog-enter-from,
+.dialog-leave-to {
+  opacity: 0;
+}
+
+.dialog-enter-from .ui-dialog__panel,
+.dialog-leave-to .ui-dialog__panel {
+  opacity: 0;
+  transform: scale(0.95);
+}

@@ -23,12 +23,17 @@
   background: var(--ui-button-bg);
   border-radius: var(--ui-button-radius);
   transition:
-    background-color 0.15s ease,
-    color 0.15s ease;
+    background-color var(--duration-fast) var(--ease-out),
+    color var(--duration-fast) var(--ease-out),
+    transform var(--duration-instant) var(--ease-out);
 }
 
 .ui-button:hover:not(:disabled) {
   background: var(--ui-button-bg-hover);
+}
+
+.ui-button:active:not(:disabled) {
+  transform: scale(0.97);
 }
 
 .ui-button:disabled {

@@ -36,25 +36,27 @@ function handleKeydown(event: KeyboardEvent) {
 
 <template>
   <Teleport to="body">
-    <div
-      v-if="open"
-      class="ui-dialog"
-      role="dialog"
-      aria-modal="true"
-      :aria-labelledby="titleId"
-      @click="handleBackdropClick"
-      @keydown="handleKeydown"
-    >
-      <div class="ui-dialog__panel">
-        <h2 :id="titleId" class="ui-dialog__title">{{ title }}</h2>
-        <div class="ui-dialog__content">
-          <slot />
-        </div>
-        <div v-if="$slots.actions" class="ui-dialog__actions">
-          <slot name="actions" />
+    <Transition name="dialog">
+      <div
+        v-if="open"
+        class="ui-dialog"
+        role="dialog"
+        aria-modal="true"
+        :aria-labelledby="titleId"
+        @click="handleBackdropClick"
+        @keydown="handleKeydown"
+      >
+        <div class="ui-dialog__panel">
+          <h2 :id="titleId" class="ui-dialog__title">{{ title }}</h2>
+          <div class="ui-dialog__content">
+            <slot />
+          </div>
+          <div v-if="$slots.actions" class="ui-dialog__actions">
+            <slot name="actions" />
+          </div>
         </div>
       </div>
-    </div>
+    </Transition>
   </Teleport>
 </template>
 

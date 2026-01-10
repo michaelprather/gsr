@@ -14,7 +14,11 @@ useTheme()
     <IconWifiOffOutline aria-hidden="true" />
     <span>You're offline</span>
   </div>
-  <RouterView />
+  <RouterView v-slot="{ Component }">
+    <Transition name="page" mode="out-in">
+      <component :is="Component" />
+    </Transition>
+  </RouterView>
 </template>
 
 <style>
@@ -36,5 +40,16 @@ useTheme()
 .offline-banner svg {
   width: 1rem;
   height: 1rem;
+}
+
+/* Page transitions */
+.page-enter-active,
+.page-leave-active {
+  transition: opacity var(--duration-fast) var(--ease-out);
+}
+
+.page-enter-from,
+.page-leave-to {
+  opacity: 0;
 }
 </style>
