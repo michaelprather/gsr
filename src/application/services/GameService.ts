@@ -85,6 +85,35 @@ export class GameService {
     return updatedGame
   }
 
+  async unskipPlayer(playerId: string, roundIndex: number): Promise<Game> {
+    const game = await this.requireGame()
+    const player = this.getPlayer(game, playerId)
+    const round = this.getRound(game, roundIndex)
+
+    if (round.isLocked) {
+      throw new ValidationError(Feedback.fromRecord({ round: ['Round is locked'] }))
+    }
+
+    // Cannot unskip if player chose to skip all future rounds from an earlier round
+    if (player.skipFromRound !== null && player.skipFromRound < roundIndex) {
+      throw new ValidationError(
+        Feedback.fromRecord({ player: ['Cannot unskip player who chose to skip rest of game'] }),
+      )
+    }
+
+    // Set score back to pending
+    const updatedRound = round.setScore(player.id, RoundScore.pending())
+    let updatedGame = game.updateRound(roundIndex, updatedRound)
+
+    // If player skipFromRound equals this round, clear it (they're unskipping their "skip all" choice)
+    if (player.skipFromRound === roundIndex) {
+      updatedGame = updatedGame.updatePlayer(playerId, (p) => Player.hydrate(p.id, p.name, null))
+    }
+
+    await this.repo.save(updatedGame)
+    return updatedGame
+  }
+
   async lockRound(roundIndex: number): Promise<Game> {
     const game = await this.requireGame()
     const round = this.getRound(game, roundIndex)

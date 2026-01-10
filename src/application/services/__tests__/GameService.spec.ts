@@ -164,6 +164,54 @@ describe('GameService', () => {
     })
   })
 
+  describe('unskipPlayer', () => {
+    it('sets round score back to pending', async () => {
+      const game = await service.startGame(['Alice', 'Bob', 'Charlie'])
+      const charlieId = game.players[2]!.id.value
+
+      await service.skipPlayer(charlieId, 0, false)
+      const updated = await service.unskipPlayer(charlieId, 0)
+
+      const score = updated.rounds[0]?.getScore(updated.players[2]!.id)
+      expect(score?.type).toBe('pending')
+    })
+
+    it('clears skipFromRound when unskipping from the same round', async () => {
+      const game = await service.startGame(['Alice', 'Bob', 'Charlie'])
+      const charlieId = game.players[2]!.id.value
+
+      await service.skipPlayer(charlieId, 2, true)
+      expect((await repo.load())!.players[2]?.skipFromRound).toBe(2)
+
+      const updated = await service.unskipPlayer(charlieId, 2)
+
+      expect(updated.players[2]?.skipFromRound).toBeNull()
+    })
+
+    it('throws when trying to unskip from a later round after skip all', async () => {
+      const game = await service.startGame(['Alice', 'Bob', 'Charlie'])
+      const charlieId = game.players[2]!.id.value
+
+      await service.skipPlayer(charlieId, 2, true)
+
+      await expect(service.unskipPlayer(charlieId, 3)).rejects.toThrow(ValidationError)
+    })
+
+    it('throws for locked round', async () => {
+      const game = await service.startGame(['Alice', 'Bob', 'Charlie'])
+      const alice = game.players[0]!
+      const bob = game.players[1]!
+      const charlie = game.players[2]!
+
+      await service.setScore(alice.id.value, 0, 0)
+      await service.setScore(bob.id.value, 0, 25)
+      await service.skipPlayer(charlie.id.value, 0, false)
+      await service.lockRound(0)
+
+      await expect(service.unskipPlayer(charlie.id.value, 0)).rejects.toThrow(ValidationError)
+    })
+  })
+
   describe('lockRound', () => {
     it('locks a complete round', async () => {
       const game = await service.startGame(['Alice', 'Bob'])

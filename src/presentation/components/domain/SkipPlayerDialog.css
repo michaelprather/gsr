@@ -1,0 +1,101 @@
+.skip-player-dialog {
+  --skip-player-dialog-backdrop: var(--overlay);
+  --skip-player-dialog-bg: var(--surface-overlay);
+  --skip-player-dialog-border: var(--border);
+  --skip-player-dialog-shadow: var(--shadow-lg);
+  --skip-player-dialog-padding: var(--space-4);
+  --skip-player-dialog-radius: var(--radius-lg);
+  --skip-player-dialog-max-width: var(--size-96);
+
+  --skip-player-dialog-title-color: var(--text);
+
+  --skip-player-dialog-option-bg: var(--surface);
+  --skip-player-dialog-option-bg-hover: var(--surface-raised);
+  --skip-player-dialog-option-border: var(--border);
+  --skip-player-dialog-option-radius: var(--radius-md);
+
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-4);
+  background: var(--skip-player-dialog-backdrop);
+}
+
+.skip-player-dialog__panel {
+  width: 100%;
+  max-width: var(--skip-player-dialog-max-width);
+  padding: var(--skip-player-dialog-padding);
+  background: var(--skip-player-dialog-bg);
+  border: 1px solid var(--skip-player-dialog-border);
+  border-radius: var(--skip-player-dialog-radius);
+  box-shadow: var(--skip-player-dialog-shadow);
+}
+
+.skip-player-dialog__title {
+  margin: 0 0 var(--space-4);
+  font-size: var(--text-lg);
+  font-weight: var(--font-semibold);
+  color: var(--skip-player-dialog-title-color);
+  text-align: center;
+}
+
+.skip-player-dialog__options {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  margin-bottom: var(--space-4);
+}
+
+.skip-player-dialog__option {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+  width: 100%;
+  padding: var(--space-3) var(--space-4);
+  text-align: left;
+  background: var(--skip-player-dialog-option-bg);
+  border: 1px solid var(--skip-player-dialog-option-border);
+  border-radius: var(--skip-player-dialog-option-radius);
+  transition: background-color 0.15s ease;
+}
+
+.skip-player-dialog__option:hover {
+  background: var(--skip-player-dialog-option-bg-hover);
+}
+
+.skip-player-dialog__option:focus-visible {
+  outline: 2px solid var(--interactive);
+  outline-offset: 2px;
+}
+
+.skip-player-dialog__option-icon {
+  width: var(--icon-md);
+  height: var(--icon-md);
+  flex-shrink: 0;
+  margin-top: var(--space-1);
+  color: var(--text-muted);
+}
+
+.skip-player-dialog__option-content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.skip-player-dialog__option-label {
+  font-size: var(--text-base);
+  font-weight: var(--font-medium);
+  color: var(--text);
+}
+
+.skip-player-dialog__option-desc {
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+}
+
+.skip-player-dialog__actions {
+  display: flex;
+}

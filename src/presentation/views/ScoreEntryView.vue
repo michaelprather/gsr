@@ -5,9 +5,9 @@ import type { Game, Player, Round } from '@/domain'
 import { RoundScore, validateScore } from '@/domain'
 import { GameService } from '@/application'
 import { IndexedDBGameRepository } from '@/infrastructure'
-import { IconChevronLeft, IconChevronRight } from '../components/icons'
+import { IconChevronLeft, IconChevronRight, IconUserSlashOutline } from '../components/icons'
 import { UiButton, UiInput } from '../components/ui'
-import { RoundPicker } from '../components/domain'
+import { RoundPicker, SkipPlayerDialog } from '../components/domain'
 
 const router = useRouter()
 
@@ -20,6 +20,10 @@ const isLoading = ref(true)
 const loadError = ref<string | null>(null)
 const showRoundPicker = ref(false)
 
+// Skip dialog state
+const showSkipDialog = ref(false)
+const skipTargetPlayer = ref<Player | null>(null)
+
 // Local form state for each player's score input
 const scoreInputs = ref<Record<string, string>>({})
 const scoreErrors = ref<Record<string, string | null>>({})
@@ -27,11 +31,6 @@ const scoreErrors = ref<Record<string, string | null>>({})
 const currentRound = computed<Round | null>(() => {
   if (!game.value) return null
   return game.value.rounds[currentRoundIndex.value] ?? null
-})
-
-const activePlayers = computed<Player[]>(() => {
-  if (!game.value) return []
-  return game.value.players.filter((p) => !p.isSkippedAt(currentRoundIndex.value))
 })
 
 const canGoPrev = computed(() => currentRoundIndex.value > 0)
@@ -59,6 +58,12 @@ const playerTotals = computed<Record<string, number>>(() => {
   }
 
   return totals
+})
+
+// Get active (non-skipped) players for the current round
+const activePlayers = computed<Player[]>(() => {
+  if (!game.value) return []
+  return game.value.players.filter((p) => !isSkipped(p))
 })
 
 // Check if we should show the "winner required" hint
@@ -188,8 +193,88 @@ async function handleScoreBlur(playerId: string) {
   }
 }
 
+// Check if player is skipped for current round (either via skipFromRound OR round score)
 function isSkipped(player: Player): boolean {
-  return player.isSkippedAt(currentRoundIndex.value)
+  // Check if player chose "skip rest of game" from a previous/current round
+  if (player.isSkippedAt(currentRoundIndex.value)) {
+    return true
+  }
+
+  // Check if round score is marked as skipped (single round skip)
+  if (currentRound.value) {
+    const score = currentRound.value.getScore(player.id)
+    if (score && RoundScore.isSkipped(score)) {
+      return true
+    }
+  }
+
+  return false
+}
+
+// Check if player can be unskipped for this round
+function canUnskip(player: Player): boolean {
+  if (!currentRound.value || currentRound.value.isLocked) return false
+
+  // If player skipFromRound is set and < currentRoundIndex, they can't unskip
+  // (they chose to skip rest of game from a previous round)
+  if (player.skipFromRound !== null && player.skipFromRound < currentRoundIndex.value) {
+    return false
+  }
+
+  // Otherwise they can unskip (either single round skip, or they're on the round they chose to skip all)
+  return isSkipped(player)
+}
+
+// Open skip dialog for a player
+function openSkipDialog(player: Player) {
+  skipTargetPlayer.value = player
+  showSkipDialog.value = true
+}
+
+function closeSkipDialog() {
+  showSkipDialog.value = false
+  skipTargetPlayer.value = null
+}
+
+async function handleSkipRound() {
+  if (!skipTargetPlayer.value) return
+
+  try {
+    const updatedGame = await service.skipPlayer(
+      skipTargetPlayer.value.id.value,
+      currentRoundIndex.value,
+      false,
+    )
+    game.value = updatedGame
+    closeSkipDialog()
+  } catch {
+    // Error handling - could show toast
+  }
+}
+
+async function handleSkipAll() {
+  if (!skipTargetPlayer.value) return
+
+  try {
+    const updatedGame = await service.skipPlayer(
+      skipTargetPlayer.value.id.value,
+      currentRoundIndex.value,
+      true,
+    )
+    game.value = updatedGame
+    closeSkipDialog()
+  } catch {
+    // Error handling - could show toast
+  }
+}
+
+async function handleUnskip(player: Player) {
+  try {
+    const updatedGame = await service.unskipPlayer(player.id.value, currentRoundIndex.value)
+    game.value = updatedGame
+  } catch {
+    // Error handling - could show toast
+  }
 }
 </script>
 
@@ -247,21 +332,48 @@ function isSkipped(player: Player): boolean {
             </span>
           </div>
 
-          <div v-if="isSkipped(player)" class="score-entry-view__player-skipped">Skipped</div>
+          <template v-if="isSkipped(player)">
+            <div class="score-entry-view__player-skipped">
+              <IconUserSlashOutline class="score-entry-view__skipped-icon" />
+              <span>Skipped</span>
+            </div>
+            <UiButton
+              v-if="canUnskip(player)"
+              variant="secondary"
+              size="small"
+              block
+              class="score-entry-view__unskip-button"
+              @click="handleUnskip(player)"
+            >
+              Unskip
+            </UiButton>
+          </template>
 
-          <UiInput
-            v-else
-            v-model="scoreInputs[player.id.value]"
-            :label="`Score for ${player.name}`"
-            :hide-label="true"
-            type="number"
-            inputmode="numeric"
-            placeholder="—"
-            :disabled="currentRound.isLocked"
-            :error="scoreErrors[player.id.value]"
-            :center="true"
-            @blur="handleScoreBlur(player.id.value)"
-          />
+          <template v-else>
+            <div class="score-entry-view__score-row">
+              <UiInput
+                v-model="scoreInputs[player.id.value]"
+                :label="`Score for ${player.name}`"
+                :hide-label="true"
+                type="number"
+                inputmode="numeric"
+                placeholder="—"
+                :disabled="currentRound.isLocked"
+                :error="scoreErrors[player.id.value]"
+                :center="true"
+                @blur="handleScoreBlur(player.id.value)"
+              />
+              <UiButton
+                v-if="!currentRound.isLocked"
+                variant="ghost"
+                size="icon"
+                aria-label="Skip player"
+                @click="openSkipDialog(player)"
+              >
+                <IconUserSlashOutline />
+              </UiButton>
+            </div>
+          </template>
         </div>
       </div>
 
@@ -276,6 +388,14 @@ function isSkipped(player: Player): boolean {
       :current-index="currentRoundIndex"
       @select="selectRound"
       @close="showRoundPicker = false"
+    />
+
+    <SkipPlayerDialog
+      :open="showSkipDialog"
+      :player-name="skipTargetPlayer?.name ?? ''"
+      @skip-round="handleSkipRound"
+      @skip-all="handleSkipAll"
+      @close="closeSkipDialog"
     />
   </main>
 </template>
