@@ -1,5 +1,5 @@
 .app-brand {
-  --app-brand-size: 3rem;
+  --app-brand-size: 4.5rem;
 
   width: var(--app-brand-size);
   height: var(--app-brand-size);
@@ -8,5 +8,5 @@
 }
 
 .app-brand--small {
-  --app-brand-size: var(--icon-md);
+  --app-brand-size: var(--icon-lg);
 }
