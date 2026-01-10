@@ -142,12 +142,6 @@ const showWinnerHint = computed(() => {
   return !hasWinner
 })
 
-// Check if all players are skipped (for skip entire round)
-const allPlayersSkipped = computed(() => {
-  if (!game.value) return false
-  return game.value.players.every((p) => isSkipped(p))
-})
-
 onMounted(async () => {
   try {
     const loadedGame = await service.loadGame()
@@ -358,7 +352,7 @@ async function handleUnskip(player: Player) {
   }
 }
 
-// Skip entire round handler (skip all players)
+// Skip entire round handler (skip all players and proceed)
 async function handleSkipEntireRound() {
   if (!game.value) return
 
@@ -371,6 +365,11 @@ async function handleSkipEntireRound() {
       }
     }
     game.value = updatedGame
+
+    // Proceed to next round if available
+    if (canGoNext.value) {
+      currentRoundIndex.value++
+    }
   } catch {
     // Error handling - could show toast
   }
@@ -523,7 +522,6 @@ function openNewGameDialog() {
     <footer class="score-entry-view__footer">
       <div class="score-entry-view__footer-actions">
         <UiButton
-          v-if="!allPlayersSkipped"
           variant="secondary"
           @click="handleSkipEntireRound"
         >
