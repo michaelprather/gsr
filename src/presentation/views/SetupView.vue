@@ -1,13 +1,14 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
-import { useAction, useGameService } from '../composables'
+import { useAction, useGameService, useToast } from '../composables'
 import { UiButton, UiInput } from '../components/ui'
 import { AppBrand } from '../components/layout'
 import { IconPlus, IconTrash } from '../components/icons'
 
 const router = useRouter()
 const service = useGameService()
+const toast = useToast()
 
 const playerNames = ref<string[]>([])
 const newPlayerName = ref('')
@@ -35,7 +36,10 @@ function addPlayer() {
   const isDuplicate = playerNames.value.some(
     (existing) => existing.toLowerCase() === name.toLowerCase(),
   )
-  if (isDuplicate) return
+  if (isDuplicate) {
+    toast.error(`${name} is already in the game`)
+    return
+  }
 
   playerNames.value.push(name)
   newPlayerName.value = ''
