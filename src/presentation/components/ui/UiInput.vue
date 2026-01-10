@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, useId } from 'vue'
+import { computed, ref, useId } from 'vue'
 
 export interface UiInputProps {
   modelValue?: string
@@ -66,6 +66,14 @@ function handleInput(event: Event) {
 function handleBlur() {
   emit('blur')
 }
+
+const inputRef = ref<HTMLInputElement | null>(null)
+
+function focus() {
+  inputRef.value?.focus()
+}
+
+defineExpose({ focus })
 </script>
 
 <template>
@@ -74,6 +82,7 @@ function handleBlur() {
       {{ label }}
     </label>
     <input
+      ref="inputRef"
       :id="inputId"
       :type="type"
       :inputmode="inputmode"

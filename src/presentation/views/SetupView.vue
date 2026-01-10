@@ -18,6 +18,8 @@ const showNewGameConfirm = ref(false)
 
 const startGameAction = useAction(() => service.startGame(playerNames.value))
 
+const playerNameInputRef = ref<InstanceType<typeof UiInput> | null>(null)
+
 const canAddPlayer = computed(() => newPlayerName.value.trim().length > 0)
 const canStartGame = computed(() => playerNames.value.length >= 2)
 
@@ -27,6 +29,7 @@ onMounted(async () => {
     router.replace({ name: 'game' })
     return
   }
+  playerNameInputRef.value?.focus()
 })
 
 function addPlayer() {
@@ -40,6 +43,7 @@ function addPlayer() {
 
   playerNames.value.push(name)
   newPlayerName.value = ''
+  playerNameInputRef.value?.focus()
 }
 
 function removePlayer(index: number) {
@@ -79,6 +83,7 @@ function cancelNewGame() {
     <section class="setup-view__content">
       <div class="setup-view__input-group" @keydown="handleKeydown">
         <UiInput
+          ref="playerNameInputRef"
           v-model="newPlayerName"
           label="Player name"
           :hide-label="true"
