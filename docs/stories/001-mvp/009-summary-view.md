@@ -2,7 +2,8 @@
 story_id: "009"
 epic_id: "001"
 title: Summary View
-status: ready
+status: completed
+completed_date: 2026-01-10
 ---
 
 # Summary View
