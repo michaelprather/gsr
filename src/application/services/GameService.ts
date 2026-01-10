@@ -51,17 +51,22 @@ export class GameService {
   ): Promise<Game> {
     const game = await this.requireGame()
     const player = this.getPlayer(game, playerId)
-    const round = this.getRound(game, roundIndex)
 
     let updatedGame = game
 
-    // Mark score as skipped for this round
-    const updatedRound = round.setScore(player.id, RoundScore.skipped())
-    updatedGame = updatedGame.updateRound(roundIndex, updatedRound)
-
-    // If allFuture, also mark player to skip all future rounds
     if (allFuture) {
-      updatedGame = updatedGame.updatePlayer(playerId, (p) => p.skipFrom(roundIndex))
+      // Mark score as skipped for this round and all remaining rounds
+      for (let i = roundIndex; i < game.rounds.length; i++) {
+        const round = updatedGame.rounds[i]
+        if (!round) continue
+        const updatedRound = round.setScore(player.id, RoundScore.skipped())
+        updatedGame = updatedGame.updateRound(i, updatedRound)
+      }
+    } else {
+      // Mark score as skipped for this round only
+      const round = this.getRound(game, roundIndex)
+      const updatedRound = round.setScore(player.id, RoundScore.skipped())
+      updatedGame = updatedGame.updateRound(roundIndex, updatedRound)
     }
 
     await this.repo.save(updatedGame)
@@ -73,21 +78,9 @@ export class GameService {
     const player = this.getPlayer(game, playerId)
     const round = this.getRound(game, roundIndex)
 
-    // Cannot unskip if player chose to skip all future rounds from an earlier round
-    if (player.skipFromRound !== null && player.skipFromRound < roundIndex) {
-      throw new ValidationError(
-        Feedback.fromRecord({ player: ['Cannot unskip player who chose to skip rest of game'] }),
-      )
-    }
-
     // Set score back to pending
     const updatedRound = round.setScore(player.id, RoundScore.pending())
-    let updatedGame = game.updateRound(roundIndex, updatedRound)
-
-    // If player skipFromRound equals this round, clear it (they're unskipping their "skip all" choice)
-    if (player.skipFromRound === roundIndex) {
-      updatedGame = updatedGame.updatePlayer(playerId, (p) => Player.hydrate(p.id, p.name, null))
-    }
+    const updatedGame = game.updateRound(roundIndex, updatedRound)
 
     await this.repo.save(updatedGame)
     return updatedGame

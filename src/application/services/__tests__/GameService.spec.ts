@@ -128,13 +128,22 @@ describe('GameService', () => {
       expect(score?.type).toBe('skipped')
     })
 
-    it('marks player to skip all future rounds when allFuture is true', async () => {
+    it('marks all remaining rounds as skipped when allFuture is true', async () => {
       const game = await service.startGame(['Alice', 'Bob', 'Charlie'])
       const charlieId = game.players[2]!.id.value
+      const charlie = game.players[2]!
 
       const updated = await service.skipPlayer(charlieId, 2, true)
 
-      expect(updated.players[2]?.skipFromRound).toBe(2)
+      // Rounds 0 and 1 should not have skipped score
+      expect(updated.rounds[0]?.getScore(charlie.id)).toBeUndefined()
+      expect(updated.rounds[1]?.getScore(charlie.id)).toBeUndefined()
+
+      // Rounds 2-6 should all have skipped scores
+      for (let i = 2; i < 7; i++) {
+        const score = updated.rounds[i]?.getScore(charlie.id)
+        expect(score?.type).toBe('skipped')
+      }
     })
   })
 
@@ -150,25 +159,21 @@ describe('GameService', () => {
       expect(score?.type).toBe('pending')
     })
 
-    it('clears skipFromRound when unskipping from the same round', async () => {
+    it('allows unskipping individual rounds after skip all', async () => {
       const game = await service.startGame(['Alice', 'Bob', 'Charlie'])
       const charlieId = game.players[2]!.id.value
+      const charlie = game.players[2]!
 
-      await service.skipPlayer(charlieId, 2, true)
-      expect((await repo.load())!.players[2]?.skipFromRound).toBe(2)
-
-      const updated = await service.unskipPlayer(charlieId, 2)
-
-      expect(updated.players[2]?.skipFromRound).toBeNull()
-    })
-
-    it('throws when trying to unskip from a later round after skip all', async () => {
-      const game = await service.startGame(['Alice', 'Bob', 'Charlie'])
-      const charlieId = game.players[2]!.id.value
-
+      // Skip all from round 2
       await service.skipPlayer(charlieId, 2, true)
 
-      await expect(service.unskipPlayer(charlieId, 3)).rejects.toThrow(ValidationError)
+      // Unskip round 3 - should work
+      const updated = await service.unskipPlayer(charlieId, 3)
+
+      // Round 3 should be pending, others still skipped
+      expect(updated.rounds[3]?.getScore(charlie.id)?.type).toBe('pending')
+      expect(updated.rounds[2]?.getScore(charlie.id)?.type).toBe('skipped')
+      expect(updated.rounds[4]?.getScore(charlie.id)?.type).toBe('skipped')
     })
   })
 
