@@ -2,7 +2,7 @@
 story_id: "007"
 epic_id: "001"
 title: Player Skip Functionality
-status: ready
+status: completed
 ---
 
 # Player Skip Functionality
