@@ -19,17 +19,7 @@
 
 .setup-view__header {
   padding: var(--space-4) 0 var(--space-6);
-}
-
-.setup-view__title-row {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: var(--space-2);
-}
-
-.setup-view__theme-button {
-  color: var(--interactive);
+  text-align: center;
 }
 
 .setup-view__content {

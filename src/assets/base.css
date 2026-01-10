@@ -152,13 +152,6 @@ ol {
   --green-600: #16a34a;
   --green-700: #15803d;
 
-  /* Colors - Blue */
-  --blue-50: #eff6ff;
-  --blue-100: #dbeafe;
-  --blue-500: #3b82f6;
-  --blue-600: #2563eb;
-  --blue-700: #1d4ed8;
-
   /* Colors - Amber */
   --amber-50: #fffbeb;
   --amber-100: #fef3c7;
@@ -194,17 +187,17 @@ ol {
   /* Typography */
   --font-family: var(--font-family-system);
 
-  /* Surfaces - blue tinted (default theme) */
-  --surface: #f8faff;
-  --surface-raised: #f0f5ff;
+  /* Surfaces - violet tinted */
+  --surface: #faf8ff;
+  --surface-raised: #f5f0ff;
   --surface-overlay: var(--white);
   --surface-sunken: var(--gray-100);
-  --surface-accent: #e0eaff;
+  --surface-accent: #ebe0ff;
 
   /* Borders */
-  --border: #c7d7f5;
-  --border-muted: #dbe6fc;
-  --border-strong: #a3bfed;
+  --border: #d4c4f5;
+  --border-muted: #e6dcfc;
+  --border-strong: #b8a3ed;
 
   /* Text */
   --text: var(--gray-900);
@@ -213,16 +206,16 @@ ol {
   --text-inverse: var(--white);
   --text-on-interactive: var(--white);
 
-  /* Primary - blue (default theme) */
-  --primary: var(--blue-600);
-  --primary-hover: var(--blue-700);
-  --primary-muted: var(--blue-50);
+  /* Primary - violet */
+  --primary: var(--violet-600);
+  --primary-hover: var(--violet-700);
+  --primary-muted: var(--violet-50);
 
   /* Interactive */
   --interactive: var(--primary);
   --interactive-hover: var(--primary-hover);
-  --interactive-muted: #e8f0fe;
-  --interactive-muted-hover: #d4e3fc;
+  --interactive-muted: #f0e8fe;
+  --interactive-muted-hover: #e4d8fc;
 
   /* Success */
   --success: var(--green-600);
@@ -279,35 +272,35 @@ ol {
 
 @media (prefers-color-scheme: dark) {
   :root {
-    /* Surfaces - dark blue (default theme) */
-    --surface: #0a1628;
-    --surface-raised: #0f1f3d;
-    --surface-overlay: #142952;
+    /* Surfaces - deep violet */
+    --surface: #0d0a1a;
+    --surface-raised: #150f2d;
+    --surface-overlay: #1f1640;
     --surface-sunken: var(--black);
-    --surface-accent: #1a3566;
+    --surface-accent: #2a1f52;
 
     /* Borders */
-    --border: #2a4a7a;
-    --border-muted: #1e3a66;
-    --border-strong: #3b5c94;
+    --border: #3d2a7a;
+    --border-muted: #2a1f52;
+    --border-strong: #5040a0;
 
     /* Text */
-    --text: #f0f5ff;
-    --text-muted: #a3bfed;
-    --text-subtle: #7a9bd4;
-    --text-inverse: #0a1628;
+    --text: #f5f0ff;
+    --text-muted: #b8a3ed;
+    --text-subtle: #8a7ab8;
+    --text-inverse: #0d0a1a;
     --text-on-interactive: var(--white);
 
-    /* Primary - blue (default theme) */
-    --primary: var(--blue-500);
-    --primary-hover: var(--blue-400);
-    --primary-muted: rgba(59, 130, 246, 0.2);
+    /* Primary - violet */
+    --primary: var(--violet-500);
+    --primary-hover: var(--violet-400);
+    --primary-muted: rgba(139, 92, 246, 0.2);
 
     /* Interactive */
     --interactive: var(--primary);
     --interactive-hover: var(--primary-hover);
-    --interactive-muted: #1a3566;
-    --interactive-muted-hover: #2a4a7a;
+    --interactive-muted: #2a1f52;
+    --interactive-muted-hover: #3d2a7a;
 
     /* Success */
     --success: var(--green-500);
@@ -330,12 +323,12 @@ ol {
     /* Overlay */
     --overlay: rgba(0, 0, 0, 0.7);
 
-    /* Shadows - deeper for dark mode */
-    --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.2);
-    --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.25), 0 1px 2px rgba(0, 0, 0, 0.15);
-    --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.3), 0 2px 4px rgba(0, 0, 0, 0.2);
-    --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.35), 0 4px 6px rgba(0, 0, 0, 0.2);
-    --shadow-xl: 0 20px 25px rgba(0, 0, 0, 0.4), 0 8px 10px rgba(0, 0, 0, 0.25);
+    /* Shadows - violet tinted for dark mode */
+    --shadow-xs: 0 1px 2px rgba(13, 10, 26, 0.3);
+    --shadow-sm: 0 1px 2px rgba(13, 10, 26, 0.3);
+    --shadow-md: 0 2px 8px rgba(13, 10, 26, 0.4);
+    --shadow-lg: 0 4px 24px rgba(13, 10, 26, 0.5);
+    --shadow-xl: 0 8px 32px rgba(13, 10, 26, 0.6);
   }
 }
 

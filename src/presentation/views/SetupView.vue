@@ -3,13 +3,12 @@ import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { GameService } from '@/application'
 import { IndexedDBGameRepository } from '@/infrastructure'
-import { useAction, useTheme } from '../composables'
+import { useAction } from '../composables'
 import { UiButton, UiConfirmDialog, UiInput } from '../components/ui'
 import { AppBrand } from '../components/layout'
-import { IconPalette, IconPlus, IconTrash } from '../components/icons'
+import { IconPlus, IconTrash } from '../components/icons'
 
 const router = useRouter()
-const theme = useTheme()
 
 const repo = new IndexedDBGameRepository()
 const service = new GameService(repo)
@@ -79,19 +78,7 @@ function cancelNewGame() {
 <template>
   <main class="setup-view">
     <header class="setup-view__header">
-      <div class="setup-view__title-row">
-        <AppBrand />
-        <UiButton
-          variant="ghost"
-          size="small"
-          class="setup-view__theme-button"
-          :title="`Theme: ${theme.current.value}`"
-          aria-label="Change theme"
-          @click="theme.cycle"
-        >
-          <IconPalette />
-        </UiButton>
-      </div>
+      <AppBrand />
     </header>
 
     <section class="setup-view__content">

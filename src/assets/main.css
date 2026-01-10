@@ -1,6 +1,4 @@
 @import './base.css';
-@import './themes/violet.css';
-@import './themes/blue.css';
 @import './themes/contrast.css';
 
 #app {

@@ -1,70 +1,31 @@
 import { ref, readonly, onMounted, type DeepReadonly, type Ref } from 'vue'
 
-export type Theme = 'violet' | 'blue' | 'contrast'
+export type Theme = 'default' | 'contrast'
 
 export interface UseThemeReturn {
   current: DeepReadonly<Ref<Theme>>
-  themes: readonly Theme[]
-  set: (theme: Theme) => void
-  cycle: () => void
 }
 
-const STORAGE_KEY = 'gsr-theme'
-const DEFAULT_THEME: Theme = 'violet'
-const THEMES: readonly Theme[] = ['violet', 'blue', 'contrast'] as const
-
-const current = ref<Theme>(DEFAULT_THEME)
+const current = ref<Theme>('default')
 let initialized = false
 
 function applyTheme(theme: Theme): void {
-  document.documentElement.setAttribute('data-theme', theme)
+  if (theme === 'contrast') {
+    document.documentElement.setAttribute('data-theme', 'contrast')
+  } else {
+    document.documentElement.removeAttribute('data-theme')
+  }
 }
 
 function prefersHighContrast(): boolean {
   return window.matchMedia('(prefers-contrast: more)').matches
 }
 
-function loadFromStorage(): Theme | null {
-  try {
-    const saved = localStorage.getItem(STORAGE_KEY)
-    if (saved && THEMES.includes(saved as Theme)) {
-      return saved as Theme
-    }
-  } catch {
-    // localStorage unavailable
-  }
-  return null
-}
-
 function resolveTheme(): Theme {
-  const saved = loadFromStorage()
-  if (saved) return saved
-  if (prefersHighContrast()) return 'contrast'
-  return DEFAULT_THEME
-}
-
-function saveToStorage(theme: Theme): void {
-  try {
-    localStorage.setItem(STORAGE_KEY, theme)
-  } catch {
-    // localStorage unavailable
-  }
+  return prefersHighContrast() ? 'contrast' : 'default'
 }
 
 export function useTheme(): UseThemeReturn {
-  function set(theme: Theme): void {
-    current.value = theme
-    applyTheme(theme)
-    saveToStorage(theme)
-  }
-
-  function cycle(): void {
-    const currentIndex = THEMES.indexOf(current.value)
-    const nextIndex = (currentIndex + 1) % THEMES.length
-    const nextTheme = THEMES[nextIndex] ?? DEFAULT_THEME
-    set(nextTheme)
-  }
-
   onMounted(() => {
     if (!initialized) {
       const theme = resolveTheme()
@@ -76,8 +37,5 @@ export function useTheme(): UseThemeReturn {
 
   return {
     current: readonly(current),
-    themes: THEMES,
-    set,
-    cycle,
   }
 }
