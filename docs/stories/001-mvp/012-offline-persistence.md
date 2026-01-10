@@ -2,7 +2,8 @@
 story_id: "012"
 epic_id: "001"
 title: Offline Support and Resume
-status: ready
+status: completed
+completed_date: 2026-01-10
 ---
 
 # Offline Support and Resume
