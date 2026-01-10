@@ -1,38 +1,52 @@
 .ui-toast {
   --ui-toast-bg: var(--surface-overlay);
-  --ui-toast-border: var(--border);
   --ui-toast-color: var(--text);
-  --ui-toast-icon-color: var(--text-muted);
+  --ui-toast-accent: var(--primary);
+  --ui-toast-icon-color: var(--primary);
   --ui-toast-radius: var(--radius-lg);
-  --ui-toast-padding: var(--space-3) var(--space-4);
-  --ui-toast-shadow: var(--elevation-2);
-  --ui-toast-min-width: 200px;
-  --ui-toast-max-width: 360px;
+  --ui-toast-padding: var(--space-4);
+  --ui-toast-shadow: var(--elevation-3);
+  --ui-toast-min-width: 240px;
+  --ui-toast-max-width: 400px;
 
+  position: relative;
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: var(--space-3);
   min-width: var(--ui-toast-min-width);
   max-width: var(--ui-toast-max-width);
   padding: var(--ui-toast-padding);
+  padding-left: calc(var(--ui-toast-padding) + var(--space-1));
   color: var(--ui-toast-color);
   background: var(--ui-toast-bg);
-  border: 1px solid var(--ui-toast-border);
   border-radius: var(--ui-toast-radius);
   box-shadow: var(--ui-toast-shadow);
+  overflow: hidden;
+}
+
+.ui-toast__accent {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 4px;
+  background: var(--ui-toast-accent);
+  border-radius: var(--ui-toast-radius) 0 0 var(--ui-toast-radius);
 }
 
 .ui-toast__icon {
   flex-shrink: 0;
   width: var(--icon-md);
   height: var(--icon-md);
+  margin-top: 1px;
   color: var(--ui-toast-icon-color);
 }
 
 .ui-toast__message {
   flex: 1;
   font-size: var(--text-sm);
-  line-height: 1.4;
+  font-weight: var(--font-medium);
+  line-height: 1.5;
 }
 
 .ui-toast__dismiss {
@@ -42,10 +56,11 @@
   justify-content: center;
   width: var(--size-6);
   height: var(--size-6);
-  margin: calc(-1 * var(--space-1)) calc(-1 * var(--space-2)) calc(-1 * var(--space-1)) 0;
-  color: var(--text-muted);
-  border-radius: var(--radius-sm);
-  transition: color var(--duration-fast) var(--ease-out),
+  margin: -2px calc(-1 * var(--space-2)) -2px 0;
+  color: var(--text-subtle);
+  border-radius: var(--radius-md);
+  transition:
+    color var(--duration-fast) var(--ease-out),
     background var(--duration-fast) var(--ease-out);
 }
 
@@ -61,16 +76,16 @@
 
 /* Variants */
 .ui-toast--success {
-  --ui-toast-border: var(--success);
+  --ui-toast-accent: var(--success);
   --ui-toast-icon-color: var(--success);
 }
 
 .ui-toast--error {
-  --ui-toast-border: var(--error);
+  --ui-toast-accent: var(--error);
   --ui-toast-icon-color: var(--error);
 }
 
 .ui-toast--info {
-  --ui-toast-border: var(--primary);
+  --ui-toast-accent: var(--primary);
   --ui-toast-icon-color: var(--primary);
 }

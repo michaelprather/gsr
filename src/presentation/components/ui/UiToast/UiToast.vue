@@ -1,6 +1,11 @@
 <script setup lang="ts">
 import type { Toast } from '@/presentation/entities'
-import { IconXmark, IconCircleCheck } from '@/presentation/components/icons'
+import {
+  IconXmark,
+  IconCircleCheck,
+  IconCircleExclamation,
+  IconCircleInfo,
+} from '@/presentation/components/icons'
 
 export interface UiToastProps {
   toast: Toast
@@ -16,7 +21,10 @@ const emit = defineEmits<UiToastEmits>()
 
 <template>
   <div class="ui-toast" :class="`ui-toast--${toast.variant}`" role="alert">
+    <div class="ui-toast__accent" aria-hidden="true" />
     <IconCircleCheck v-if="toast.variant === 'success'" class="ui-toast__icon" aria-hidden="true" />
+    <IconCircleExclamation v-else-if="toast.variant === 'error'" class="ui-toast__icon" aria-hidden="true" />
+    <IconCircleInfo v-else class="ui-toast__icon" aria-hidden="true" />
     <span class="ui-toast__message">{{ toast.message }}</span>
     <button
       type="button"
