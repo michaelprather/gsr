@@ -2,7 +2,8 @@
 story_id: "015"
 epic_id: "002"
 title: Winner Celebration
-status: ready
+status: completed
+completed_date: 2026-01-10
 ---
 
 # Winner Celebration

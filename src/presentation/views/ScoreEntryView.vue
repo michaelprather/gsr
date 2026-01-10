@@ -2,10 +2,14 @@
 import { ref, computed, onMounted, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import type { Game, Player, Round } from '@/domain'
-import { RoundScore, validateRoundCompletion, validateScore } from '@/domain'
-import { GameService } from '@/application'
-import { IndexedDBGameRepository } from '@/infrastructure'
-import { useSwipe } from '../composables'
+import {
+  RoundScore,
+  calculatePlayerTotals,
+  findFirstInvalidRoundIndex,
+  validateRoundCompletion,
+  validateScore,
+} from '@/domain'
+import { useGameService, useNewGame, useSwipe } from '../composables'
 import {
   IconChevronLeft,
   IconChevronRight,
@@ -18,9 +22,8 @@ import { AppBrand } from '../components/layout'
 import { RoundPicker, SkipPlayerDialog } from '../components/domain'
 
 const router = useRouter()
-
-const repo = new IndexedDBGameRepository()
-const service = new GameService(repo)
+const service = useGameService()
+const newGame = useNewGame()
 
 const game = ref<Game | null>(null)
 const currentRoundIndex = ref(0)
@@ -34,9 +37,6 @@ const skipTargetPlayer = ref<Player | null>(null)
 
 // End game dialog state
 const showEndGameDialog = ref(false)
-
-// New game dialog state
-const showNewGameDialog = ref(false)
 
 // Swipe navigation
 const contentRef = ref<HTMLElement | null>(null)
@@ -97,21 +97,7 @@ const canEndGame = computed(() => {
 // Calculate cumulative totals for each player
 const playerTotals = computed<Record<string, number>>(() => {
   if (!game.value) return {}
-
-  const totals: Record<string, number> = {}
-
-  for (const player of game.value.players) {
-    let total = 0
-    for (const round of game.value.rounds) {
-      const score = round.getScore(player.id)
-      if (score && RoundScore.isEntered(score)) {
-        total += score.value.value
-      }
-    }
-    totals[player.id.value] = total
-  }
-
-  return totals
+  return calculatePlayerTotals(game.value)
 })
 
 // Get active (non-skipped) players for the current round
@@ -168,8 +154,18 @@ watch(currentRoundIndex, () => {
 })
 
 function initializeRoundIndex() {
-  // Start at round 0
-  currentRoundIndex.value = 0
+  if (!game.value) {
+    currentRoundIndex.value = 0
+    return
+  }
+
+  const invalidIndex = findFirstInvalidRoundIndex(game.value)
+  if (invalidIndex >= 0) {
+    currentRoundIndex.value = invalidIndex
+  } else {
+    // All rounds valid - go to last round
+    currentRoundIndex.value = game.value.rounds.length - 1
+  }
 }
 
 function initializeScoreInputs() {
@@ -398,20 +394,6 @@ async function handleEndGame() {
     // Error handling - could show toast
   }
 }
-
-async function handleNewGame() {
-  try {
-    await service.clearGame()
-    showNewGameDialog.value = false
-    router.push({ name: 'setup' })
-  } catch {
-    // Error handling - could show toast
-  }
-}
-
-function openNewGameDialog() {
-  showNewGameDialog.value = true
-}
 </script>
 
 <template>
@@ -428,7 +410,7 @@ function openNewGameDialog() {
           size="icon"
           aria-label="New game"
           title="New game"
-          @click="openNewGameDialog"
+          @click="newGame.openDialog"
         >
           <IconPlus />
         </UiButton>
@@ -578,13 +560,13 @@ function openNewGameDialog() {
     />
 
     <UiConfirmDialog
-      :open="showNewGameDialog"
+      :open="newGame.showDialog.value"
       title="Start New Game"
       message="This will end your current game. All scores will be lost."
       confirm-label="New Game"
       :destructive="true"
-      @confirm="handleNewGame"
-      @cancel="showNewGameDialog = false"
+      @confirm="newGame.confirm"
+      @cancel="newGame.closeDialog"
     />
   </main>
 </template>

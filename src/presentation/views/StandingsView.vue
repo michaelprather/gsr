@@ -2,10 +2,8 @@
 import { ref, computed, onMounted } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import type { Game } from '@/domain'
-import { validateRoundCompletion, calculateRankings } from '@/domain'
-import { GameService } from '@/application'
-import { IndexedDBGameRepository } from '@/infrastructure'
-import { useOrientation } from '../composables'
+import { calculateRankings, findFirstInvalidRoundIndex } from '@/domain'
+import { useGameService, useNewGame, useOrientation } from '../composables'
 import { IconChevronLeft, IconPlus } from '../components/icons'
 import { UiButton, UiConfirmDialog } from '../components/ui'
 import { AppBrand } from '../components/layout'
@@ -15,14 +13,12 @@ import type { Winner } from '../components/domain'
 const router = useRouter()
 const route = useRoute()
 const { orientation } = useOrientation()
-
-const repo = new IndexedDBGameRepository()
-const service = new GameService(repo)
+const service = useGameService()
+const newGame = useNewGame()
 
 const game = ref<Game | null>(null)
 const isLoading = ref(true)
 const loadError = ref<string | null>(null)
-const showNewGameDialog = ref(false)
 const showCelebration = ref(false)
 const celebrationDismissed = ref(false)
 
@@ -47,13 +43,9 @@ const shouldShowCelebration = computed(() => {
 const currentRoundNumber = computed(() => {
   if (!game.value) return 1
 
-  for (let i = 0; i < game.value.rounds.length; i++) {
-    const round = game.value.rounds[i]
-    if (!round) continue
-    const feedback = validateRoundCompletion(round, i, game.value.players)
-    if (feedback.hasFeedback) {
-      return i + 1
-    }
+  const invalidIndex = findFirstInvalidRoundIndex(game.value)
+  if (invalidIndex >= 0) {
+    return invalidIndex + 1
   }
 
   return game.value.rounds.length
@@ -107,16 +99,6 @@ async function handleEditScores() {
     // Error handling - could show toast
   }
 }
-
-async function handleNewGame() {
-  try {
-    await service.clearGame()
-    showNewGameDialog.value = false
-    router.push({ name: 'setup' })
-  } catch {
-    // Error handling - could show toast
-  }
-}
 </script>
 
 <template>
@@ -133,7 +115,7 @@ async function handleNewGame() {
           size="icon"
           aria-label="New game"
           title="New game"
-          @click="showNewGameDialog = true"
+          @click="newGame.openDialog"
         >
           <IconPlus />
         </UiButton>
@@ -169,13 +151,13 @@ async function handleNewGame() {
     </section>
 
     <UiConfirmDialog
-      :open="showNewGameDialog"
+      :open="newGame.showDialog.value"
       title="Start New Game"
       message="This will end your current game. All scores will be lost."
       confirm-label="New Game"
       :destructive="true"
-      @confirm="handleNewGame"
-      @cancel="showNewGameDialog = false"
+      @confirm="newGame.confirm"
+      @cancel="newGame.closeDialog"
     />
 
     <WinnerCelebration

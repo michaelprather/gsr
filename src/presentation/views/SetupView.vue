@@ -1,21 +1,16 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
-import { GameService } from '@/application'
-import { IndexedDBGameRepository } from '@/infrastructure'
-import { useAction } from '../composables'
-import { UiButton, UiConfirmDialog, UiInput } from '../components/ui'
+import { useAction, useGameService } from '../composables'
+import { UiButton, UiInput } from '../components/ui'
 import { AppBrand } from '../components/layout'
 import { IconPlus, IconTrash } from '../components/icons'
 
 const router = useRouter()
-
-const repo = new IndexedDBGameRepository()
-const service = new GameService(repo)
+const service = useGameService()
 
 const playerNames = ref<string[]>([])
 const newPlayerName = ref('')
-const showNewGameConfirm = ref(false)
 
 const startGameAction = useAction(() => service.startGame(playerNames.value))
 
@@ -62,16 +57,6 @@ function handleKeydown(event: KeyboardEvent) {
   if (event.key === 'Enter') {
     addPlayer()
   }
-}
-
-async function confirmNewGame() {
-  await service.clearGame()
-  playerNames.value = []
-  showNewGameConfirm.value = false
-}
-
-function cancelNewGame() {
-  showNewGameConfirm.value = false
 }
 </script>
 
@@ -147,17 +132,6 @@ function cancelNewGame() {
         {{ startGameAction.state.value.isPending ? 'Starting...' : 'Start Game' }}
       </UiButton>
     </footer>
-
-    <UiConfirmDialog
-      :open="showNewGameConfirm"
-      title="Start New Game?"
-      message="This will end your current game. All progress will be lost."
-      confirm-label="Start New"
-      cancel-label="Keep Playing"
-      :destructive="true"
-      @confirm="confirmNewGame"
-      @cancel="cancelNewGame"
-    />
   </main>
 </template>
 
