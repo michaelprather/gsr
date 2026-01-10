@@ -7,7 +7,6 @@
   --score-entry-view-round-indicator-color: var(--text-muted);
 
   --score-entry-view-player-bg: var(--surface-raised);
-  --score-entry-view-player-bg-locked: var(--surface);
   --score-entry-view-player-border: var(--border);
   --score-entry-view-player-radius: var(--radius-md);
 
@@ -17,11 +16,7 @@
   --score-entry-view-hint-color: var(--warning);
   --score-entry-view-hint-border: var(--warning);
 
-  --score-entry-view-error-bg: var(--destructive-muted);
-  --score-entry-view-error-color: var(--destructive);
-  --score-entry-view-error-border: var(--destructive);
-
-  --score-entry-view-lock-icon-color: var(--text-muted);
+  --score-entry-view-complete-icon-color: var(--success);
 
   --score-entry-view-footer-bg: var(--surface);
   --score-entry-view-footer-border: var(--border);
@@ -59,6 +54,14 @@
   font-size: var(--text-xl);
   font-weight: var(--font-semibold);
   color: var(--score-entry-view-round-type-color);
+}
+
+.score-entry-view__complete-icon {
+  width: var(--icon-sm);
+  height: var(--icon-sm);
+  margin-left: var(--space-2);
+  color: var(--score-entry-view-complete-icon-color);
+  vertical-align: middle;
 }
 
 .score-entry-view__round-indicator {
@@ -102,10 +105,6 @@
   background: var(--score-entry-view-player-bg);
   border: 1px solid var(--score-entry-view-player-border);
   border-radius: var(--score-entry-view-player-radius);
-}
-
-.score-entry-view__player-card--locked {
-  background: var(--score-entry-view-player-bg-locked);
 }
 
 .score-entry-view__player-header {
@@ -182,24 +181,6 @@
   color: var(--text-muted);
 }
 
-.score-entry-view__lock-icon {
-  width: var(--icon-sm);
-  height: var(--icon-sm);
-  margin-left: var(--space-2);
-  color: var(--score-entry-view-lock-icon-color);
-  vertical-align: middle;
-}
-
-.score-entry-view__lock-error {
-  margin-top: var(--space-4);
-  padding: var(--space-3) var(--space-4);
-  font-size: var(--text-sm);
-  color: var(--score-entry-view-error-color);
-  background: var(--score-entry-view-error-bg);
-  border: 1px solid var(--score-entry-view-error-border);
-  border-radius: var(--radius-md);
-}
-
 .score-entry-view__footer {
   position: sticky;
   bottom: 0;
@@ -216,6 +197,6 @@
   margin: 0 auto;
 }
 
-.score-entry-view__footer-actions .ui-button:last-child {
+.score-entry-view__footer-actions .ui-button {
   flex: 1;
 }

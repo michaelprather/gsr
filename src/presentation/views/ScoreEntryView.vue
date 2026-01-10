@@ -2,18 +2,16 @@
 import { ref, computed, onMounted, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import type { Game, Player, Round } from '@/domain'
-import { RoundScore, validateScore } from '@/domain'
-import { ValidationError } from '@/core'
+import { RoundScore, validateRoundCompletion, validateScore } from '@/domain'
 import { GameService } from '@/application'
 import { IndexedDBGameRepository } from '@/infrastructure'
 import {
   IconChevronLeft,
   IconChevronRight,
+  IconCircleCheck,
   IconUserSlashOutline,
-  IconLock,
-  IconLockOpen,
 } from '../components/icons'
-import { UiButton, UiInput, UiConfirmDialog } from '../components/ui'
+import { UiButton, UiInput } from '../components/ui'
 import { RoundPicker, SkipPlayerDialog } from '../components/domain'
 
 const router = useRouter()
@@ -31,13 +29,6 @@ const showRoundPicker = ref(false)
 const showSkipDialog = ref(false)
 const skipTargetPlayer = ref<Player | null>(null)
 
-// Unlock confirmation dialog state
-const showUnlockDialog = ref(false)
-
-// Lock action state
-const lockError = ref<string | null>(null)
-const isLocking = ref(false)
-
 // Local form state for each player's score input
 const scoreInputs = ref<Record<string, string>>({})
 const scoreErrors = ref<Record<string, string | null>>({})
@@ -53,7 +44,18 @@ const canGoNext = computed(() => {
   return currentRoundIndex.value < game.value.rounds.length - 1
 })
 
-// Calculate cumulative totals for each player (locked rounds only)
+// Check if current round is complete (all scores entered + one winner)
+const isRoundComplete = computed(() => {
+  if (!game.value || !currentRound.value) return false
+  const feedback = validateRoundCompletion(
+    currentRound.value,
+    currentRoundIndex.value,
+    game.value.players,
+  )
+  return !feedback.hasFeedback
+})
+
+// Calculate cumulative totals for each player
 const playerTotals = computed<Record<string, number>>(() => {
   if (!game.value) return {}
 
@@ -62,7 +64,6 @@ const playerTotals = computed<Record<string, number>>(() => {
   for (const player of game.value.players) {
     let total = 0
     for (const round of game.value.rounds) {
-      if (!round.isLocked) continue
       const score = round.getScore(player.id)
       if (score && RoundScore.isEntered(score)) {
         total += score.value.value
@@ -82,7 +83,7 @@ const activePlayers = computed<Player[]>(() => {
 
 // Check if we should show the "winner required" hint
 const showWinnerHint = computed(() => {
-  if (!currentRound.value || currentRound.value.isLocked) return false
+  if (!currentRound.value) return false
 
   const activePlayerIds = activePlayers.value.map((p) => p.id.value)
   if (activePlayerIds.length === 0) return false
@@ -127,20 +128,14 @@ onMounted(async () => {
   }
 })
 
-// When round changes, re-initialize score inputs and clear lock error
+// When round changes, re-initialize score inputs
 watch(currentRoundIndex, () => {
   initializeScoreInputs()
-  lockError.value = null
 })
 
 function initializeRoundIndex() {
-  if (!game.value) return
-
-  // Find first unlocked round, or stay at 0
-  const firstUnlockedIndex = game.value.rounds.findIndex((r) => !r.isLocked)
-  if (firstUnlockedIndex !== -1) {
-    currentRoundIndex.value = firstUnlockedIndex
-  }
+  // Start at round 0
+  currentRoundIndex.value = 0
 }
 
 function initializeScoreInputs() {
@@ -185,7 +180,6 @@ async function handleScoreBlur(playerId: string) {
 
   // Clear error first
   scoreErrors.value[playerId] = null
-  lockError.value = null
 
   // Empty input is valid (just means no score entered yet)
   if (inputValue === '' || inputValue === undefined) {
@@ -235,7 +229,7 @@ function isSkipped(player: Player): boolean {
 
 // Check if player can be unskipped for this round
 function canUnskip(player: Player): boolean {
-  if (!currentRound.value || currentRound.value.isLocked) return false
+  if (!currentRound.value) return false
 
   // If player skipFromRound is set and < currentRoundIndex, they can't unskip
   // (they chose to skip rest of game from a previous round)
@@ -299,51 +293,9 @@ async function handleUnskip(player: Player) {
   }
 }
 
-// Lock round handler
-async function handleLockRound() {
-  lockError.value = null
-  isLocking.value = true
-
-  try {
-    const updatedGame = await service.lockRound(currentRoundIndex.value)
-    game.value = updatedGame
-
-    // Auto-advance to next unlocked round if available
-    if (canGoNext.value) {
-      currentRoundIndex.value++
-    }
-  } catch (e) {
-    if (e instanceof ValidationError) {
-      // Extract user-friendly error message
-      const roundErrors = e.feedback.get('round')
-      const completionErrors = e.feedback.get('completion')
-      lockError.value = completionErrors?.[0] ?? roundErrors?.[0] ?? 'Cannot lock round'
-    } else {
-      lockError.value = 'Failed to lock round'
-    }
-  } finally {
-    isLocking.value = false
-  }
-}
-
-// Unlock round handler (called after confirmation)
-async function handleUnlockRound() {
-  showUnlockDialog.value = false
-
-  try {
-    const updatedGame = await service.unlockRound(currentRoundIndex.value)
-    game.value = updatedGame
-  } catch {
-    // Error handling - could show toast
-  }
-}
-
-// Skip entire round handler (skip all players then lock)
+// Skip entire round handler (skip all players)
 async function handleSkipEntireRound() {
   if (!game.value) return
-
-  lockError.value = null
-  isLocking.value = true
 
   try {
     // Skip all non-skipped players for this round
@@ -353,24 +305,14 @@ async function handleSkipEntireRound() {
         updatedGame = await service.skipPlayer(player.id.value, currentRoundIndex.value, false)
       }
     }
-
-    // Now lock the round (all players are skipped, validation should pass)
-    updatedGame = await service.lockRound(currentRoundIndex.value)
     game.value = updatedGame
-
-    // Auto-advance to next round if available
-    if (canGoNext.value) {
-      currentRoundIndex.value++
-    }
-  } catch (e) {
-    if (e instanceof ValidationError) {
-      lockError.value = e.feedback.get('completion')?.[0] ?? 'Cannot skip round'
-    } else {
-      lockError.value = 'Failed to skip round'
-    }
-  } finally {
-    isLocking.value = false
+  } catch {
+    // Error handling - could show toast
   }
+}
+
+function goToSummary() {
+  router.push({ name: 'summary' })
 }
 </script>
 
@@ -394,7 +336,11 @@ async function handleSkipEntireRound() {
       <div class="score-entry-view__round-info">
         <h1 class="score-entry-view__round-type">
           {{ currentRound.type.displayName }}
-          <IconLock v-if="currentRound.isLocked" class="score-entry-view__lock-icon" />
+          <IconCircleCheck
+            v-if="isRoundComplete"
+            class="score-entry-view__complete-icon"
+            aria-label="Round complete"
+          />
         </h1>
         <button
           type="button"
@@ -423,7 +369,6 @@ async function handleSkipEntireRound() {
           v-for="player in game.players"
           :key="player.id.value"
           class="score-entry-view__player-card"
-          :class="{ 'score-entry-view__player-card--locked': currentRound.isLocked }"
         >
           <div class="score-entry-view__player-header">
             <span class="score-entry-view__player-name">{{ player.name }}</span>
@@ -458,13 +403,12 @@ async function handleSkipEntireRound() {
                 type="number"
                 inputmode="numeric"
                 placeholder="—"
-                :disabled="currentRound.isLocked"
+                :step="5"
                 :error="scoreErrors[player.id.value]"
                 :center="true"
                 @blur="handleScoreBlur(player.id.value)"
               />
               <UiButton
-                v-if="!currentRound.isLocked"
                 variant="ghost"
                 size="icon"
                 aria-label="Skip player"
@@ -480,40 +424,25 @@ async function handleSkipEntireRound() {
       <div v-if="showWinnerHint" class="score-entry-view__hint" role="alert">
         One player must have a score of 0 (round winner)
       </div>
-
-      <div v-if="lockError" class="score-entry-view__lock-error" role="alert">
-        {{ lockError }}
-      </div>
     </section>
 
     <footer class="score-entry-view__footer">
-      <template v-if="currentRound.isLocked">
-        <UiButton variant="secondary" block @click="showUnlockDialog = true">
-          <IconLockOpen />
-          Unlock Round
+      <div class="score-entry-view__footer-actions">
+        <UiButton
+          v-if="!allPlayersSkipped"
+          variant="secondary"
+          @click="handleSkipEntireRound"
+        >
+          Skip Round
         </UiButton>
-      </template>
-      <template v-else>
-        <div class="score-entry-view__footer-actions">
-          <UiButton
-            v-if="!allPlayersSkipped"
-            variant="secondary"
-            :disabled="isLocking"
-            @click="handleSkipEntireRound"
-          >
-            Skip Round
-          </UiButton>
-          <UiButton :disabled="isLocking" :loading="isLocking" block @click="handleLockRound">
-            <IconLock />
-            Lock Round
-          </UiButton>
-        </div>
-      </template>
+        <UiButton variant="primary" @click="goToSummary">Standings</UiButton>
+      </div>
     </footer>
 
     <RoundPicker
       :open="showRoundPicker"
       :rounds="game.rounds"
+      :players="game.players"
       :current-index="currentRoundIndex"
       @select="selectRound"
       @close="showRoundPicker = false"
@@ -525,16 +454,6 @@ async function handleSkipEntireRound() {
       @skip-round="handleSkipRound"
       @skip-all="handleSkipAll"
       @close="closeSkipDialog"
-    />
-
-    <UiConfirmDialog
-      :open="showUnlockDialog"
-      title="Unlock Round?"
-      message="This will allow scores to be edited again. Are you sure you want to unlock this round?"
-      confirm-label="Unlock"
-      cancel-label="Cancel"
-      @confirm="handleUnlockRound"
-      @cancel="showUnlockDialog = false"
     />
   </main>
 </template>
