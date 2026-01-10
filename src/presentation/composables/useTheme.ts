@@ -20,7 +20,11 @@ function applyTheme(theme: Theme): void {
   document.documentElement.setAttribute('data-theme', theme)
 }
 
-function loadFromStorage(): Theme {
+function prefersHighContrast(): boolean {
+  return window.matchMedia('(prefers-contrast: more)').matches
+}
+
+function loadFromStorage(): Theme | null {
   try {
     const saved = localStorage.getItem(STORAGE_KEY)
     if (saved && THEMES.includes(saved as Theme)) {
@@ -29,6 +33,13 @@ function loadFromStorage(): Theme {
   } catch {
     // localStorage unavailable
   }
+  return null
+}
+
+function resolveTheme(): Theme {
+  const saved = loadFromStorage()
+  if (saved) return saved
+  if (prefersHighContrast()) return 'contrast'
   return DEFAULT_THEME
 }
 
@@ -56,9 +67,9 @@ export function useTheme(): UseThemeReturn {
 
   onMounted(() => {
     if (!initialized) {
-      const saved = loadFromStorage()
-      current.value = saved
-      applyTheme(saved)
+      const theme = resolveTheme()
+      current.value = theme
+      applyTheme(theme)
       initialized = true
     }
   })
