@@ -28,14 +28,6 @@ describe('Game', () => {
       const game = Game.create(['Alice', 'Bob'])
       expect(game.isEnded).toBe(false)
     })
-
-    it('throws for fewer than 2 players', () => {
-      expect(() => Game.create(['Alice'])).toThrow('Game requires at least 2 players')
-    })
-
-    it('throws for empty player list', () => {
-      expect(() => Game.create([])).toThrow('Game requires at least 2 players')
-    })
   })
 
   describe('updateRound', () => {

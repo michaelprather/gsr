@@ -16,7 +16,7 @@
   --round-picker-item-color-active: var(--text-inverse);
   --round-picker-item-radius: var(--radius-md);
 
-  --round-picker-locked-color: var(--text-subtle);
+  --round-picker-complete-color: var(--success);
 
   position: fixed;
   inset: 0;
@@ -100,7 +100,7 @@
 .round-picker__item-status {
   display: flex;
   align-items: center;
-  color: var(--round-picker-locked-color);
+  color: var(--round-picker-complete-color);
 }
 
 .round-picker__item--active .round-picker__item-status {

@@ -64,7 +64,7 @@ describe('IndexedDBGameRepository', () => {
     const playerId = game.players[0]?.id
     expect(playerId).toBeDefined()
 
-    const round = game.rounds[0]!.setScore(playerId!, RoundScore.entered(Score.create(50))).lock()
+    const round = game.rounds[0]!.setScore(playerId!, RoundScore.entered(Score.create(50)))
     const updatedGame = game.updateRound(0, round)
 
     await repository.save(updatedGame)
@@ -72,7 +72,6 @@ describe('IndexedDBGameRepository', () => {
 
     const loadedRound = loaded!.rounds[0]
     expect(loadedRound).toBeDefined()
-    expect(loadedRound!.isLocked).toBe(true)
 
     const score = loadedRound!.getScore(loaded!.players[0]!.id)
     expect(score?.type).toBe('entered')

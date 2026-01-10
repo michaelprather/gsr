@@ -60,17 +60,6 @@ describe('GameMapper', () => {
     expect(bobScore?.type).toBe('skipped')
   })
 
-  it('preserves locked round state', () => {
-    const game = Game.create(['Alice', 'Bob'])
-    const lockedRound = game.rounds[0]!.lock()
-    const updatedGame = game.updateRound(0, lockedRound)
-
-    const dto = mapper.toDTO(updatedGame)
-    const restored = mapper.toDomain(dto)
-
-    expect(restored.rounds[0]?.isLocked).toBe(true)
-  })
-
   it('preserves ended game state', () => {
     const game = Game.create(['Alice', 'Bob']).end()
 

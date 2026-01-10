@@ -1,16 +1,22 @@
 import { describe, it, expect } from 'vitest'
 import { mount } from '@vue/test-utils'
 import RoundPicker from '../RoundPicker.vue'
-import { Round, RoundType } from '@/domain'
+import { Game, Round, RoundType, RoundScore, Score } from '@/domain'
 
 describe('RoundPicker', () => {
   function createMockRounds(): Round[] {
     return RoundType.all().map((type) => Round.create(type))
   }
 
+  function createMockPlayers() {
+    const game = Game.create(['Alice', 'Bob'])
+    return game.players
+  }
+
   const defaultProps = {
     open: true,
     rounds: createMockRounds(),
+    players: createMockPlayers(),
     currentIndex: 0,
   }
 
@@ -145,20 +151,28 @@ describe('RoundPicker', () => {
     expect(wrapper.emitted('close')).toHaveLength(1)
   })
 
-  it('shows lock icon for locked rounds', () => {
+  it('shows checkmark for complete rounds', () => {
+    const players = createMockPlayers()
     const rounds = createMockRounds()
-    const lockedRounds = [rounds[0]!.lock(), rounds[1]!.lock(), ...rounds.slice(2)]
+
+    // Complete round 0: both players have scores, one has 0
+    const completeRound = rounds[0]!
+      .setScore(players[0]!.id, RoundScore.entered(Score.create(0)))
+      .setScore(players[1]!.id, RoundScore.entered(Score.create(25)))
+
+    const roundsWithComplete = [completeRound, ...rounds.slice(1)]
 
     const wrapper = mount(RoundPicker, {
       props: {
         ...defaultProps,
-        rounds: lockedRounds,
+        rounds: roundsWithComplete,
+        players,
       },
       ...mountOptions,
     })
 
     const statusIcons = wrapper.findAll('.round-picker__item-status')
-    expect(statusIcons).toHaveLength(2)
+    expect(statusIcons).toHaveLength(1)
   })
 
   it('has proper accessibility attributes on dialog', () => {

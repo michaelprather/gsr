@@ -9,7 +9,6 @@ describe('Round', () => {
     it('creates round with type and no scores', () => {
       const round = Round.create(roundType)
       expect(round.type.name).toBe('twoBooks')
-      expect(round.isLocked).toBe(false)
       expect(round.scores.size).toBe(0)
     })
   })
@@ -33,15 +32,6 @@ describe('Round', () => {
 
       expect(round.scores.size).toBe(0)
     })
-
-    it('throws when round is locked', () => {
-      const playerId = PlayerId.generate()
-      const round = Round.create(roundType).lock()
-
-      expect(() => round.setScore(playerId, RoundScore.entered(Score.create(25)))).toThrow(
-        'Cannot modify scores on a locked round',
-      )
-    })
   })
 
   describe('getScore', () => {
@@ -60,26 +50,6 @@ describe('Round', () => {
       const retrieved = round.getScore(playerId)
       expect(retrieved?.type).toBe('entered')
       expect(retrieved?.type === 'entered' && retrieved.value.value).toBe(50)
-    })
-  })
-
-  describe('lock/unlock', () => {
-    it('locks round', () => {
-      const round = Round.create(roundType)
-      const locked = round.lock()
-      expect(locked.isLocked).toBe(true)
-    })
-
-    it('unlocks round', () => {
-      const round = Round.create(roundType).lock()
-      const unlocked = round.unlock()
-      expect(unlocked.isLocked).toBe(false)
-    })
-
-    it('does not mutate original', () => {
-      const round = Round.create(roundType)
-      round.lock()
-      expect(round.isLocked).toBe(false)
     })
   })
 })

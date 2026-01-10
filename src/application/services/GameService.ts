@@ -1,14 +1,5 @@
 import { Feedback, ValidationError } from '@/core'
-import {
-  Game,
-  Player,
-  Round,
-  RoundScore,
-  Score,
-  validatePlayerNames,
-  validateScore,
-  validateRoundCompletion,
-} from '@/domain'
+import { Game, Player, Round, RoundScore, Score, validatePlayerNames, validateScore } from '@/domain'
 import type { GameRepository } from '@/domain'
 
 export class GameService {
@@ -39,10 +30,6 @@ export class GameService {
       throw new ValidationError(scoreFeedback)
     }
 
-    if (round.isLocked) {
-      throw new ValidationError(Feedback.fromRecord({ round: ['Round is locked'] }))
-    }
-
     if (player.isSkippedAt(roundIndex)) {
       throw new ValidationError(
         Feedback.fromRecord({ player: ['Player is skipped for this round'] }),
@@ -66,10 +53,6 @@ export class GameService {
     const player = this.getPlayer(game, playerId)
     const round = this.getRound(game, roundIndex)
 
-    if (round.isLocked) {
-      throw new ValidationError(Feedback.fromRecord({ round: ['Round is locked'] }))
-    }
-
     let updatedGame = game
 
     // Mark score as skipped for this round
@@ -89,10 +72,6 @@ export class GameService {
     const game = await this.requireGame()
     const player = this.getPlayer(game, playerId)
     const round = this.getRound(game, roundIndex)
-
-    if (round.isLocked) {
-      throw new ValidationError(Feedback.fromRecord({ round: ['Round is locked'] }))
-    }
 
     // Cannot unskip if player chose to skip all future rounds from an earlier round
     if (player.skipFromRound !== null && player.skipFromRound < roundIndex) {
@@ -114,62 +93,11 @@ export class GameService {
     return updatedGame
   }
 
-  async lockRound(roundIndex: number): Promise<Game> {
-    const game = await this.requireGame()
-    const round = this.getRound(game, roundIndex)
-
-    if (round.isLocked) {
-      throw new ValidationError(Feedback.fromRecord({ round: ['Round is already locked'] }))
-    }
-
-    // Validate round completion before locking
-    const completionFeedback = validateRoundCompletion(round, roundIndex, game.players)
-    if (completionFeedback.hasFeedback) {
-      throw new ValidationError(completionFeedback)
-    }
-
-    const updatedRound = round.lock()
-    const updatedGame = game.updateRound(roundIndex, updatedRound)
-
-    await this.repo.save(updatedGame)
-    return updatedGame
-  }
-
-  async unlockRound(roundIndex: number): Promise<Game> {
-    const game = await this.requireGame()
-    const round = this.getRound(game, roundIndex)
-
-    if (!round.isLocked) {
-      throw new ValidationError(Feedback.fromRecord({ round: ['Round is not locked'] }))
-    }
-
-    if (game.isEnded) {
-      throw new ValidationError(Feedback.fromRecord({ game: ['Cannot unlock round in ended game'] }))
-    }
-
-    const updatedRound = round.unlock()
-    const updatedGame = game.updateRound(roundIndex, updatedRound)
-
-    await this.repo.save(updatedGame)
-    return updatedGame
-  }
-
   async endGame(): Promise<Game> {
     const game = await this.requireGame()
 
     if (game.isEnded) {
       throw new ValidationError(Feedback.fromRecord({ game: ['Game is already ended'] }))
-    }
-
-    // Validate all rounds are locked
-    const unlockedRounds = game.rounds
-      .map((r, i) => ({ round: r, index: i }))
-      .filter(({ round }) => !round.isLocked)
-
-    if (unlockedRounds.length > 0) {
-      throw new ValidationError(
-        Feedback.fromRecord({ game: ['All rounds must be locked before ending the game'] }),
-      )
     }
 
     const updatedGame = game.end()

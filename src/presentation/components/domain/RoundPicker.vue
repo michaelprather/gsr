@@ -1,11 +1,13 @@
 <script setup lang="ts">
 import { useId } from 'vue'
-import type { Round } from '@/domain'
-import { IconLock } from '../icons'
+import type { Player, Round } from '@/domain'
+import { validateRoundCompletion } from '@/domain'
+import { IconCircleCheck } from '../icons'
 
 export interface RoundPickerProps {
   open: boolean
   rounds: readonly Round[]
+  players: readonly Player[]
   currentIndex: number
 }
 
@@ -14,11 +16,16 @@ export interface RoundPickerEmits {
   (e: 'close'): void
 }
 
-const { open, rounds, currentIndex } = defineProps<RoundPickerProps>()
+const { open, rounds, players, currentIndex } = defineProps<RoundPickerProps>()
 
 const emit = defineEmits<RoundPickerEmits>()
 
 const titleId = useId()
+
+function isRoundComplete(round: Round, index: number): boolean {
+  const feedback = validateRoundCompletion(round, index, players)
+  return !feedback.hasFeedback
+}
 
 function handleSelect(index: number) {
   emit('select', index)
@@ -67,11 +74,11 @@ function handleKeydown(event: KeyboardEvent) {
               <span class="round-picker__item-number">Round {{ index + 1 }}</span>
             </div>
             <span
-              v-if="round.isLocked"
+              v-if="isRoundComplete(round, index)"
               class="round-picker__item-status"
-              aria-label="Locked"
+              aria-label="Complete"
             >
-              <IconLock />
+              <IconCircleCheck />
             </span>
           </button>
         </div>

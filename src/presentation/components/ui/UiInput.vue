@@ -13,6 +13,7 @@ export interface UiInputProps {
   maxlength?: number
   min?: number
   max?: number
+  step?: number
   center?: boolean
 }
 
@@ -33,6 +34,7 @@ const {
   maxlength,
   min,
   max,
+  step,
   center = false,
 } = defineProps<UiInputProps>()
 
@@ -82,6 +84,7 @@ function handleBlur() {
       :maxlength="maxlength"
       :min="min"
       :max="max"
+      :step="step"
       :aria-invalid="!!error"
       :aria-describedby="error ? errorId : undefined"
       @input="handleInput"

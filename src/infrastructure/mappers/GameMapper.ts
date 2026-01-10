@@ -15,7 +15,6 @@ export interface PlayerDTO {
 export interface RoundDTO {
   type: RoundTypeName
   scores: Record<string, RoundScoreDTO>
-  isLocked: boolean
 }
 
 export interface GameDTO {
@@ -59,7 +58,6 @@ export class GameMapper {
     return {
       type: round.type.name,
       scores,
-      isLocked: round.isLocked,
     }
   }
 
@@ -68,7 +66,7 @@ export class GameMapper {
     for (const [playerId, scoreDTO] of Object.entries(dto.scores)) {
       scores.set(playerId, this.roundScoreToDomain(scoreDTO))
     }
-    return Round.hydrate(RoundType.fromName(dto.type), scores, dto.isLocked)
+    return Round.hydrate(RoundType.fromName(dto.type), scores)
   }
 
   private roundScoreToDTO(score: RoundScore): RoundScoreDTO {

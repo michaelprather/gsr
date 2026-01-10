@@ -10,9 +10,6 @@ export class Game {
   ) {}
 
   static create(playerNames: string[]): Game {
-    if (playerNames.length < 2) {
-      throw new Error('Game requires at least 2 players')
-    }
     const players = playerNames.map((name) => Player.create(name))
     const rounds = RoundType.all().map((type) => Round.create(type))
     return new Game(players, rounds, false)
