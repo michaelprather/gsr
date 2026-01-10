@@ -2,7 +2,8 @@
 story_id: "017"
 epic_id: "002"
 title: App Icon and Favicon
-status: ready
+status: completed
+completed_date: 2026-01-10
 ---
 
 # App Icon and Favicon

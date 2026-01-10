@@ -131,7 +131,8 @@
       "story_id": "017",
       "epic_id": "002",
       "title": "App Icon and Favicon",
-      "status": "ready"
+      "status": "completed",
+      "completed_date": "2026-01-10"
     },
     "018": {
       "file": "002-dot-one/018-help-section.md",
@@ -170,7 +171,7 @@
       "total_estimated_hours": 0,
       "completed_hours": 0,
       "story_count": 7,
-      "stories_completed": 3,
+      "stories_completed": 4,
       "last_updated": "2026-01-10"
     }
   }

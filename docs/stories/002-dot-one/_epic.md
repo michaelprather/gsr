@@ -6,7 +6,7 @@ status: active
 total_estimated_hours: 0
 completed_hours: 0
 story_count: 7
-stories_completed: 0
+stories_completed: 4
 last_updated: 2026-01-10
 ---
 
