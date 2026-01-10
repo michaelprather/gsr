@@ -2,7 +2,7 @@
 story_id: "006"
 epic_id: "001"
 title: Score Entry View
-status: ready
+status: completed
 ---
 
 # Score Entry View
