@@ -5,18 +5,21 @@
     fill="currentColor"
   >
     <!-- Playing card background -->
-    <rect x="4" y="2" width="24" height="28" rx="3" fill="currentColor" opacity="0.1" />
-    <rect x="4" y="2" width="24" height="28" rx="3" stroke="currentColor" stroke-width="1.5" fill="none" />
-    <!-- Jester hat - three points with bells -->
+    <rect x="4" y="2" width="24" height="28" rx="3" fill="currentColor" opacity="0.08" />
+    <rect x="4" y="2" width="24" height="28" rx="3" stroke="currentColor" stroke-width="1.25" fill="none" />
+    <!-- Street - perspective view going into distance -->
+    <!-- Road surface -->
     <path
-      d="M16 7c-1 0-2 .5-2.5 1.5L8 18h3l2-5c.3-.7 1-1.2 1.8-1.2h2.4c.8 0 1.5.5 1.8 1.2l2 5h3l-5.5-9.5C18 7.5 17 7 16 7z"
+      d="M8 26 L14 6 L18 6 L24 26 Z"
       fill="currentColor"
+      opacity="0.3"
     />
-    <!-- Left bell -->
-    <circle cx="9.5" cy="19.5" r="1.5" fill="currentColor" />
-    <!-- Center bell -->
-    <circle cx="16" cy="10" r="1.5" fill="currentColor" />
-    <!-- Right bell -->
-    <circle cx="22.5" cy="19.5" r="1.5" fill="currentColor" />
+    <!-- Road edges -->
+    <line x1="8" y1="26" x2="14" y2="6" stroke="currentColor" stroke-width="1.5" />
+    <line x1="24" y1="26" x2="18" y2="6" stroke="currentColor" stroke-width="1.5" />
+    <!-- Center dashed line -->
+    <line x1="16" y1="8" x2="16" y2="12" stroke="currentColor" stroke-width="1.5" />
+    <line x1="16" y1="15" x2="16" y2="19" stroke="currentColor" stroke-width="1.5" />
+    <line x1="16" y1="22" x2="16" y2="26" stroke="currentColor" stroke-width="1.5" />
   </svg>
 </template>
