@@ -9,7 +9,7 @@ import {
   validateRoundCompletion,
   validateScore,
 } from '@/domain'
-import { useGameService, useNewGame, useSwipe } from '../composables'
+import { useGameService, useNewGame, useSwipe, useToast } from '../composables'
 import {
   IconChevronLeft,
   IconChevronRight,
@@ -25,6 +25,7 @@ import { RoundPicker, SkipPlayerDialog } from '../components/domain'
 const router = useRouter()
 const service = useGameService()
 const newGame = useNewGame()
+const toast = useToast()
 
 const game = ref<Game | null>(null)
 const currentRoundIndex = ref(0)
@@ -222,7 +223,7 @@ async function saveUnsavedScores(): Promise<void> {
         const updatedGame = await service.setScore(player.id.value, currentRoundIndex.value, numericValue)
         game.value = updatedGame
       } catch {
-        // Ignore save errors here - validation will catch issues
+        toast.error('Failed to save score')
       }
     }
   }
@@ -359,7 +360,7 @@ async function handleSkipRound() {
     game.value = updatedGame
     closeSkipDialog()
   } catch {
-    // Error handling - could show toast
+    toast.error('Failed to skip player')
   }
 }
 
@@ -375,7 +376,7 @@ async function handleSkipAll() {
     game.value = updatedGame
     closeSkipDialog()
   } catch {
-    // Error handling - could show toast
+    toast.error('Failed to skip player')
   }
 }
 
@@ -384,7 +385,7 @@ async function handleUnskip(player: Player) {
     const updatedGame = await service.unskipPlayer(player.id.value, currentRoundIndex.value)
     game.value = updatedGame
   } catch {
-    // Error handling - could show toast
+    toast.error('Failed to unskip player')
   }
 }
 
@@ -407,7 +408,7 @@ async function handleSkipEntireRound() {
       currentRoundIndex.value++
     }
   } catch {
-    // Error handling - could show toast
+    toast.error('Failed to skip round')
   }
 }
 
@@ -421,7 +422,7 @@ async function handleEndGame() {
     showEndGameDialog.value = false
     router.push({ name: 'standings', query: { celebrate: 'true' } })
   } catch {
-    // Error handling - could show toast
+    toast.error('Failed to end game')
   }
 }
 </script>

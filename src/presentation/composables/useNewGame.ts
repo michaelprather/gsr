@@ -1,10 +1,12 @@
 import { ref, readonly } from 'vue'
 import { useRouter } from 'vue-router'
 import { useGameService } from './useGameService'
+import { useToast } from './useToast'
 
 export function useNewGame() {
   const router = useRouter()
   const service = useGameService()
+  const toast = useToast()
 
   const showDialog = ref(false)
 
@@ -22,7 +24,7 @@ export function useNewGame() {
       showDialog.value = false
       router.push({ name: 'setup' })
     } catch {
-      // Error handling - could show toast
+      toast.error('Failed to start new game')
     }
   }
 

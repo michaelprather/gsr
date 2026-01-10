@@ -3,7 +3,7 @@ import { ref, computed, onMounted } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import type { Game } from '@/domain'
 import { calculateRankings, findFirstInvalidRoundIndex } from '@/domain'
-import { useGameService, useNewGame, useOrientation } from '../composables'
+import { useGameService, useNewGame, useOrientation, useToast } from '../composables'
 import { IconChevronLeft, IconPlus } from '../components/icons'
 import { UiButton, UiConfirmDialog } from '../components/ui'
 import { AppBrand } from '../components/layout'
@@ -15,6 +15,7 @@ const route = useRoute()
 const { orientation } = useOrientation()
 const service = useGameService()
 const newGame = useNewGame()
+const toast = useToast()
 
 const game = ref<Game | null>(null)
 const isLoading = ref(true)
@@ -96,7 +97,7 @@ async function handleEditScores() {
     await service.reopenGame()
     router.push({ name: 'game' })
   } catch {
-    // Error handling - could show toast
+    toast.error('Failed to reopen game')
   }
 }
 </script>
