@@ -1,6 +1,5 @@
 <script setup lang="ts">
-import { useId } from 'vue'
-import { UiButton } from '../ui'
+import { UiButton, UiDialog } from '../ui'
 import { IconUserSlashOutline, IconForwardOutline } from '../icons'
 
 export interface SkipPlayerDialogProps {
@@ -16,66 +15,40 @@ export interface SkipPlayerDialogEmits {
 
 const { open, playerName } = defineProps<SkipPlayerDialogProps>()
 const emit = defineEmits<SkipPlayerDialogEmits>()
-
-const titleId = useId()
-
-function handleBackdropClick(event: MouseEvent) {
-  if (event.target === event.currentTarget) {
-    emit('close')
-  }
-}
-
-function handleKeydown(event: KeyboardEvent) {
-  if (event.key === 'Escape') {
-    emit('close')
-  }
-}
 </script>
 
 <template>
-  <div
-    v-if="open"
-    class="skip-player-dialog"
-    role="dialog"
-    aria-modal="true"
-    :aria-labelledby="titleId"
-    @click="handleBackdropClick"
-    @keydown="handleKeydown"
-  >
-    <div class="skip-player-dialog__panel">
-      <h2 :id="titleId" class="skip-player-dialog__title">Skip {{ playerName }}</h2>
+  <UiDialog :open="open" :title="`Skip ${playerName}`" @close="emit('close')">
+    <div class="skip-player-dialog__options">
+      <button
+        type="button"
+        class="skip-player-dialog__option"
+        @click="emit('skip-round')"
+      >
+        <IconUserSlashOutline class="skip-player-dialog__option-icon" />
+        <div class="skip-player-dialog__option-content">
+          <span class="skip-player-dialog__option-label">Skip this round</span>
+          <span class="skip-player-dialog__option-desc">Player will be active again next round</span>
+        </div>
+      </button>
 
-      <div class="skip-player-dialog__options">
-        <button
-          type="button"
-          class="skip-player-dialog__option"
-          @click="emit('skip-round')"
-        >
-          <IconUserSlashOutline class="skip-player-dialog__option-icon" />
-          <div class="skip-player-dialog__option-content">
-            <span class="skip-player-dialog__option-label">Skip this round</span>
-            <span class="skip-player-dialog__option-desc">Player will be active again next round</span>
-          </div>
-        </button>
-
-        <button
-          type="button"
-          class="skip-player-dialog__option"
-          @click="emit('skip-all')"
-        >
-          <IconForwardOutline class="skip-player-dialog__option-icon" />
-          <div class="skip-player-dialog__option-content">
-            <span class="skip-player-dialog__option-label">Skip rest of game</span>
-            <span class="skip-player-dialog__option-desc">Player will be skipped for all remaining rounds</span>
-          </div>
-        </button>
-      </div>
-
-      <div class="skip-player-dialog__actions">
-        <UiButton variant="secondary" block @click="emit('close')">Cancel</UiButton>
-      </div>
+      <button
+        type="button"
+        class="skip-player-dialog__option"
+        @click="emit('skip-all')"
+      >
+        <IconForwardOutline class="skip-player-dialog__option-icon" />
+        <div class="skip-player-dialog__option-content">
+          <span class="skip-player-dialog__option-label">Skip rest of game</span>
+          <span class="skip-player-dialog__option-desc">Player will be skipped for all remaining rounds</span>
+        </div>
+      </button>
     </div>
-  </div>
+
+    <template #actions>
+      <UiButton variant="secondary" block @click="emit('close')">Cancel</UiButton>
+    </template>
+  </UiDialog>
 </template>
 
 <style src="./SkipPlayerDialog.css"></style>

@@ -13,7 +13,7 @@ describe('SkipPlayerDialog', () => {
       props: defaultProps,
     })
 
-    expect(wrapper.find('.skip-player-dialog').exists()).toBe(true)
+    expect(wrapper.find('.ui-dialog').exists()).toBe(true)
   })
 
   it('does not render when open is false', () => {
@@ -24,7 +24,7 @@ describe('SkipPlayerDialog', () => {
       },
     })
 
-    expect(wrapper.find('.skip-player-dialog').exists()).toBe(false)
+    expect(wrapper.find('.ui-dialog').exists()).toBe(false)
   })
 
   it('displays title with player name', () => {
@@ -32,7 +32,7 @@ describe('SkipPlayerDialog', () => {
       props: defaultProps,
     })
 
-    expect(wrapper.find('.skip-player-dialog__title').text()).toBe('Skip Alice')
+    expect(wrapper.find('.ui-dialog__title').text()).toBe('Skip Alice')
   })
 
   it('displays skip this round option', () => {
@@ -90,7 +90,7 @@ describe('SkipPlayerDialog', () => {
       props: defaultProps,
     })
 
-    await wrapper.find('.skip-player-dialog').trigger('click')
+    await wrapper.find('.ui-dialog').trigger('click')
 
     expect(wrapper.emitted('close')).toHaveLength(1)
   })
@@ -100,7 +100,7 @@ describe('SkipPlayerDialog', () => {
       props: defaultProps,
     })
 
-    await wrapper.find('.skip-player-dialog__panel').trigger('click')
+    await wrapper.find('.ui-dialog__panel').trigger('click')
 
     expect(wrapper.emitted('close')).toBeUndefined()
   })
@@ -110,7 +110,7 @@ describe('SkipPlayerDialog', () => {
       props: defaultProps,
     })
 
-    await wrapper.find('.skip-player-dialog').trigger('keydown', { key: 'Escape' })
+    await wrapper.find('.ui-dialog').trigger('keydown', { key: 'Escape' })
 
     expect(wrapper.emitted('close')).toHaveLength(1)
   })
@@ -120,7 +120,7 @@ describe('SkipPlayerDialog', () => {
       props: defaultProps,
     })
 
-    const dialog = wrapper.find('.skip-player-dialog')
+    const dialog = wrapper.find('.ui-dialog')
     expect(dialog.attributes('role')).toBe('dialog')
     expect(dialog.attributes('aria-modal')).toBe('true')
     expect(dialog.attributes('aria-labelledby')).toBeTruthy()
@@ -131,8 +131,8 @@ describe('SkipPlayerDialog', () => {
       props: defaultProps,
     })
 
-    const dialog = wrapper.find('.skip-player-dialog')
-    const title = wrapper.find('.skip-player-dialog__title')
+    const dialog = wrapper.find('.ui-dialog')
+    const title = wrapper.find('.ui-dialog__title')
 
     expect(dialog.attributes('aria-labelledby')).toBe(title.attributes('id'))
   })

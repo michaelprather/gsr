@@ -14,7 +14,7 @@ describe('UiConfirmDialog', () => {
       props: defaultProps,
     })
 
-    expect(wrapper.find('.ui-confirm-dialog').exists()).toBe(true)
+    expect(wrapper.find('.ui-dialog').exists()).toBe(true)
   })
 
   it('does not render when open is false', () => {
@@ -25,7 +25,7 @@ describe('UiConfirmDialog', () => {
       },
     })
 
-    expect(wrapper.find('.ui-confirm-dialog').exists()).toBe(false)
+    expect(wrapper.find('.ui-dialog').exists()).toBe(false)
   })
 
   it('displays title', () => {
@@ -33,7 +33,7 @@ describe('UiConfirmDialog', () => {
       props: defaultProps,
     })
 
-    expect(wrapper.find('.ui-confirm-dialog__title').text()).toBe('Confirm Action')
+    expect(wrapper.find('.ui-dialog__title').text()).toBe('Confirm Action')
   })
 
   it('displays message', () => {
@@ -97,7 +97,7 @@ describe('UiConfirmDialog', () => {
       props: defaultProps,
     })
 
-    await wrapper.find('.ui-confirm-dialog').trigger('click')
+    await wrapper.find('.ui-dialog').trigger('click')
 
     expect(wrapper.emitted('cancel')).toHaveLength(1)
   })
@@ -107,7 +107,7 @@ describe('UiConfirmDialog', () => {
       props: defaultProps,
     })
 
-    await wrapper.find('.ui-confirm-dialog__panel').trigger('click')
+    await wrapper.find('.ui-dialog__panel').trigger('click')
 
     expect(wrapper.emitted('cancel')).toBeUndefined()
   })
@@ -117,7 +117,7 @@ describe('UiConfirmDialog', () => {
       props: defaultProps,
     })
 
-    await wrapper.find('.ui-confirm-dialog').trigger('keydown', { key: 'Escape' })
+    await wrapper.find('.ui-dialog').trigger('keydown', { key: 'Escape' })
 
     expect(wrapper.emitted('cancel')).toHaveLength(1)
   })
@@ -127,7 +127,7 @@ describe('UiConfirmDialog', () => {
       props: defaultProps,
     })
 
-    const dialog = wrapper.find('.ui-confirm-dialog')
+    const dialog = wrapper.find('.ui-dialog')
     expect(dialog.attributes('role')).toBe('dialog')
     expect(dialog.attributes('aria-modal')).toBe('true')
     expect(dialog.attributes('aria-labelledby')).toBeTruthy()
@@ -138,8 +138,8 @@ describe('UiConfirmDialog', () => {
       props: defaultProps,
     })
 
-    const dialog = wrapper.find('.ui-confirm-dialog')
-    const title = wrapper.find('.ui-confirm-dialog__title')
+    const dialog = wrapper.find('.ui-dialog')
+    const title = wrapper.find('.ui-dialog__title')
 
     expect(dialog.attributes('aria-labelledby')).toBe(title.attributes('id'))
   })
