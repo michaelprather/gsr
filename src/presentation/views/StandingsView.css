@@ -16,14 +16,39 @@
   top: 0;
   z-index: 20;
   display: flex;
-  align-items: center;
+  flex-direction: column;
   gap: var(--space-2);
-  padding: var(--space-4) var(--standings-view-padding);
+  padding: var(--space-3) var(--standings-view-padding);
   background: var(--standings-view-header-bg);
   border-bottom: 1px solid var(--border);
 }
 
-.standings-view__header .ui-button svg {
+.standings-view__title-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.standings-view__game-name {
+  --standings-view-game-name-color: var(--text-muted);
+
+  font-size: var(--text-sm);
+  font-weight: var(--font-medium);
+  color: var(--standings-view-game-name-color);
+}
+
+.standings-view__title-bar .ui-button svg {
+  width: var(--icon-md);
+  height: var(--icon-md);
+}
+
+.standings-view__nav {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.standings-view__nav .ui-button svg {
   width: var(--icon-lg);
   height: var(--icon-lg);
 }

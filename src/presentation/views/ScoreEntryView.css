@@ -31,68 +31,42 @@
   top: 0;
   z-index: 10;
   display: flex;
-  align-items: center;
-  justify-content: space-between;
+  flex-direction: column;
   gap: var(--space-2);
-  padding: var(--space-4) var(--score-entry-view-padding);
+  padding: var(--space-3) var(--score-entry-view-padding);
   background: var(--score-entry-view-header-bg);
   border-bottom: 1px solid var(--border);
 }
 
-.score-entry-view__header .ui-button svg {
-  width: var(--icon-lg);
-  height: var(--icon-lg);
+.score-entry-view__title-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.score-entry-view__game-name {
+  --score-entry-view-game-name-color: var(--text-muted);
+
+  font-size: var(--text-sm);
+  font-weight: var(--font-medium);
+  color: var(--score-entry-view-game-name-color);
+}
+
+.score-entry-view__title-bar .ui-button svg {
+  width: var(--icon-md);
+  height: var(--icon-md);
 }
 
 .score-entry-view__nav {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  flex: 1;
   gap: var(--space-2);
 }
 
-.score-entry-view__menu-wrapper {
-  position: relative;
-}
-
-.score-entry-view__menu {
-  --score-entry-view-menu-bg: var(--surface-raised);
-  --score-entry-view-menu-border: var(--border);
-  --score-entry-view-menu-shadow: var(--shadow-md);
-
-  position: absolute;
-  top: 100%;
-  right: 0;
-  z-index: 20;
-  min-width: var(--size-40);
-  margin-top: var(--space-1);
-  padding: var(--space-1);
-  background: var(--score-entry-view-menu-bg);
-  border: 1px solid var(--score-entry-view-menu-border);
-  border-radius: var(--radius-md);
-  box-shadow: var(--score-entry-view-menu-shadow);
-}
-
-.score-entry-view__menu-item {
-  --score-entry-view-menu-item-color: var(--text);
-  --score-entry-view-menu-item-hover-bg: var(--surface);
-
-  display: block;
-  width: 100%;
-  padding: var(--space-2) var(--space-3);
-  font-size: var(--text-sm);
-  color: var(--score-entry-view-menu-item-color);
-  text-align: left;
-  cursor: pointer;
-  background: transparent;
-  border: none;
-  border-radius: var(--radius-sm);
-  transition: background-color 0.15s ease;
-}
-
-.score-entry-view__menu-item:hover {
-  background: var(--score-entry-view-menu-item-hover-bg);
+.score-entry-view__nav .ui-button svg {
+  width: var(--icon-lg);
+  height: var(--icon-lg);
 }
 
 .score-entry-view__round-info {
@@ -101,6 +75,13 @@
 }
 
 .score-entry-view__round-type {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+}
+
+.score-entry-view__round-name {
   margin: 0;
   font-size: var(--text-xl);
   font-weight: var(--font-semibold);
@@ -110,16 +91,12 @@
 .score-entry-view__complete-icon {
   width: var(--icon-sm);
   height: var(--icon-sm);
-  margin-left: var(--space-2);
   color: var(--score-entry-view-complete-icon-color);
-  vertical-align: middle;
 }
 
 .score-entry-view__round-indicator {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--space-1);
-  margin-top: var(--space-1);
+  display: inline-block;
+  margin-top: calc(-1 * var(--space-1));
   padding: var(--space-1) var(--space-2);
   font-size: var(--text-sm);
   color: var(--score-entry-view-round-indicator-color);

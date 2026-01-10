@@ -1,5 +1,4 @@
 // Solid icons (actionable elements)
-export { default as IconBars } from './IconBars.vue'
 export { default as IconChevronLeft } from './IconChevronLeft.vue'
 export { default as IconChevronRight } from './IconChevronRight.vue'
 export { default as IconCircleCheck } from './IconCircleCheck.vue'

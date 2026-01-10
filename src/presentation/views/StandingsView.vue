@@ -6,8 +6,8 @@ import { validateRoundCompletion } from '@/domain'
 import { GameService } from '@/application'
 import { IndexedDBGameRepository } from '@/infrastructure'
 import { useOrientation } from '../composables'
-import { IconChevronLeft } from '../components/icons'
-import { UiButton } from '../components/ui'
+import { IconChevronLeft, IconPlus } from '../components/icons'
+import { UiButton, UiConfirmDialog } from '../components/ui'
 import { GameScorecard, StandingsList } from '../components/domain'
 
 const router = useRouter()
@@ -19,6 +19,7 @@ const service = new GameService(repo)
 const game = ref<Game | null>(null)
 const isLoading = ref(true)
 const loadError = ref<string | null>(null)
+const showNewGameDialog = ref(false)
 
 const isEnded = computed(() => game.value?.isEnded ?? false)
 
@@ -73,6 +74,16 @@ async function handleEditScores() {
     // Error handling - could show toast
   }
 }
+
+async function handleNewGame() {
+  try {
+    await service.clearGame()
+    showNewGameDialog.value = false
+    router.push({ name: 'setup' })
+  } catch {
+    // Error handling - could show toast
+  }
+}
 </script>
 
 <template>
@@ -82,32 +93,57 @@ async function handleEditScores() {
 
   <main v-else-if="game" class="standings-view" :class="`standings-view--${orientation}`">
     <header class="standings-view__header">
-      <UiButton
-        variant="ghost"
-        size="icon"
-        :aria-label="isEnded ? 'Edit scores' : 'Back to score entry'"
-        @click="handleEditScores"
-      >
-        <IconChevronLeft />
-      </UiButton>
-
-      <div class="standings-view__title-area">
-        <h1 class="standings-view__title">{{ isEnded ? 'Final Results' : 'Standings' }}</h1>
-        <span v-if="!isEnded" class="standings-view__round-indicator">
-          Round {{ currentRoundNumber }} of {{ totalRounds }}
-        </span>
-        <span v-else class="standings-view__round-indicator">
-          Game Complete
-        </span>
+      <div class="standings-view__title-bar">
+        <span class="standings-view__game-name">George Street Rummy</span>
+        <UiButton
+          variant="ghost"
+          size="icon"
+          aria-label="New game"
+          title="New game"
+          @click="showNewGameDialog = true"
+        >
+          <IconPlus />
+        </UiButton>
       </div>
 
-      <div class="standings-view__spacer" />
+      <div class="standings-view__nav">
+        <UiButton
+          variant="ghost"
+          size="icon"
+          :aria-label="isEnded ? 'Edit scores' : 'Back to score entry'"
+          @click="handleEditScores"
+        >
+          <IconChevronLeft />
+        </UiButton>
+
+        <div class="standings-view__title-area">
+          <h1 class="standings-view__title">{{ isEnded ? 'Final Results' : 'Standings' }}</h1>
+          <span v-if="!isEnded" class="standings-view__round-indicator">
+            Round {{ currentRoundNumber }} of {{ totalRounds }}
+          </span>
+          <span v-else class="standings-view__round-indicator">
+            Game Complete
+          </span>
+        </div>
+
+        <div class="standings-view__spacer" />
+      </div>
     </header>
 
     <section class="standings-view__content" :class="{ 'standings-view__content--landscape': orientation === 'landscape' }">
       <StandingsList v-if="orientation === 'portrait'" :game="game" :is-ended="isEnded" />
       <GameScorecard v-else :game="game" />
     </section>
+
+    <UiConfirmDialog
+      :open="showNewGameDialog"
+      title="Start New Game"
+      message="This will end your current game. All scores will be lost."
+      confirm-label="New Game"
+      :destructive="true"
+      @confirm="handleNewGame"
+      @cancel="showNewGameDialog = false"
+    />
   </main>
 </template>
 

@@ -7,10 +7,10 @@ import { GameService } from '@/application'
 import { IndexedDBGameRepository } from '@/infrastructure'
 import { useSwipe } from '../composables'
 import {
-  IconBars,
   IconChevronLeft,
   IconChevronRight,
   IconCircleCheck,
+  IconPlus,
   IconUserSlashOutline,
 } from '../components/icons'
 import { UiButton, UiConfirmDialog, UiInput } from '../components/ui'
@@ -34,8 +34,7 @@ const skipTargetPlayer = ref<Player | null>(null)
 // End game dialog state
 const showEndGameDialog = ref(false)
 
-// Menu state
-const showMenu = ref(false)
+// New game dialog state
 const showNewGameDialog = ref(false)
 
 // Swipe navigation
@@ -402,7 +401,6 @@ async function handleNewGame() {
 }
 
 function openNewGameDialog() {
-  showMenu.value = false
   showNewGameDialog.value = true
 }
 </script>
@@ -414,6 +412,19 @@ function openNewGameDialog() {
 
   <main v-else-if="game && currentRound" class="score-entry-view">
     <header class="score-entry-view__header">
+      <div class="score-entry-view__title-bar">
+        <span class="score-entry-view__game-name">George Street Rummy</span>
+        <UiButton
+          variant="ghost"
+          size="icon"
+          aria-label="New game"
+          title="New game"
+          @click="openNewGameDialog"
+        >
+          <IconPlus />
+        </UiButton>
+      </div>
+
       <div class="score-entry-view__nav">
         <UiButton
           variant="ghost"
@@ -426,14 +437,16 @@ function openNewGameDialog() {
         </UiButton>
 
         <div class="score-entry-view__round-info">
-          <h1 class="score-entry-view__round-type">
-            {{ currentRound.type.displayName }}
+          <div class="score-entry-view__round-type">
+            <h1 class="score-entry-view__round-name">
+              {{ currentRound.type.displayName }}
+            </h1>
             <IconCircleCheck
               v-if="isRoundComplete"
               class="score-entry-view__complete-icon"
               aria-label="Round complete"
             />
-          </h1>
+          </div>
           <button
             type="button"
             class="score-entry-view__round-indicator"
@@ -453,27 +466,6 @@ function openNewGameDialog() {
         >
           <IconChevronRight />
         </UiButton>
-      </div>
-
-      <div class="score-entry-view__menu-wrapper">
-        <UiButton
-          variant="ghost"
-          size="icon"
-          aria-label="Menu"
-          @click="showMenu = !showMenu"
-        >
-          <IconBars />
-        </UiButton>
-
-        <div v-if="showMenu" class="score-entry-view__menu">
-          <button
-            type="button"
-            class="score-entry-view__menu-item"
-            @click="openNewGameDialog"
-          >
-            New Game
-          </button>
-        </div>
       </div>
     </header>
 
