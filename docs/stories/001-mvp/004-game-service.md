@@ -2,7 +2,7 @@
 story_id: "004"
 epic_id: "001"
 title: Game Application Service
-status: ready
+status: in-progress
 ---
 
 # Game Application Service
