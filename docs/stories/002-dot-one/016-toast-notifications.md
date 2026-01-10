@@ -2,7 +2,8 @@
 story_id: "016"
 epic_id: "002"
 title: Toast Notifications
-status: in-progress
+status: completed
+completed_date: 2026-01-10
 ---
 
 # Toast Notifications
