@@ -14,6 +14,7 @@ import {
   IconChevronLeft,
   IconChevronRight,
   IconCircleCheck,
+  IconCrown,
   IconPlus,
   IconUserSlashOutline,
 } from '../components/icons'
@@ -299,6 +300,35 @@ function showSaveFeedback(playerId: string) {
   }, 300)
 }
 
+async function handleMarkWinner(playerId: string) {
+  if (!game.value) return
+
+  try {
+    // Clear any existing winner's score
+    for (const player of game.value.players) {
+      if (player.id.value !== playerId && scoreInputs.value[player.id.value] === '0') {
+        scoreInputs.value[player.id.value] = ''
+        const updatedGame = await service.clearScore(player.id.value, currentRoundIndex.value)
+        game.value = updatedGame
+      }
+    }
+
+    // Set new winner
+    scoreInputs.value[playerId] = '0'
+    scoreErrors.value[playerId] = null
+    const updatedGame = await service.setScore(playerId, currentRoundIndex.value, 0)
+    game.value = updatedGame
+    showSaveFeedback(playerId)
+  } catch {
+    scoreErrors.value[playerId] = 'Failed to save score'
+  }
+}
+
+function isWinner(player: Player): boolean {
+  const inputValue = scoreInputs.value[player.id.value]
+  return inputValue === '0'
+}
+
 // Check if player is skipped for current round
 function isSkipped(player: Player): boolean {
   if (!currentRound.value) return false
@@ -492,6 +522,17 @@ async function handleEndGame() {
               @blur="handleScoreBlur(player.id.value)"
             />
             <div v-else class="score-entry-view__skipped-placeholder">—</div>
+            <UiButton
+              v-if="!isSkipped(player)"
+              variant="ghost"
+              size="icon"
+              :class="{ 'score-entry-view__winner-button--active': isWinner(player) }"
+              aria-label="Mark as round winner"
+              title="Mark as round winner"
+              @click="handleMarkWinner(player.id.value)"
+            >
+              <IconCrown />
+            </UiButton>
             <UiButton
               variant="ghost"
               size="icon"

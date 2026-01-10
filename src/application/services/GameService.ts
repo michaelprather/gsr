@@ -87,6 +87,18 @@ export class GameService {
     return updatedGame
   }
 
+  async clearScore(playerId: string, roundIndex: number): Promise<Game> {
+    const game = await this.requireGame()
+    const player = this.getPlayer(game, playerId)
+    const round = this.getRound(game, roundIndex)
+
+    const updatedRound = round.setScore(player.id, RoundScore.pending())
+    const updatedGame = game.updateRound(roundIndex, updatedRound)
+
+    await this.repo.save(updatedGame)
+    return updatedGame
+  }
+
   async endGame(): Promise<Game> {
     const game = await this.requireGame()
 

@@ -190,6 +190,10 @@
   border-radius: var(--radius-md);
 }
 
+.score-entry-view__winner-button--active {
+  color: var(--accent);
+}
+
 .score-entry-view__skip-button--active {
   color: var(--warning);
 }
