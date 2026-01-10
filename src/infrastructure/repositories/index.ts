@@ -1,0 +1,1 @@
+export { IndexedDBGameRepository } from './IndexedDBGameRepository'

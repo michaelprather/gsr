@@ -2,7 +2,7 @@
 story_id: "002"
 epic_id: "001"
 title: Local Persistence Layer
-status: ready
+status: in-progress
 ---
 
 # Local Persistence Layer
