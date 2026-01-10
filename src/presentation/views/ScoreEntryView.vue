@@ -16,12 +16,11 @@ import {
   IconCircleCheck,
   IconCrown,
   IconPlus,
-  IconShare,
   IconUserSlashOutline,
 } from '../components/icons'
 import { UiButton, UiConfirmDialog, UiInput } from '../components/ui'
 import { AppBrand } from '../components/layout'
-import { RoundPicker, ShareGameDialog, SkipPlayerDialog } from '../components/domain'
+import { RoundPicker, SkipPlayerDialog } from '../components/domain'
 
 const router = useRouter()
 const service = useGameService()
@@ -40,9 +39,6 @@ const skipTargetPlayer = ref<Player | null>(null)
 
 // End game dialog state
 const showEndGameDialog = ref(false)
-
-// Share dialog state
-const showShareDialog = ref(false)
 
 // Swipe navigation
 const contentRef = ref<HTMLElement | null>(null)
@@ -213,13 +209,16 @@ async function saveUnsavedScores(): Promise<void> {
 
     // Check if score differs from persisted value
     const currentScore = currentRound.value.getScore(player.id)
-    const persistedValue = currentScore && RoundScore.isEntered(currentScore)
-      ? currentScore.value.value
-      : null
+    const persistedValue =
+      currentScore && RoundScore.isEntered(currentScore) ? currentScore.value.value : null
 
     if (persistedValue !== numericValue) {
       try {
-        const updatedGame = await service.setScore(player.id.value, currentRoundIndex.value, numericValue)
+        const updatedGame = await service.setScore(
+          player.id.value,
+          currentRoundIndex.value,
+          numericValue,
+        )
         game.value = updatedGame
       } catch {
         toast.error('Failed to save score')
@@ -303,7 +302,16 @@ function showSaveFeedback(playerId: string) {
 async function handleMarkWinner(playerId: string) {
   if (!game.value) return
 
+  const targetPlayer = game.value.players.find((p) => p.id.value === playerId)
+  if (!targetPlayer) return
+
   try {
+    // Unskip player if they are currently skipped
+    if (isSkipped(targetPlayer)) {
+      const updatedGame = await service.unskipPlayer(playerId, currentRoundIndex.value)
+      game.value = updatedGame
+    }
+
     // Clear any existing winner's score
     for (const player of game.value.players) {
       if (player.id.value !== playerId && scoreInputs.value[player.id.value] === '0') {
@@ -435,26 +443,15 @@ async function handleEndGame() {
     <header class="score-entry-view__header">
       <div class="score-entry-view__title-bar">
         <AppBrand size="small" />
-        <div class="score-entry-view__header-actions">
-          <UiButton
-            variant="ghost"
-            size="icon"
-            aria-label="Share game"
-            title="Share game"
-            @click="showShareDialog = true"
-          >
-            <IconShare />
-          </UiButton>
-          <UiButton
-            variant="ghost"
-            size="icon"
-            aria-label="New game"
-            title="New game"
-            @click="newGame.openDialog"
-          >
-            <IconPlus />
-          </UiButton>
-        </div>
+        <UiButton
+          variant="ghost"
+          size="icon"
+          aria-label="New game"
+          title="New game"
+          @click="newGame.openDialog"
+        >
+          <IconPlus />
+        </UiButton>
       </div>
 
       <div class="score-entry-view__nav">
@@ -508,7 +505,7 @@ async function handleEndGame() {
           :key="player.id.value"
           :class="[
             'score-entry-view__player-card',
-            { 'score-entry-view__player-card--saved': recentlySaved.has(player.id.value) }
+            { 'score-entry-view__player-card--saved': recentlySaved.has(player.id.value) },
           ]"
         >
           <div class="score-entry-view__player-header">
@@ -534,7 +531,6 @@ async function handleEndGame() {
             />
             <div v-else class="score-entry-view__skipped-placeholder">—</div>
             <UiButton
-              v-if="!isSkipped(player)"
               variant="ghost"
               size="icon"
               :class="{ 'score-entry-view__winner-button--active': isWinner(player) }"
@@ -564,17 +560,8 @@ async function handleEndGame() {
 
     <footer class="score-entry-view__footer">
       <div class="score-entry-view__footer-actions">
-        <UiButton
-          variant="secondary"
-          @click="handleSkipEntireRound"
-        >
-          Skip Round
-        </UiButton>
-        <UiButton
-          v-if="canEndGame"
-          variant="primary"
-          @click="showEndGameDialog = true"
-        >
+        <UiButton variant="secondary" @click="handleSkipEntireRound"> Skip Round </UiButton>
+        <UiButton v-if="canEndGame" variant="primary" @click="showEndGameDialog = true">
           End Game
         </UiButton>
         <UiButton v-else variant="primary" @click="goToStandings">Standings</UiButton>
@@ -615,12 +602,6 @@ async function handleEndGame() {
       :destructive="true"
       @confirm="newGame.confirm"
       @cancel="newGame.closeDialog"
-    />
-
-    <ShareGameDialog
-      :open="showShareDialog"
-      :game="game"
-      @close="showShareDialog = false"
     />
   </main>
 </template>

@@ -4,7 +4,7 @@ import { useRouter, useRoute } from 'vue-router'
 import type { Game } from '@/domain'
 import { calculateRankings, findFirstInvalidRoundIndex } from '@/domain'
 import { useGameService, useNewGame, useOrientation, useToast } from '../composables'
-import { IconChevronLeft, IconPlus, IconShare } from '../components/icons'
+import { IconChevronLeft, IconPlus } from '../components/icons'
 import { UiButton, UiConfirmDialog } from '../components/ui'
 import { AppBrand } from '../components/layout'
 import { GameScorecard, ShareGameDialog, StandingsList, WinnerCelebration } from '../components/domain'
@@ -112,26 +112,15 @@ async function handleEditScores() {
     <header class="standings-view__header">
       <div class="standings-view__title-bar">
         <AppBrand size="small" />
-        <div class="standings-view__header-actions">
-          <UiButton
-            variant="ghost"
-            size="icon"
-            aria-label="Share game"
-            title="Share game"
-            @click="showShareDialog = true"
-          >
-            <IconShare />
-          </UiButton>
-          <UiButton
-            variant="ghost"
-            size="icon"
-            aria-label="New game"
-            title="New game"
-            @click="newGame.openDialog"
-          >
-            <IconPlus />
-          </UiButton>
-        </div>
+        <UiButton
+          variant="ghost"
+          size="icon"
+          aria-label="New game"
+          title="New game"
+          @click="newGame.openDialog"
+        >
+          <IconPlus />
+        </UiButton>
       </div>
 
       <div class="standings-view__nav">
@@ -162,6 +151,12 @@ async function handleEditScores() {
       <StandingsList v-if="orientation === 'portrait'" :game="game" :is-ended="isEnded" />
       <GameScorecard v-else :game="game" />
     </section>
+
+    <footer v-if="orientation === 'portrait'" class="standings-view__footer">
+      <UiButton block variant="secondary" @click="showShareDialog = true">
+        Share Game
+      </UiButton>
+    </footer>
 
     <UiConfirmDialog
       :open="newGame.showDialog.value"

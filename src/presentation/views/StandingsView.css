@@ -29,12 +29,6 @@
   justify-content: space-between;
 }
 
-.standings-view__header-actions {
-  display: flex;
-  align-items: center;
-  gap: var(--space-1);
-}
-
 .standings-view__title-bar .ui-button svg {
   width: var(--icon-md);
   height: var(--icon-md);
@@ -85,6 +79,13 @@
 .standings-view__content--landscape {
   max-width: none;
   overflow-x: auto;
+}
+
+.standings-view__footer {
+  width: 100%;
+  max-width: var(--standings-view-max-width);
+  margin: 0 auto;
+  padding: var(--space-4) var(--standings-view-padding);
 }
 
 .standings-view__loading,
