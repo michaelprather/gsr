@@ -2,7 +2,8 @@
 story_id: "010"
 epic_id: "001"
 title: Scorecard View
-status: ready
+status: completed
+completed_date: 2026-01-10
 ---
 
 # Scorecard View
