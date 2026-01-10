@@ -59,6 +59,10 @@ onMounted(async () => {
 function goBack() {
   router.push({ name: 'game' })
 }
+
+function goToScorecard() {
+  router.push({ name: 'scorecard' })
+}
 </script>
 
 <template>
@@ -101,6 +105,21 @@ function goBack() {
         </li>
       </ol>
     </section>
+
+    <footer class="summary-view__footer">
+      <nav class="summary-view__view-toggle">
+        <span class="summary-view__view-toggle-item summary-view__view-toggle-item--active">
+          Standings
+        </span>
+        <button
+          type="button"
+          class="summary-view__view-toggle-item"
+          @click="goToScorecard"
+        >
+          Scorecard
+        </button>
+      </nav>
+    </footer>
   </main>
 </template>
 

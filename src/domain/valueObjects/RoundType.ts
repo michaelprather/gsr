@@ -20,6 +20,16 @@ const ROUND_DISPLAY_NAMES: Record<RoundTypeName, string> = {
   threeRunsAndOut: '3 Runs and Out',
 }
 
+const ROUND_ABBREVIATIONS: Record<RoundTypeName, string> = {
+  twoBooks: '2B',
+  oneBookOneRun: '1B1R',
+  twoRuns: '2R',
+  twoBooksOneRun: '2B1R',
+  twoRunsOneBook: '2R1B',
+  threeBooks: '3B',
+  threeRunsAndOut: '3R+',
+}
+
 export class RoundType {
   private constructor(readonly name: RoundTypeName) {}
 
@@ -33,6 +43,10 @@ export class RoundType {
 
   get displayName(): string {
     return ROUND_DISPLAY_NAMES[this.name]
+  }
+
+  get abbreviation(): string {
+    return ROUND_ABBREVIATIONS[this.name]
   }
 
   equals(other: RoundType): boolean {
