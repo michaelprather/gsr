@@ -5,7 +5,7 @@ created: 2026-01-10
 status: active
 total_estimated_hours: 0
 completed_hours: 0
-story_count: 6
+story_count: 7
 stories_completed: 0
 last_updated: 2026-01-10
 ---
@@ -28,4 +28,4 @@ Visual polish and enhanced experience for George Street Rummy Scorekeeper. Build
 ## Out of Scope
 
 - New features or functionality changes
-- Multi-device or cloud features
+- Cloud sync or backend services

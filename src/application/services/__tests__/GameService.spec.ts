@@ -2,7 +2,6 @@ import { describe, it, expect, beforeEach } from 'vitest'
 import { GameService } from '../GameService'
 import { ValidationError } from '@/core'
 import type { Game, GameRepository } from '@/domain'
-import { RoundScore, Score } from '@/domain'
 
 class InMemoryGameRepository implements GameRepository {
   private game: Game | null = null

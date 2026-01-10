@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { RoundType, ROUND_TYPES } from '../RoundType'
+import { RoundType } from '../RoundType'
 
 describe('RoundType', () => {
   describe('all', () => {

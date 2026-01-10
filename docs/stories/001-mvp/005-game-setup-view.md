@@ -2,7 +2,7 @@
 story_id: "005"
 epic_id: "001"
 title: Game Setup View
-status: ready
+status: completed
 ---
 
 # Game Setup View

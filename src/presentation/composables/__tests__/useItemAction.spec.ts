@@ -16,7 +16,7 @@ describe('useItemAction', () => {
       resolve = r
     })
 
-    const action = useItemAction((_id: string) => promise)
+    const action = useItemAction(() => promise)
     const executePromise = action.execute('item-123')
 
     expect(action.activeId.value).toBe('item-123')
@@ -39,7 +39,7 @@ describe('useItemAction', () => {
 
   it('transitions to failed on error', async () => {
     const error = new Error('Delete failed')
-    const action = useItemAction((_id: string) => Promise.reject(error))
+    const action = useItemAction(() => Promise.reject(error))
 
     const success = await action.execute('item-789')
 
@@ -51,7 +51,7 @@ describe('useItemAction', () => {
 
   it('transitions to invalid on ValidationError', async () => {
     const feedback = Feedback.fromRecord({ id: ['Cannot delete'] })
-    const action = useItemAction((_id: string) => Promise.reject(new ValidationError(feedback)))
+    const action = useItemAction(() => Promise.reject(new ValidationError(feedback)))
 
     const success = await action.execute('item-999')
 
