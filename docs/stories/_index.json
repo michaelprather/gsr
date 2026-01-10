@@ -146,7 +146,8 @@
       "story_id": "019",
       "epic_id": "002",
       "title": "Share Game via QR Code",
-      "status": "ready"
+      "status": "completed",
+      "completed_date": "2026-01-10"
     }
   },
   "epics": {
@@ -171,7 +172,7 @@
       "total_estimated_hours": 0,
       "completed_hours": 0,
       "story_count": 7,
-      "stories_completed": 4,
+      "stories_completed": 5,
       "last_updated": "2026-01-10"
     }
   }

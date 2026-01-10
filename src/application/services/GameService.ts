@@ -128,6 +128,10 @@ export class GameService {
     await this.repo.clear()
   }
 
+  async importGame(game: Game): Promise<void> {
+    await this.repo.save(game)
+  }
+
   private async requireGame(): Promise<Game> {
     const game = await this.repo.load()
     if (!game) {

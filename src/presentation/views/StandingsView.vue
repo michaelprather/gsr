@@ -4,10 +4,10 @@ import { useRouter, useRoute } from 'vue-router'
 import type { Game } from '@/domain'
 import { calculateRankings, findFirstInvalidRoundIndex } from '@/domain'
 import { useGameService, useNewGame, useOrientation, useToast } from '../composables'
-import { IconChevronLeft, IconPlus } from '../components/icons'
+import { IconChevronLeft, IconPlus, IconShare } from '../components/icons'
 import { UiButton, UiConfirmDialog } from '../components/ui'
 import { AppBrand } from '../components/layout'
-import { GameScorecard, StandingsList, WinnerCelebration } from '../components/domain'
+import { GameScorecard, ShareGameDialog, StandingsList, WinnerCelebration } from '../components/domain'
 import type { Winner } from '../components/domain'
 
 const router = useRouter()
@@ -22,6 +22,7 @@ const isLoading = ref(true)
 const loadError = ref<string | null>(null)
 const showCelebration = ref(false)
 const celebrationDismissed = ref(false)
+const showShareDialog = ref(false)
 
 const isEnded = computed(() => game.value?.isEnded ?? false)
 
@@ -111,15 +112,26 @@ async function handleEditScores() {
     <header class="standings-view__header">
       <div class="standings-view__title-bar">
         <AppBrand size="small" />
-        <UiButton
-          variant="ghost"
-          size="icon"
-          aria-label="New game"
-          title="New game"
-          @click="newGame.openDialog"
-        >
-          <IconPlus />
-        </UiButton>
+        <div class="standings-view__header-actions">
+          <UiButton
+            variant="ghost"
+            size="icon"
+            aria-label="Share game"
+            title="Share game"
+            @click="showShareDialog = true"
+          >
+            <IconShare />
+          </UiButton>
+          <UiButton
+            variant="ghost"
+            size="icon"
+            aria-label="New game"
+            title="New game"
+            @click="newGame.openDialog"
+          >
+            <IconPlus />
+          </UiButton>
+        </div>
       </div>
 
       <div class="standings-view__nav">
@@ -165,6 +177,12 @@ async function handleEditScores() {
       v-if="shouldShowCelebration"
       :winners="winners"
       @dismiss="handleCelebrationDismiss"
+    />
+
+    <ShareGameDialog
+      :open="showShareDialog"
+      :game="game"
+      @close="showShareDialog = false"
     />
   </main>
 </template>

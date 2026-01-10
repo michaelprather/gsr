@@ -16,11 +16,12 @@ import {
   IconCircleCheck,
   IconCrown,
   IconPlus,
+  IconShare,
   IconUserSlashOutline,
 } from '../components/icons'
 import { UiButton, UiConfirmDialog, UiInput } from '../components/ui'
 import { AppBrand } from '../components/layout'
-import { RoundPicker, SkipPlayerDialog } from '../components/domain'
+import { RoundPicker, ShareGameDialog, SkipPlayerDialog } from '../components/domain'
 
 const router = useRouter()
 const service = useGameService()
@@ -39,6 +40,9 @@ const skipTargetPlayer = ref<Player | null>(null)
 
 // End game dialog state
 const showEndGameDialog = ref(false)
+
+// Share dialog state
+const showShareDialog = ref(false)
 
 // Swipe navigation
 const contentRef = ref<HTMLElement | null>(null)
@@ -431,15 +435,26 @@ async function handleEndGame() {
     <header class="score-entry-view__header">
       <div class="score-entry-view__title-bar">
         <AppBrand size="small" />
-        <UiButton
-          variant="ghost"
-          size="icon"
-          aria-label="New game"
-          title="New game"
-          @click="newGame.openDialog"
-        >
-          <IconPlus />
-        </UiButton>
+        <div class="score-entry-view__header-actions">
+          <UiButton
+            variant="ghost"
+            size="icon"
+            aria-label="Share game"
+            title="Share game"
+            @click="showShareDialog = true"
+          >
+            <IconShare />
+          </UiButton>
+          <UiButton
+            variant="ghost"
+            size="icon"
+            aria-label="New game"
+            title="New game"
+            @click="newGame.openDialog"
+          >
+            <IconPlus />
+          </UiButton>
+        </div>
       </div>
 
       <div class="score-entry-view__nav">
@@ -600,6 +615,12 @@ async function handleEndGame() {
       :destructive="true"
       @confirm="newGame.confirm"
       @cancel="newGame.closeDialog"
+    />
+
+    <ShareGameDialog
+      :open="showShareDialog"
+      :game="game"
+      @close="showShareDialog = false"
     />
   </main>
 </template>

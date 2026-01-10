@@ -1,6 +1,7 @@
 export { useAction } from './useAction'
 export type { UseActionReturn } from './useAction'
 export { useGameService } from './useGameService'
+export { useGameShare } from './useGameShare'
 export { useItemAction } from './useItemAction'
 export type { UseItemActionReturn } from './useItemAction'
 export { useNewGame } from './useNewGame'

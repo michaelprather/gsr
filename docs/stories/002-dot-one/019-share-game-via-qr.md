@@ -2,7 +2,8 @@
 story_id: "019"
 epic_id: "002"
 title: Share Game via QR Code
-status: ready
+status: completed
+completed_date: 2026-01-10
 ---
 
 # Share Game via QR Code

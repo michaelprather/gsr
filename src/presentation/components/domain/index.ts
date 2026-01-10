@@ -1,5 +1,6 @@
 export { default as GameScorecard } from './GameScorecard.vue'
 export { default as RoundPicker } from './RoundPicker.vue'
+export { default as ShareGameDialog } from './ShareGameDialog.vue'
 export { default as SkipPlayerDialog } from './SkipPlayerDialog.vue'
 export { default as StandingsList } from './StandingsList.vue'
 export { default as WinnerCelebration } from './WinnerCelebration.vue'

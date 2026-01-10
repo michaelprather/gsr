@@ -1,0 +1,39 @@
+.share-game-dialog {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-4);
+  text-align: center;
+}
+
+.share-game-dialog__instructions {
+  color: var(--text-muted);
+  font-size: var(--text-sm);
+}
+
+.share-game-dialog__qr-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 256px;
+  height: 256px;
+  background: var(--white);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+}
+
+.share-game-dialog__loading {
+  color: var(--text-muted);
+  font-size: var(--text-sm);
+}
+
+.share-game-dialog__qr {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.share-game-dialog__fallback-text {
+  color: var(--text-subtle);
+  font-size: var(--text-xs);
+}
