@@ -74,9 +74,6 @@ const isRoundComplete = computed(() => {
   return !feedback.hasFeedback
 })
 
-// Round validation errors for display
-const roundValidationErrors = ref<string[]>([])
-
 // Check if all rounds are complete (for end game)
 const allRoundsComplete = computed(() => {
   if (!game.value) return false
@@ -149,10 +146,9 @@ onMounted(async () => {
   }
 })
 
-// When round changes, re-initialize score inputs and clear errors
+// When round changes, re-initialize score inputs
 watch(currentRoundIndex, () => {
   initializeScoreInputs()
-  roundValidationErrors.value = []
 })
 
 function initializeRoundIndex() {
@@ -192,7 +188,6 @@ function initializeScoreInputs() {
 
 function goPrev() {
   if (canGoPrev.value) {
-    roundValidationErrors.value = []
     currentRoundIndex.value--
   }
 }
@@ -246,11 +241,11 @@ async function goNext() {
   )
 
   if (feedback.hasFeedback) {
-    roundValidationErrors.value = [...(feedback.get('round') ?? [])]
+    const errors = feedback.get('round') ?? []
+    errors.forEach((error) => toast.error(error))
     return
   }
 
-  roundValidationErrors.value = []
   currentRoundIndex.value++
 }
 
@@ -547,12 +542,8 @@ async function handleEndGame() {
         </div>
       </div>
 
-      <div v-if="showWinnerHint && roundValidationErrors.length === 0" class="score-entry-view__hint" role="alert">
+      <div v-if="showWinnerHint" class="score-entry-view__hint" role="alert">
         One player must have a score of 0 (round winner)
-      </div>
-
-      <div v-if="roundValidationErrors.length > 0" class="score-entry-view__errors" role="alert">
-        <p v-for="(error, i) in roundValidationErrors" :key="i">{{ error }}</p>
       </div>
     </section>
 
