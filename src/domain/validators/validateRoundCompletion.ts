@@ -5,12 +5,12 @@ import { RoundScore } from '../valueObjects'
 
 export function validateRoundCompletion(
   round: Round,
-  roundIndex: number,
+  _roundIndex: number,
   players: readonly Player[],
 ): Feedback {
   const errors: string[] = []
 
-  const activePlayers = players.filter((p) => !isPlayerSkippedForRound(p, round, roundIndex))
+  const activePlayers = players.filter((p) => !isPlayerSkippedForRound(p, round))
 
   // Check all active players have entered scores
   const playersWithoutScores: string[] = []
@@ -43,17 +43,7 @@ export function validateRoundCompletion(
   return Feedback.fromRecord({ round: errors })
 }
 
-function isPlayerSkippedForRound(
-  player: Player,
-  round: Round,
-  roundIndex: number,
-): boolean {
-  // Check if player is marked to skip from a certain round
-  if (player.isSkippedAt(roundIndex)) {
-    return true
-  }
-
-  // Check if player's score is explicitly marked as skipped for this round
+function isPlayerSkippedForRound(player: Player, round: Round): boolean {
   const score = round.getScore(player.id)
   return score !== undefined && RoundScore.isSkipped(score)
 }

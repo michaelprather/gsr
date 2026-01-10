@@ -15,19 +15,13 @@ export function calculateRankings(game: Game): PlayerRanking[] {
     let total = 0
     let hasSkippedRounds = false
 
-    for (let roundIndex = 0; roundIndex < game.rounds.length; roundIndex++) {
-      const round = game.rounds[roundIndex]
+    for (const round of game.rounds) {
       if (!round) continue
       const score = round.getScore(player.id)
 
       if (score && RoundScore.isEntered(score)) {
         total += score.value.value
       } else if (score && RoundScore.isSkipped(score)) {
-        hasSkippedRounds = true
-      }
-
-      // Check if player skipped from this round onwards
-      if (player.isSkippedAt(roundIndex)) {
         hasSkippedRounds = true
       }
     }

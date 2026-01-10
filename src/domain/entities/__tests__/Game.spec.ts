@@ -53,26 +53,6 @@ describe('Game', () => {
     })
   })
 
-  describe('updatePlayer', () => {
-    it('updates player by id', () => {
-      const game = Game.create(['Alice', 'Bob'])
-      const aliceId = game.players[0]!.id.value
-
-      const updatedGame = game.updatePlayer(aliceId, (p) => p.skipFrom(3))
-
-      expect(updatedGame.players[0]?.skipFromRound).toBe(3)
-    })
-
-    it('does not affect other players', () => {
-      const game = Game.create(['Alice', 'Bob'])
-      const aliceId = game.players[0]!.id.value
-
-      const updatedGame = game.updatePlayer(aliceId, (p) => p.skipFrom(3))
-
-      expect(updatedGame.players[1]?.skipFromRound).toBeNull()
-    })
-  })
-
   describe('end', () => {
     it('marks game as ended', () => {
       const game = Game.create(['Alice', 'Bob'])

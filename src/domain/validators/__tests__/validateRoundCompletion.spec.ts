@@ -57,16 +57,4 @@ describe('validateRoundCompletion', () => {
     const feedback = validateRoundCompletion(round, 0, game.players)
     expect(feedback.hasFeedback).toBe(false)
   })
-
-  it('excludes players with skipFromRound set', () => {
-    const game = Game.create(['Alice', 'Bob', 'Charlie'])
-    const updatedGame = game.updatePlayer(game.players[2]!.id.value, (p) => p.skipFrom(0))
-
-    const round = game.rounds[0]!
-      .setScore(updatedGame.players[0]!.id, RoundScore.entered(Score.zero()))
-      .setScore(updatedGame.players[1]!.id, RoundScore.entered(Score.create(25)))
-
-    const feedback = validateRoundCompletion(round, 0, updatedGame.players)
-    expect(feedback.hasFeedback).toBe(false)
-  })
 })

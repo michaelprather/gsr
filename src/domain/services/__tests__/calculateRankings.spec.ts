@@ -124,29 +124,6 @@ describe('calculateRankings', () => {
     expect(bobRanking!.hasSkippedRounds).toBe(true)
   })
 
-  it('marks hasSkippedRounds for players with skipFromRound set', () => {
-    const game = Game.create(['Alice', 'Bob'])
-    const alice = game.players[0]!
-    const bob = game.players[1]!
-
-    // Alice plays normally, Bob skips from round 2
-    let updated = game
-    updated = updated.updateRound(
-      0,
-      updated.rounds[0]!.setScore(alice.id, RoundScore.entered(Score.create(20))),
-    )
-    updated = updated.updateRound(
-      0,
-      updated.rounds[0]!.setScore(bob.id, RoundScore.entered(Score.create(30))),
-    )
-    updated = updated.updatePlayer(bob.id.value, (p) => p.skipFrom(2))
-
-    const rankings = calculateRankings(updated)
-
-    const bobRanking = rankings.find((r) => r.playerName === 'Bob')
-    expect(bobRanking!.hasSkippedRounds).toBe(true)
-  })
-
   it('treats pending scores as 0', () => {
     const game = Game.create(['Alice', 'Bob'])
     const alice = game.players[0]!

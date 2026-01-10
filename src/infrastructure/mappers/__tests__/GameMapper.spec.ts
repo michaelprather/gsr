@@ -18,21 +18,6 @@ describe('GameMapper', () => {
     expect(restored.isEnded).toBe(false)
   })
 
-  it('preserves player skip state', () => {
-    const game = Game.create(['Alice', 'Bob'])
-    const aliceId = game.players[0]?.id.value
-    expect(aliceId).toBeDefined()
-
-    const updatedGame = game.updatePlayer(aliceId!, (p) => p.skipFrom(3))
-
-    const dto = mapper.toDTO(updatedGame)
-    const restored = mapper.toDomain(dto)
-
-    expect(restored.players[0]?.skipFromRound).toBe(3)
-    expect(restored.players[0]?.isSkippedAt(3)).toBe(true)
-    expect(restored.players[0]?.isSkippedAt(2)).toBe(false)
-  })
-
   it('preserves round scores', () => {
     const game = Game.create(['Alice', 'Bob'])
     const aliceId = game.players[0]?.id

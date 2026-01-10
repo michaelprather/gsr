@@ -25,11 +25,6 @@ export class Game {
     return new Game(this.players, newRounds, this.isEnded)
   }
 
-  updatePlayer(playerId: string, updater: (player: Player) => Player): Game {
-    const newPlayers = this.players.map((p) => (p.id.value === playerId ? updater(p) : p))
-    return new Game(newPlayers, this.rounds, this.isEnded)
-  }
-
   end(): Game {
     return new Game(this.players, this.rounds, true)
   }

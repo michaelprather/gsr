@@ -9,7 +9,6 @@ export interface RoundScoreDTO {
 export interface PlayerDTO {
   id: string
   name: string
-  skipFromRound: number | null
 }
 
 export interface RoundDTO {
@@ -42,12 +41,11 @@ export class GameMapper {
     return {
       id: player.id.value,
       name: player.name,
-      skipFromRound: player.skipFromRound,
     }
   }
 
   private playerToDomain(dto: PlayerDTO): Player {
-    return Player.hydrate(PlayerId.create(dto.id), dto.name, dto.skipFromRound)
+    return Player.hydrate(PlayerId.create(dto.id), dto.name)
   }
 
   private roundToDTO(round: Round): RoundDTO {

@@ -30,7 +30,8 @@ export class GameService {
       throw new ValidationError(scoreFeedback)
     }
 
-    if (player.isSkippedAt(roundIndex)) {
+    const existingScore = round.getScore(player.id)
+    if (existingScore && RoundScore.isSkipped(existingScore)) {
       throw new ValidationError(
         Feedback.fromRecord({ player: ['Player is skipped for this round'] }),
       )
