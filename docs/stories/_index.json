@@ -15,7 +15,8 @@
       "story_id": "002",
       "epic_id": "001",
       "title": "Local Persistence Layer",
-      "status": "ready"
+      "status": "completed",
+      "completed_date": "2026-01-10"
     },
     "003": {
       "file": "001-mvp/003-game-domain-model.md",
