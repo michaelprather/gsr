@@ -393,7 +393,7 @@ async function handleEndGame() {
   try {
     await service.endGame()
     showEndGameDialog.value = false
-    router.push({ name: 'standings' })
+    router.push({ name: 'standings', query: { celebrate: 'true' } })
   } catch {
     // Error handling - could show toast
   }

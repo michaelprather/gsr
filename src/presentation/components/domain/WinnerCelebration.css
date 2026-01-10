@@ -1,0 +1,184 @@
+/* ==========================================================================
+   WinnerCelebration Component
+   ========================================================================== */
+
+.winner-celebration {
+  --winner-celebration-bg: var(--overlay);
+  --winner-celebration-content-bg: var(--surface-overlay);
+  --winner-celebration-content-border: var(--border);
+  --winner-celebration-trophy-bg: var(--success);
+  --winner-celebration-trophy-color: var(--text-on-interactive);
+  --winner-celebration-trophy-glow: var(--success);
+  --winner-celebration-label-color: var(--text-muted);
+  --winner-celebration-names-color: var(--text);
+  --winner-celebration-score-color: var(--success);
+  --winner-celebration-hint-color: var(--text-subtle);
+
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-4);
+  background: var(--winner-celebration-bg);
+  backdrop-filter: blur(var(--overlay-blur));
+  opacity: 0;
+  transition: opacity var(--duration-slow) var(--ease-out);
+}
+
+.winner-celebration--visible {
+  opacity: 1;
+}
+
+/* ==========================================================================
+   Confetti
+   ========================================================================== */
+
+.winner-celebration__confetti {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.winner-celebration__particle {
+  position: absolute;
+  top: -20px;
+  left: var(--confetti-left);
+  width: var(--confetti-size);
+  height: var(--confetti-size);
+  background: var(--confetti-color);
+  border-radius: 2px;
+  opacity: 0;
+  animation: confetti-fall var(--confetti-duration) var(--confetti-delay) ease-out forwards;
+  transform: rotate(var(--confetti-rotation));
+}
+
+@keyframes confetti-fall {
+  0% {
+    opacity: 1;
+    transform: translateY(0) translateX(0) rotate(var(--confetti-rotation)) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(100vh) translateX(var(--confetti-drift)) rotate(calc(var(--confetti-rotation) + 720deg)) scale(0.5);
+  }
+}
+
+/* ==========================================================================
+   Content
+   ========================================================================== */
+
+.winner-celebration__content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-8);
+  background: var(--winner-celebration-content-bg);
+  border: 1px solid var(--winner-celebration-content-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--elevation-3);
+  text-align: center;
+  transform: scale(0.8);
+  opacity: 0;
+  animation: content-enter var(--duration-slow) var(--ease-spring) 0.1s forwards;
+}
+
+@keyframes content-enter {
+  0% {
+    transform: scale(0.8);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* ==========================================================================
+   Trophy
+   ========================================================================== */
+
+.winner-celebration__trophy {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--size-12);
+  height: var(--size-12);
+  background: var(--winner-celebration-trophy-bg);
+  border-radius: var(--radius-full);
+  box-shadow: 0 0 8px var(--winner-celebration-trophy-glow);
+  animation: trophy-pulse 1.5s ease-in-out infinite;
+}
+
+.winner-celebration__trophy-icon {
+  width: var(--icon-lg);
+  height: var(--icon-lg);
+  color: var(--winner-celebration-trophy-color);
+}
+
+@keyframes trophy-pulse {
+  0%, 100% {
+    box-shadow: 0 0 8px var(--winner-celebration-trophy-glow);
+    transform: scale(1);
+  }
+  50% {
+    box-shadow: 0 0 12px var(--winner-celebration-trophy-glow);
+    transform: scale(1.05);
+  }
+}
+
+/* ==========================================================================
+   Text
+   ========================================================================== */
+
+.winner-celebration__label {
+  font-size: var(--text-sm);
+  font-weight: var(--font-semibold);
+  color: var(--winner-celebration-label-color);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.winner-celebration__names {
+  font-size: var(--text-2xl);
+  font-weight: var(--font-bold);
+  color: var(--winner-celebration-names-color);
+  margin: 0;
+}
+
+.winner-celebration__score {
+  font-size: var(--text-lg);
+  font-weight: var(--font-semibold);
+  color: var(--winner-celebration-score-color);
+}
+
+.winner-celebration__hint {
+  margin-top: var(--space-2);
+  font-size: var(--text-xs);
+  color: var(--winner-celebration-hint-color);
+}
+
+/* ==========================================================================
+   Reduced Motion
+
+   The base.css already handles animation-duration: 0.01ms for reduced motion.
+   We add additional styling to ensure winner emphasis is still visible.
+   ========================================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  .winner-celebration__content {
+    transform: scale(1);
+    opacity: 1;
+  }
+
+  .winner-celebration__particle {
+    display: none;
+  }
+
+  .winner-celebration__trophy {
+    box-shadow: 0 0 8px var(--winner-celebration-trophy-glow);
+  }
+}

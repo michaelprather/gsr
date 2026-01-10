@@ -1,17 +1,19 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue'
-import { useRouter } from 'vue-router'
+import { useRouter, useRoute } from 'vue-router'
 import type { Game } from '@/domain'
-import { validateRoundCompletion } from '@/domain'
+import { validateRoundCompletion, calculateRankings } from '@/domain'
 import { GameService } from '@/application'
 import { IndexedDBGameRepository } from '@/infrastructure'
 import { useOrientation } from '../composables'
 import { IconChevronLeft, IconPlus } from '../components/icons'
 import { UiButton, UiConfirmDialog } from '../components/ui'
 import { AppBrand } from '../components/layout'
-import { GameScorecard, StandingsList } from '../components/domain'
+import { GameScorecard, StandingsList, WinnerCelebration } from '../components/domain'
+import type { Winner } from '../components/domain'
 
 const router = useRouter()
+const route = useRoute()
 const { orientation } = useOrientation()
 
 const repo = new IndexedDBGameRepository()
@@ -21,8 +23,26 @@ const game = ref<Game | null>(null)
 const isLoading = ref(true)
 const loadError = ref<string | null>(null)
 const showNewGameDialog = ref(false)
+const showCelebration = ref(false)
+const celebrationDismissed = ref(false)
 
 const isEnded = computed(() => game.value?.isEnded ?? false)
+
+const winners = computed<Winner[]>(() => {
+  if (!game.value || !isEnded.value) return []
+
+  const rankings = calculateRankings(game.value)
+  const topRank = rankings.find((r) => r.rank === 1)
+  if (!topRank) return []
+
+  return rankings
+    .filter((r) => r.rank === 1)
+    .map((r) => ({ name: r.playerName, score: r.total }))
+})
+
+const shouldShowCelebration = computed(() => {
+  return isEnded.value && showCelebration.value && !celebrationDismissed.value && winners.value.length > 0
+})
 
 const currentRoundNumber = computed(() => {
   if (!game.value) return 1
@@ -51,12 +71,24 @@ onMounted(async () => {
       return
     }
     game.value = loadedGame
+
+    // Show celebration when arriving from game end (via query param)
+    if (loadedGame.isEnded && route.query.celebrate === 'true') {
+      showCelebration.value = true
+      // Clear the query param from URL without triggering navigation
+      router.replace({ name: 'standings', query: {} })
+    }
   } catch {
     loadError.value = 'Failed to load game'
   } finally {
     isLoading.value = false
   }
 })
+
+function handleCelebrationDismiss() {
+  celebrationDismissed.value = true
+  showCelebration.value = false
+}
 
 function goBack() {
   router.push({ name: 'game' })
@@ -144,6 +176,12 @@ async function handleNewGame() {
       :destructive="true"
       @confirm="handleNewGame"
       @cancel="showNewGameDialog = false"
+    />
+
+    <WinnerCelebration
+      v-if="shouldShowCelebration"
+      :winners="winners"
+      @dismiss="handleCelebrationDismiss"
     />
   </main>
 </template>
