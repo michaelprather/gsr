@@ -94,7 +94,7 @@ export class GameService {
     }
 
     // Validate round completion before locking
-    const completionFeedback = validateRoundCompletion(round, game.players)
+    const completionFeedback = validateRoundCompletion(round, roundIndex, game.players)
     if (completionFeedback.hasFeedback) {
       throw new ValidationError(completionFeedback)
     }

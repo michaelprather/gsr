@@ -9,7 +9,7 @@ describe('validateRoundCompletion', () => {
       .setScore(game.players[0]!.id, RoundScore.entered(Score.zero()))
       .setScore(game.players[1]!.id, RoundScore.entered(Score.create(25)))
 
-    const feedback = validateRoundCompletion(round, game.players)
+    const feedback = validateRoundCompletion(round, 0, game.players)
     expect(feedback.hasFeedback).toBe(false)
   })
 
@@ -20,7 +20,7 @@ describe('validateRoundCompletion', () => {
       RoundScore.entered(Score.zero()),
     )
 
-    const feedback = validateRoundCompletion(round, game.players)
+    const feedback = validateRoundCompletion(round, 0, game.players)
     expect(feedback.hasFeedback).toBe(true)
     expect(feedback.get('round')?.some((e) => e.includes('Missing scores'))).toBe(true)
   })
@@ -31,7 +31,7 @@ describe('validateRoundCompletion', () => {
       .setScore(game.players[0]!.id, RoundScore.entered(Score.create(25)))
       .setScore(game.players[1]!.id, RoundScore.entered(Score.create(50)))
 
-    const feedback = validateRoundCompletion(round, game.players)
+    const feedback = validateRoundCompletion(round, 0, game.players)
     expect(feedback.hasFeedback).toBe(true)
     expect(feedback.get('round')?.some((e) => e.includes('score of 0'))).toBe(true)
   })
@@ -42,7 +42,7 @@ describe('validateRoundCompletion', () => {
       .setScore(game.players[0]!.id, RoundScore.entered(Score.zero()))
       .setScore(game.players[1]!.id, RoundScore.entered(Score.zero()))
 
-    const feedback = validateRoundCompletion(round, game.players)
+    const feedback = validateRoundCompletion(round, 0, game.players)
     expect(feedback.hasFeedback).toBe(true)
     expect(feedback.get('round')?.some((e) => e.includes('Only one player'))).toBe(true)
   })
@@ -54,7 +54,7 @@ describe('validateRoundCompletion', () => {
       .setScore(game.players[1]!.id, RoundScore.entered(Score.create(25)))
       .setScore(game.players[2]!.id, RoundScore.skipped())
 
-    const feedback = validateRoundCompletion(round, game.players)
+    const feedback = validateRoundCompletion(round, 0, game.players)
     expect(feedback.hasFeedback).toBe(false)
   })
 
@@ -66,7 +66,7 @@ describe('validateRoundCompletion', () => {
       .setScore(updatedGame.players[0]!.id, RoundScore.entered(Score.zero()))
       .setScore(updatedGame.players[1]!.id, RoundScore.entered(Score.create(25)))
 
-    const feedback = validateRoundCompletion(round, updatedGame.players)
+    const feedback = validateRoundCompletion(round, 0, updatedGame.players)
     expect(feedback.hasFeedback).toBe(false)
   })
 })

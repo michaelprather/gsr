@@ -3,10 +3,14 @@ import type { Round } from '../entities'
 import type { Player } from '../entities'
 import { RoundScore } from '../valueObjects'
 
-export function validateRoundCompletion(round: Round, players: readonly Player[]): Feedback {
+export function validateRoundCompletion(
+  round: Round,
+  roundIndex: number,
+  players: readonly Player[],
+): Feedback {
   const errors: string[] = []
 
-  const activePlayers = players.filter((p) => !isPlayerSkippedForRound(p, round, players))
+  const activePlayers = players.filter((p) => !isPlayerSkippedForRound(p, round, roundIndex))
 
   // Check all active players have entered scores
   const playersWithoutScores: string[] = []
@@ -42,10 +46,9 @@ export function validateRoundCompletion(round: Round, players: readonly Player[]
 function isPlayerSkippedForRound(
   player: Player,
   round: Round,
-  players: readonly Player[],
+  roundIndex: number,
 ): boolean {
   // Check if player is marked to skip from a certain round
-  const roundIndex = getRoundIndex(round, players)
   if (player.isSkippedAt(roundIndex)) {
     return true
   }
@@ -53,19 +56,4 @@ function isPlayerSkippedForRound(
   // Check if player's score is explicitly marked as skipped for this round
   const score = round.getScore(player.id)
   return score !== undefined && RoundScore.isSkipped(score)
-}
-
-function getRoundIndex(round: Round, players: readonly Player[]): number {
-  // We need to determine round index from round type
-  // This is a simplification - in practice we'd pass the index or have it on the round
-  const allTypes = [
-    'twoBooks',
-    'oneBookOneRun',
-    'twoRuns',
-    'twoBooksOneRun',
-    'twoRunsOneBook',
-    'threeBooks',
-    'threeRunsAndOut',
-  ]
-  return allTypes.indexOf(round.type.name)
 }
