@@ -2,7 +2,8 @@
 story_id: "001"
 epic_id: "001"
 title: Project Foundation
-status: in-progress
+status: completed
+completed_date: 2026-01-10
 ---
 
 # Project Foundation

@@ -7,7 +7,8 @@
       "story_id": "001",
       "epic_id": "001",
       "title": "Project Foundation",
-      "status": "ready"
+      "status": "completed",
+      "completed_date": "2026-01-10"
     },
     "002": {
       "file": "001-mvp/002-local-persistence.md",
