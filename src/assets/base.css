@@ -19,15 +19,7 @@ html {
 body {
   min-height: 100vh;
   line-height: 1.5;
-  font-family:
-    system-ui,
-    -apple-system,
-    BlinkMacSystemFont,
-    'Segoe UI',
-    Roboto,
-    'Helvetica Neue',
-    Arial,
-    sans-serif;
+  font-family: var(--font-family);
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -119,6 +111,15 @@ ol {
   --font-medium: 500;
   --font-semibold: 600;
 
+  /* Typography - Font families */
+  --font-family-system: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI',
+    Roboto, 'Helvetica Neue', Arial, sans-serif;
+  --font-family-rounded: 'SF Pro Rounded', 'SF Pro', system-ui, -apple-system,
+    BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-family-serif: Georgia, 'Times New Roman', Times, serif;
+  --font-family-mono: 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas,
+    'Courier New', monospace;
+
   /* Sizing */
   --size-4: 1rem;
   --size-5: 1.25rem;
@@ -142,6 +143,34 @@ ol {
   /* Colors - Yellow (warning) */
   --yellow-500: #eab308;
   --yellow-600: #ca8a04;
+
+  /* Colors - Green */
+  --green-50: #f0fdf4;
+  --green-100: #dcfce7;
+  --green-500: #22c55e;
+  --green-600: #16a34a;
+  --green-700: #15803d;
+
+  /* Colors - Blue */
+  --blue-50: #eff6ff;
+  --blue-100: #dbeafe;
+  --blue-500: #3b82f6;
+  --blue-600: #2563eb;
+  --blue-700: #1d4ed8;
+
+  /* Colors - Amber */
+  --amber-50: #fffbeb;
+  --amber-100: #fef3c7;
+  --amber-500: #f59e0b;
+  --amber-600: #d97706;
+  --amber-700: #b45309;
+
+  /* Colors - Teal */
+  --teal-50: #f0fdfa;
+  --teal-100: #ccfbf1;
+  --teal-500: #14b8a6;
+  --teal-600: #0d9488;
+  --teal-700: #0f766e;
 }
 
 /* ==========================================================================
@@ -149,33 +178,52 @@ ol {
    ========================================================================== */
 
 :root {
-  /* Surfaces */
-  --surface: var(--white);
-  --surface-raised: var(--gray-50);
+  /* Typography */
+  --font-family: var(--font-family-system);
+
+  /* Surfaces - blue tinted (default theme) */
+  --surface: #f8faff;
+  --surface-raised: #f0f5ff;
   --surface-overlay: var(--white);
   --surface-sunken: var(--gray-100);
+  --surface-accent: #e0eaff;
 
   /* Borders */
-  --border: var(--gray-200);
-  --border-muted: var(--gray-100);
-  --border-strong: var(--gray-300);
+  --border: #c7d7f5;
+  --border-muted: #dbe6fc;
+  --border-strong: #a3bfed;
 
   /* Text */
   --text: var(--gray-900);
   --text-muted: var(--gray-500);
   --text-subtle: var(--gray-400);
   --text-inverse: var(--white);
+  --text-on-interactive: var(--white);
+
+  /* Primary - blue (default theme) */
+  --primary: var(--blue-600);
+  --primary-hover: var(--blue-700);
+  --primary-muted: var(--blue-50);
 
   /* Interactive */
-  --interactive: var(--gray-900);
-  --interactive-hover: var(--gray-700);
-  --interactive-muted: var(--gray-100);
-  --interactive-muted-hover: var(--gray-200);
+  --interactive: var(--primary);
+  --interactive-hover: var(--primary-hover);
+  --interactive-muted: #e8f0fe;
+  --interactive-muted-hover: #d4e3fc;
+
+  /* Success */
+  --success: var(--green-600);
+  --success-hover: var(--green-700);
+  --success-muted: var(--green-50);
 
   /* Destructive */
   --destructive: var(--red-600);
   --destructive-hover: var(--red-700);
   --destructive-muted: rgba(220, 38, 38, 0.1);
+
+  /* Error (alias for destructive in form contexts) */
+  --error: var(--destructive);
+  --error-muted: var(--destructive-muted);
 
   /* Warning */
   --warning: var(--yellow-600);
@@ -183,7 +231,12 @@ ol {
 
   /* Overlay */
   --overlay: rgba(0, 0, 0, 0.5);
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 2px 8px rgba(0, 0, 0, 0.1);
   --shadow-lg: 0 4px 24px rgba(0, 0, 0, 0.15);
+
+  /* Icon sizing (additional) */
+  --icon-xs: 0.75rem;
 }
 
 /* ==========================================================================
@@ -192,33 +245,49 @@ ol {
 
 @media (prefers-color-scheme: dark) {
   :root {
-    /* Surfaces */
-    --surface: var(--gray-950);
-    --surface-raised: var(--gray-900);
-    --surface-overlay: var(--gray-900);
+    /* Surfaces - dark blue (default theme) */
+    --surface: #0a1628;
+    --surface-raised: #0f1f3d;
+    --surface-overlay: #142952;
     --surface-sunken: var(--black);
+    --surface-accent: #1a3566;
 
     /* Borders */
-    --border: var(--gray-800);
-    --border-muted: var(--gray-900);
-    --border-strong: var(--gray-700);
+    --border: #2a4a7a;
+    --border-muted: #1e3a66;
+    --border-strong: #3b5c94;
 
     /* Text */
-    --text: var(--gray-50);
-    --text-muted: var(--gray-400);
-    --text-subtle: var(--gray-500);
-    --text-inverse: var(--gray-950);
+    --text: #f0f5ff;
+    --text-muted: #a3bfed;
+    --text-subtle: #7a9bd4;
+    --text-inverse: #0a1628;
+    --text-on-interactive: var(--white);
+
+    /* Primary - blue (default theme) */
+    --primary: var(--blue-500);
+    --primary-hover: var(--blue-400);
+    --primary-muted: rgba(59, 130, 246, 0.2);
 
     /* Interactive */
-    --interactive: var(--gray-50);
-    --interactive-hover: var(--gray-200);
-    --interactive-muted: var(--gray-800);
-    --interactive-muted-hover: var(--gray-700);
+    --interactive: var(--primary);
+    --interactive-hover: var(--primary-hover);
+    --interactive-muted: #1a3566;
+    --interactive-muted-hover: #2a4a7a;
+
+    /* Success */
+    --success: var(--green-500);
+    --success-hover: var(--green-600);
+    --success-muted: rgba(34, 197, 94, 0.15);
 
     /* Destructive */
     --destructive: var(--red-500);
     --destructive-hover: var(--red-600);
     --destructive-muted: rgba(239, 68, 68, 0.15);
+
+    /* Error */
+    --error: var(--destructive);
+    --error-muted: var(--destructive-muted);
 
     /* Warning */
     --warning: var(--yellow-500);
@@ -226,6 +295,8 @@ ol {
 
     /* Overlay */
     --overlay: rgba(0, 0, 0, 0.7);
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.2);
+    --shadow-md: 0 2px 8px rgba(0, 0, 0, 0.3);
     --shadow-lg: 0 4px 24px rgba(0, 0, 0, 0.4);
   }
 }

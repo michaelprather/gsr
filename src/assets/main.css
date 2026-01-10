@@ -1,4 +1,6 @@
 @import './base.css';
+@import './themes/blue.css';
+@import './themes/contrast.css';
 
 #app {
   min-height: 100vh;

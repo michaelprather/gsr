@@ -1,9 +1,12 @@
 <script setup lang="ts">
 import { RouterView } from 'vue-router'
-import { useOnlineStatus } from '@/presentation/composables'
+import { useOnlineStatus, useTheme } from '@/presentation/composables'
 import { IconWifiOffOutline } from '@/presentation/components/icons'
 
 const { isOnline } = useOnlineStatus()
+
+// Initialize theme from localStorage on app load
+useTheme()
 </script>
 
 <template>

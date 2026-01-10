@@ -1,0 +1,89 @@
+/* Contrast Theme - High contrast, reduced motion, accessibility-focused */
+[data-theme='contrast'] {
+  /* Typography */
+  --font-family: var(--font-family-system);
+
+  /* Surfaces - pure white/black for maximum contrast */
+  --surface: var(--white);
+  --surface-raised: var(--white);
+  --surface-overlay: var(--white);
+  --surface-accent: var(--gray-100);
+
+  /* Borders - stronger for visibility */
+  --border: var(--gray-400);
+  --border-muted: var(--gray-300);
+  --border-strong: var(--gray-600);
+
+  /* Text - maximum contrast */
+  --text: var(--black);
+  --text-muted: var(--gray-700);
+  --text-subtle: var(--gray-600);
+
+  /* Primary - high contrast black */
+  --primary: var(--black);
+  --primary-hover: var(--gray-800);
+  --primary-muted: var(--gray-200);
+
+  /* Interactive */
+  --interactive: var(--primary);
+  --interactive-hover: var(--primary-hover);
+  --interactive-muted: var(--gray-200);
+  --interactive-muted-hover: var(--gray-300);
+
+  /* Reduced motion */
+  --transition-duration: 0s;
+}
+
+/* Disable all transitions and animations */
+[data-theme='contrast'],
+[data-theme='contrast'] *,
+[data-theme='contrast'] *::before,
+[data-theme='contrast'] *::after {
+  transition-duration: 0s !important;
+  animation-duration: 0s !important;
+}
+
+/* Ensure focus states are highly visible */
+[data-theme='contrast'] :focus-visible {
+  outline: 3px solid var(--black);
+  outline-offset: 2px;
+}
+
+@media (prefers-color-scheme: dark) {
+  [data-theme='contrast'] {
+    /* Surfaces - pure black for maximum contrast */
+    --surface: var(--black);
+    --surface-raised: var(--black);
+    --surface-overlay: var(--gray-950);
+    --surface-accent: var(--gray-900);
+
+    /* Borders - stronger for visibility */
+    --border: var(--gray-500);
+    --border-muted: var(--gray-600);
+    --border-strong: var(--gray-300);
+
+    /* Text - maximum contrast */
+    --text: var(--white);
+    --text-muted: var(--gray-300);
+    --text-subtle: var(--gray-400);
+    --text-inverse: var(--black);
+    --text-on-interactive: var(--black);
+
+    /* Primary - high contrast white */
+    --primary: var(--white);
+    --primary-hover: var(--gray-200);
+    --primary-muted: var(--gray-800);
+
+    /* Interactive */
+    --interactive: var(--primary);
+    --interactive-hover: var(--primary-hover);
+    --interactive-muted: var(--gray-800);
+    --interactive-muted-hover: var(--gray-700);
+  }
+
+  /* Ensure focus states are highly visible in dark mode */
+  [data-theme='contrast'] :focus-visible {
+    outline: 3px solid var(--white);
+    outline-offset: 2px;
+  }
+}

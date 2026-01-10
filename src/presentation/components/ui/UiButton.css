@@ -7,7 +7,7 @@
 
   --ui-button-bg: var(--interactive);
   --ui-button-bg-hover: var(--interactive-hover);
-  --ui-button-color: var(--text-inverse);
+  --ui-button-color: var(--text-on-interactive);
   --ui-button-bg-disabled: var(--interactive-muted);
   --ui-button-color-disabled: var(--text-subtle);
 
