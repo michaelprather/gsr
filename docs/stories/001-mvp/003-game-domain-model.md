@@ -2,7 +2,7 @@
 story_id: "003"
 epic_id: "001"
 title: Game Domain Model
-status: ready
+status: in-progress
 ---
 
 # Game Domain Model

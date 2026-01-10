@@ -5,7 +5,7 @@ created: 2026-01-10
 status: active
 total_estimated_hours: 0
 completed_hours: 0
-story_count: 5
+story_count: 6
 stories_completed: 0
 last_updated: 2026-01-10
 ---

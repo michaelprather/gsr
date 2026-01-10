@@ -115,6 +115,20 @@
       "epic_id": "002",
       "title": "Toast Notifications",
       "status": "ready"
+    },
+    "017": {
+      "file": "002-dot-one/017-app-icon-and-favicon.md",
+      "story_id": "017",
+      "epic_id": "002",
+      "title": "App Icon and Favicon",
+      "status": "ready"
+    },
+    "018": {
+      "file": "002-dot-one/018-help-section.md",
+      "story_id": "018",
+      "epic_id": "002",
+      "title": "Help Section",
+      "status": "ready"
     }
   },
   "epics": {
