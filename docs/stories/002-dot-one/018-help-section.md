@@ -2,7 +2,7 @@
 story_id: "018"
 epic_id: "002"
 title: Help Section
-status: ready
+status: completed
 ---
 
 # Help Section

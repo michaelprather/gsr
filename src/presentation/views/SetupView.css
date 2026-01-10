@@ -81,6 +81,9 @@
 }
 
 .setup-view__footer {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
   width: 100%;
   max-width: var(--setup-view-max-width);
   margin: 0 auto;
