@@ -20,7 +20,6 @@ A detailed grid view showing all players vs all rounds, similar to a paper score
 - Skipped rounds shown as dash
 - Round winner (score 0) subtly highlighted
 - Total column
-- Locked/unlocked round indicators
 - Round type names accessible (tap header for full name, or include legend)
 - Toggle or navigation between summary and scorecard
 
@@ -42,10 +41,6 @@ A detailed grid view showing all players vs all rounds, similar to a paper score
 **Given** the round winner (score 0)
 **When** viewing their cell
 **Then** it is subtly distinguished (e.g., bold or background)
-
-**Given** a locked round
-**When** viewing the column header
-**Then** a lock indicator is visible
 
 **Given** a round type abbreviation
 **When** tapping the column header
@@ -73,4 +68,3 @@ A detailed grid view showing all players vs all rounds, similar to a paper score
 
 - Horizontal scroll is acceptable for many players
 - Keep text readable (don't over-compress)
-- Column headers should indicate lock status
