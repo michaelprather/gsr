@@ -1,11 +1,11 @@
 .ui-confirm-dialog {
-  --ui-confirm-dialog-backdrop: rgba(0, 0, 0, 0.5);
+  --ui-confirm-dialog-backdrop: var(--overlay);
   --ui-confirm-dialog-bg: var(--surface-overlay);
   --ui-confirm-dialog-border: var(--border);
-  --ui-confirm-dialog-shadow: 0 4px 24px rgba(0, 0, 0, 0.15);
+  --ui-confirm-dialog-shadow: var(--shadow-lg);
   --ui-confirm-dialog-padding: var(--space-6);
   --ui-confirm-dialog-radius: var(--radius-lg);
-  --ui-confirm-dialog-max-width: 24rem;
+  --ui-confirm-dialog-max-width: var(--size-96);
 
   --ui-confirm-dialog-title-color: var(--text);
   --ui-confirm-dialog-message-color: var(--text-muted);
@@ -32,14 +32,14 @@
 
 .ui-confirm-dialog__title {
   margin: 0 0 var(--space-2);
-  font-size: 1.125rem;
-  font-weight: 600;
+  font-size: var(--text-lg);
+  font-weight: var(--font-semibold);
   color: var(--ui-confirm-dialog-title-color);
 }
 
 .ui-confirm-dialog__message {
   margin: 0 0 var(--space-6);
-  font-size: 0.9375rem;
+  font-size: var(--text-md);
   line-height: 1.5;
   color: var(--ui-confirm-dialog-message-color);
 }

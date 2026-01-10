@@ -1,6 +1,6 @@
 .score-entry-view {
   --score-entry-view-padding: var(--space-4);
-  --score-entry-view-max-width: 28rem;
+  --score-entry-view-max-width: var(--size-112);
 
   --score-entry-view-header-bg: var(--surface);
   --score-entry-view-round-type-color: var(--text);
@@ -12,9 +12,9 @@
 
   --score-entry-view-total-color: var(--text-muted);
 
-  --score-entry-view-hint-bg: rgba(234, 179, 8, 0.1);
-  --score-entry-view-hint-color: #ca8a04;
-  --score-entry-view-hint-border: #ca8a04;
+  --score-entry-view-hint-bg: var(--warning-muted);
+  --score-entry-view-hint-color: var(--warning);
+  --score-entry-view-hint-border: var(--warning);
 
   display: flex;
   flex-direction: column;
@@ -35,8 +35,8 @@
 }
 
 .score-entry-view__header .ui-button svg {
-  width: 1.5rem;
-  height: 1.5rem;
+  width: var(--icon-lg);
+  height: var(--icon-lg);
 }
 
 .score-entry-view__round-info {
@@ -46,8 +46,8 @@
 
 .score-entry-view__round-type {
   margin: 0;
-  font-size: 1.25rem;
-  font-weight: 600;
+  font-size: var(--text-xl);
+  font-weight: var(--font-semibold);
   color: var(--score-entry-view-round-type-color);
 }
 
@@ -57,7 +57,7 @@
   gap: var(--space-1);
   margin-top: var(--space-1);
   padding: var(--space-1) var(--space-2);
-  font-size: 0.875rem;
+  font-size: var(--text-sm);
   color: var(--score-entry-view-round-indicator-color);
   cursor: pointer;
   border-radius: var(--radius-sm);
@@ -102,23 +102,23 @@
 }
 
 .score-entry-view__player-name {
-  font-size: 1rem;
-  font-weight: 500;
+  font-size: var(--text-base);
+  font-weight: var(--font-medium);
   color: var(--text);
 }
 
 .score-entry-view__player-total {
-  font-size: 0.875rem;
+  font-size: var(--text-sm);
   color: var(--score-entry-view-total-color);
 }
 
 .score-entry-view__player-card .ui-input__field {
-  font-size: 1.25rem;
+  font-size: var(--text-xl);
 }
 
 .score-entry-view__player-skipped {
   padding: var(--space-3);
-  font-size: 0.9375rem;
+  font-size: var(--text-md);
   color: var(--text-muted);
   text-align: center;
   background: var(--surface);
@@ -128,7 +128,7 @@
 .score-entry-view__hint {
   margin-top: var(--space-4);
   padding: var(--space-3) var(--space-4);
-  font-size: 0.875rem;
+  font-size: var(--text-sm);
   color: var(--score-entry-view-hint-color);
   background: var(--score-entry-view-hint-bg);
   border: 1px solid var(--score-entry-view-hint-border);

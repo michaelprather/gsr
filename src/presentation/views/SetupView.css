@@ -1,6 +1,6 @@
 .setup-view {
   --setup-view-padding: var(--space-4);
-  --setup-view-max-width: 28rem;
+  --setup-view-max-width: var(--size-112);
 
   --setup-view-title-color: var(--text);
 
@@ -8,7 +8,8 @@
   --setup-view-player-border: var(--border);
   --setup-view-player-radius: var(--radius-md);
 
-  --setup-view-error-color: #dc2626;
+  --setup-view-error-color: var(--destructive);
+  --setup-view-error-bg: var(--destructive-muted);
 
   display: flex;
   flex-direction: column;
@@ -23,8 +24,8 @@
 
 .setup-view__title {
   margin: 0;
-  font-size: 1.5rem;
-  font-weight: 600;
+  font-size: var(--text-2xl);
+  font-weight: var(--font-semibold);
   color: var(--setup-view-title-color);
 }
 
@@ -63,8 +64,8 @@
 }
 
 .setup-view__player-name {
-  font-size: 1rem;
-  font-weight: 500;
+  font-size: var(--text-base);
+  font-weight: var(--font-medium);
   color: var(--text);
 }
 
@@ -72,15 +73,15 @@
   padding: var(--space-8) var(--space-4);
   text-align: center;
   color: var(--text-muted);
-  font-size: 0.9375rem;
+  font-size: var(--text-md);
 }
 
 .setup-view__error {
   margin-top: var(--space-3);
   padding: var(--space-3) var(--space-4);
-  font-size: 0.875rem;
+  font-size: var(--text-sm);
   color: var(--setup-view-error-color);
-  background: rgba(220, 38, 38, 0.1);
+  background: var(--setup-view-error-bg);
   border-radius: var(--radius-md);
 }
 

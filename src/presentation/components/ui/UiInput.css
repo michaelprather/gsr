@@ -1,20 +1,20 @@
 .ui-input {
-  --ui-input-height: 3rem;
+  --ui-input-height: var(--size-12);
   --ui-input-padding: var(--space-4);
   --ui-input-radius: var(--radius-md);
-  --ui-input-font-size: 1rem;
+  --ui-input-font-size: var(--text-base);
 
   --ui-input-bg: var(--surface);
   --ui-input-border: var(--border);
   --ui-input-border-focus: var(--interactive);
-  --ui-input-border-error: #dc2626;
+  --ui-input-border-error: var(--destructive);
   --ui-input-color: var(--text);
   --ui-input-placeholder: var(--text-subtle);
 
   --ui-input-label-color: var(--text);
-  --ui-input-label-size: 0.875rem;
-  --ui-input-error-color: #dc2626;
-  --ui-input-error-size: 0.8125rem;
+  --ui-input-label-size: var(--text-sm);
+  --ui-input-error-color: var(--destructive);
+  --ui-input-error-size: var(--text-xs);
 
   display: flex;
   flex-direction: column;
@@ -23,7 +23,7 @@
 
 .ui-input__label {
   font-size: var(--ui-input-label-size);
-  font-weight: 500;
+  font-weight: var(--font-medium);
   color: var(--ui-input-label-color);
 }
 
@@ -59,7 +59,7 @@
 
 .ui-input__field--center {
   text-align: center;
-  font-weight: 500;
+  font-weight: var(--font-medium);
 }
 
 .ui-input__error {

@@ -1,11 +1,11 @@
 .round-picker {
-  --round-picker-backdrop: rgba(0, 0, 0, 0.5);
+  --round-picker-backdrop: var(--overlay);
   --round-picker-bg: var(--surface-overlay);
   --round-picker-border: var(--border);
-  --round-picker-shadow: 0 4px 24px rgba(0, 0, 0, 0.15);
+  --round-picker-shadow: var(--shadow-lg);
   --round-picker-padding: var(--space-4);
   --round-picker-radius: var(--radius-lg);
-  --round-picker-max-width: 20rem;
+  --round-picker-max-width: var(--size-80);
 
   --round-picker-title-color: var(--text);
 
@@ -42,8 +42,8 @@
 
 .round-picker__title {
   margin: 0 0 var(--space-4);
-  font-size: 1.125rem;
-  font-weight: 600;
+  font-size: var(--text-lg);
+  font-weight: var(--font-semibold);
   color: var(--round-picker-title-color);
   text-align: center;
 }
@@ -88,12 +88,12 @@
 }
 
 .round-picker__item-type {
-  font-size: 0.9375rem;
-  font-weight: 500;
+  font-size: var(--text-md);
+  font-weight: var(--font-medium);
 }
 
 .round-picker__item-number {
-  font-size: 0.8125rem;
+  font-size: var(--text-xs);
   opacity: 0.7;
 }
 
@@ -109,6 +109,6 @@
 }
 
 .round-picker__item-status svg {
-  width: 1rem;
-  height: 1rem;
+  width: var(--icon-sm);
+  height: var(--icon-sm);
 }
