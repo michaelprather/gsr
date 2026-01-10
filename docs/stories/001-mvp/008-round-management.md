@@ -2,7 +2,8 @@
 story_id: "008"
 epic_id: "001"
 title: Round Lock and Unlock
-status: ready
+status: completed
+completed_date: 2026-01-10
 ---
 
 # Round Lock and Unlock
