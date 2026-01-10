@@ -1,28 +1,12 @@
 .app-brand {
-  --app-brand-logo-size: 2rem;
-  --app-brand-name-size: var(--text-xl);
-  --app-brand-name-color: var(--text);
+  --app-brand-size: 3rem;
 
-  display: flex;
-  align-items: center;
-  gap: var(--space-2);
-}
-
-.app-brand--small {
-  --app-brand-logo-size: 1.25rem;
-  --app-brand-name-size: var(--text-sm);
-  --app-brand-name-color: var(--text-muted);
-}
-
-.app-brand__logo {
-  width: var(--app-brand-logo-size);
-  height: var(--app-brand-logo-size);
+  width: var(--app-brand-size);
+  height: var(--app-brand-size);
   color: var(--interactive);
   flex-shrink: 0;
 }
 
-.app-brand__name {
-  font-size: var(--app-brand-name-size);
-  font-weight: var(--font-medium);
-  color: var(--app-brand-name-color);
+.app-brand--small {
+  --app-brand-size: var(--icon-md);
 }

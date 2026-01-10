@@ -18,8 +18,9 @@
 }
 
 .setup-view__header {
+  display: flex;
+  justify-content: center;
   padding: var(--space-4) 0 var(--space-6);
-  text-align: center;
 }
 
 .setup-view__content {

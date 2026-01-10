@@ -3,7 +3,6 @@
     xmlns="http://www.w3.org/2000/svg"
     viewBox="0 0 32 32"
     fill="currentColor"
-    aria-hidden="true"
   >
     <!-- Stylized playing card with spade -->
     <rect x="4" y="2" width="24" height="28" rx="3" fill="currentColor" opacity="0.1" />
