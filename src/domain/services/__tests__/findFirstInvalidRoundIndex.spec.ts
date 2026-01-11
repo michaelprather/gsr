@@ -126,11 +126,11 @@ describe('findFirstInvalidRoundIndex', () => {
     expect(result).toBe(0)
   })
 
-  it('treats round as valid when winner exists and others have no scores', () => {
+  it('treats round as invalid when only one player has a score', () => {
     const game = Game.create(['Alice', 'Bob'])
     const alice = game.players[0]!
 
-    // Alice wins (score 0), Bob has no score (implicitly skipped)
+    // Alice wins (score 0), Bob has no score - invalid because can't play alone
     let updated = game
     updated = updated.updateRound(
       0,
@@ -138,7 +138,7 @@ describe('findFirstInvalidRoundIndex', () => {
     )
 
     const result = findFirstInvalidRoundIndex(updated)
-    expect(result).toBe(-1) // Round 0 valid (has winner), remaining rounds valid (no scores = skipped)
+    expect(result).toBe(0) // Round 0 invalid - at least two players must have scores
   })
 
   it('handles game with no players', () => {

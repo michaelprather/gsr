@@ -24,8 +24,11 @@ export function validateRoundCompletion(
   }
 
   // No scores at all = skipped round (valid)
+  // At least one score but fewer than two = invalid (can't play alone)
   // At least one score but no winner = invalid
-  if (enteredScoreCount > 0 && zeroScoreCount === 0) {
+  if (enteredScoreCount === 1) {
+    errors.push('At least two players must have scores')
+  } else if (enteredScoreCount > 0 && zeroScoreCount === 0) {
     errors.push('Select a round winner')
   } else if (zeroScoreCount > 1) {
     errors.push('Only one player can win the round')

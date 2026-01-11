@@ -14,13 +14,14 @@ describe('validateRoundCompletion', () => {
     expect(feedback.hasFeedback).toBe(false)
   })
 
-  it('allows empty scores (treated as skips)', () => {
+  it('returns feedback when only one player has a score', () => {
     const game = Game.create(['Alice', 'Bob'])
-    // Alice wins, Bob has no score (implicitly skipped)
+    // Alice wins, Bob has no score - invalid because can't play alone
     const round = game.rounds[0]!.setScore(game.players[0]!.id, RoundScore.entered(Score.zero()))
 
     const feedback = validateRoundCompletion(round, 0, game.players)
-    expect(feedback.hasFeedback).toBe(false)
+    expect(feedback.hasFeedback).toBe(true)
+    expect(feedback.get('round')?.some((e) => e.includes('two players'))).toBe(true)
   })
 
   it('treats round with no scores as skipped (valid)', () => {
