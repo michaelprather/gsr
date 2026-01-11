@@ -2,7 +2,7 @@
 import { ref, computed, onMounted, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import type { Game, Round } from '@/domain'
-import { findFirstInvalidRoundIndex, validateRoundCompletion } from '@/domain'
+import { findFirstEmptyRoundIndex, validateRoundCompletion } from '@/domain'
 import {
   useGameService,
   useNewGame,
@@ -130,11 +130,11 @@ function initializeRoundIndex() {
     return
   }
 
-  const invalidIndex = findFirstInvalidRoundIndex(game.value)
-  if (invalidIndex >= 0) {
-    currentRoundIndex.value = invalidIndex
+  const emptyIndex = findFirstEmptyRoundIndex(game.value)
+  if (emptyIndex >= 0) {
+    currentRoundIndex.value = emptyIndex
   } else {
-    // All rounds valid - go to last round
+    // All rounds have scores - go to last round
     currentRoundIndex.value = game.value.rounds.length - 1
   }
 }

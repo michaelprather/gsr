@@ -2,7 +2,7 @@
 import { ref, computed, onMounted } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import type { Game } from '@/domain'
-import { calculateRankings, findFirstInvalidRoundIndex } from '@/domain'
+import { calculateRankings, findFirstEmptyRoundIndex } from '@/domain'
 import { useGameService, useNewGame, useOrientation, useToast } from '../composables'
 import { IconChevronLeft, IconPlus } from '../components/icons'
 import { UiButton, UiConfirmDialog } from '../components/ui'
@@ -53,9 +53,9 @@ const shouldShowCelebration = computed(() => {
 const currentRoundNumber = computed(() => {
   if (!game.value) return 1
 
-  const invalidIndex = findFirstInvalidRoundIndex(game.value)
-  if (invalidIndex >= 0) {
-    return invalidIndex + 1
+  const emptyIndex = findFirstEmptyRoundIndex(game.value)
+  if (emptyIndex >= 0) {
+    return emptyIndex + 1
   }
 
   return game.value.rounds.length
