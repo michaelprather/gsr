@@ -1,6 +1,6 @@
 import { ref, type Ref, type ComputedRef } from 'vue'
 import type { Game, Round } from '@/domain'
-import { RoundScore } from '@/domain'
+import { PlayerId, RoundScore } from '@/domain'
 import type { GameService } from '@/application'
 import type { UseToastReturn } from './useToast'
 
@@ -61,18 +61,38 @@ export function useRoundScores(options: UseRoundScoresOptions): UseRoundScoresRe
   }
 
   async function handleScoreBlur(playerId: string): Promise<void> {
-    const inputValue = scoreInputs.value[playerId]
+    if (!currentRound.value) return
 
-    // Empty input - no score entered yet
+    const inputValue = scoreInputs.value[playerId]
+    const currentScore = currentRound.value.getScore(PlayerId.create(playerId))
+    const hadEnteredScore = currentScore && RoundScore.isEntered(currentScore)
+
+    // Empty input - clear score if previously entered
     if (inputValue === '' || inputValue === undefined) {
+      if (hadEnteredScore) {
+        try {
+          const updatedGame = await service.clearScore(playerId, currentRoundIndex.value)
+          game.value = updatedGame
+        } catch {
+          toast.error('Failed to clear score')
+        }
+      }
       return
     }
 
     const numericValue = parseInt(inputValue, 10)
 
-    // Non-numeric input - clear it
+    // Non-numeric input - clear it and persist if needed
     if (isNaN(numericValue)) {
       scoreInputs.value[playerId] = ''
+      if (hadEnteredScore) {
+        try {
+          const updatedGame = await service.clearScore(playerId, currentRoundIndex.value)
+          game.value = updatedGame
+        } catch {
+          toast.error('Failed to clear score')
+        }
+      }
       return
     }
 
@@ -95,7 +115,21 @@ export function useRoundScores(options: UseRoundScoresOptions): UseRoundScoresRe
 
     for (const player of game.value.players) {
       const inputValue = scoreInputs.value[player.id.value]
-      if (inputValue === '' || inputValue === undefined) continue
+      const currentScore = currentRound.value.getScore(player.id)
+      const hadEnteredScore = currentScore && RoundScore.isEntered(currentScore)
+
+      // Empty input - clear if previously entered
+      if (inputValue === '' || inputValue === undefined) {
+        if (hadEnteredScore) {
+          try {
+            const updatedGame = await service.clearScore(player.id.value, currentRoundIndex.value)
+            game.value = updatedGame
+          } catch {
+            toast.error('Failed to clear score')
+          }
+        }
+        continue
+      }
 
       const numericValue = parseInt(inputValue, 10)
       if (isNaN(numericValue)) continue
@@ -103,9 +137,7 @@ export function useRoundScores(options: UseRoundScoresOptions): UseRoundScoresRe
       const normalizedValue = normalizeScore(numericValue)
 
       // Check if score differs from persisted value
-      const currentScore = currentRound.value.getScore(player.id)
-      const persistedValue =
-        currentScore && RoundScore.isEntered(currentScore) ? currentScore.value.value : null
+      const persistedValue = hadEnteredScore ? currentScore.value.value : null
 
       if (persistedValue !== normalizedValue) {
         try {
