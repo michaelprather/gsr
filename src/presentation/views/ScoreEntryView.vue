@@ -7,9 +7,15 @@ import {
   calculatePlayerTotals,
   findFirstInvalidRoundIndex,
   validateRoundCompletion,
-  validateScore,
 } from '@/domain'
-import { useGameService, useNewGame, useSwipe, useToast } from '../composables'
+import {
+  useGameService,
+  useNewGame,
+  useRoundScores,
+  useSkipPlayer,
+  useSwipe,
+  useToast,
+} from '../composables'
 import {
   IconChevronLeft,
   IconChevronRight,
@@ -32,29 +38,35 @@ const currentRoundIndex = ref(0)
 const isLoading = ref(true)
 const loadError = ref<string | null>(null)
 const showRoundPicker = ref(false)
-
-// Skip dialog state
-const showSkipDialog = ref(false)
-const skipTargetPlayer = ref<Player | null>(null)
-
-// End game dialog state
 const showEndGameDialog = ref(false)
+
+const currentRound = computed<Round | null>(() => {
+  if (!game.value) return null
+  return game.value.rounds[currentRoundIndex.value] ?? null
+})
+
+// Score management composable
+const roundScores = useRoundScores({
+  game,
+  currentRound,
+  currentRoundIndex,
+  service,
+  toast,
+})
+
+// Skip player composable
+const skipPlayer = useSkipPlayer({
+  game,
+  currentRoundIndex,
+  service,
+  toast,
+})
 
 // Swipe navigation
 const contentRef = ref<HTMLElement | null>(null)
 useSwipe(contentRef, {
   onSwipeLeft: () => goNext(),
   onSwipeRight: () => goPrev(),
-})
-
-// Local form state for each player's score input
-const scoreInputs = ref<Record<string, string>>({})
-const scoreErrors = ref<Record<string, string | null>>({})
-const recentlySaved = ref<Set<string>>(new Set())
-
-const currentRound = computed<Round | null>(() => {
-  if (!game.value) return null
-  return game.value.rounds[currentRoundIndex.value] ?? null
 })
 
 const canGoPrev = computed(() => currentRoundIndex.value > 0)
@@ -114,7 +126,7 @@ const showWinnerHint = computed(() => {
 
   // Check if all active players have entered values
   const allHaveValues = activePlayerIds.every((id) => {
-    const input = scoreInputs.value[id]
+    const input = roundScores.scoreInputs.value[id]
     return input !== undefined && input !== ''
   })
 
@@ -122,14 +134,16 @@ const showWinnerHint = computed(() => {
 
   // Check if any player has 0
   const hasWinner = activePlayerIds.some((id) => {
-    const input = scoreInputs.value[id]
+    const input = roundScores.scoreInputs.value[id]
     return input === '0'
   })
 
   return !hasWinner
 })
 
-onMounted(async () => {
+async function loadGame() {
+  isLoading.value = true
+  loadError.value = null
   try {
     const loadedGame = await service.loadGame()
     if (!loadedGame || loadedGame.isEnded) {
@@ -138,17 +152,27 @@ onMounted(async () => {
     }
     game.value = loadedGame
     initializeRoundIndex()
-    initializeScoreInputs()
+    roundScores.initializeScoreInputs()
   } catch {
     loadError.value = 'Failed to load game'
   } finally {
     isLoading.value = false
   }
+}
+
+function goToSetup() {
+  router.push({ name: 'setup' })
+}
+
+onMounted(() => {
+  loadGame()
 })
 
-// When round changes, re-initialize score inputs
+// Exception to "avoid watch()" convention: Score inputs are local form state that must
+// be imperatively reset when navigating between rounds. This cannot be computed because
+// the inputs need to be mutable for user editing while derived from persisted scores.
 watch(currentRoundIndex, () => {
-  initializeScoreInputs()
+  roundScores.initializeScoreInputs()
 })
 
 function initializeRoundIndex() {
@@ -166,64 +190,9 @@ function initializeRoundIndex() {
   }
 }
 
-function initializeScoreInputs() {
-  if (!game.value || !currentRound.value) return
-
-  const inputs: Record<string, string> = {}
-  const errors: Record<string, string | null> = {}
-
-  for (const player of game.value.players) {
-    const score = currentRound.value.getScore(player.id)
-    if (score && RoundScore.isEntered(score)) {
-      inputs[player.id.value] = String(score.value.value)
-    } else {
-      inputs[player.id.value] = ''
-    }
-    errors[player.id.value] = null
-  }
-
-  scoreInputs.value = inputs
-  scoreErrors.value = errors
-}
-
 function goPrev() {
   if (canGoPrev.value) {
     currentRoundIndex.value--
-  }
-}
-
-async function saveUnsavedScores(): Promise<void> {
-  if (!game.value || !currentRound.value) return
-
-  for (const player of game.value.players) {
-    if (isSkipped(player)) continue
-
-    const inputValue = scoreInputs.value[player.id.value]
-    if (inputValue === '' || inputValue === undefined) continue
-
-    const numericValue = parseInt(inputValue, 10)
-    if (isNaN(numericValue)) continue
-
-    const feedback = validateScore(numericValue)
-    if (feedback.hasFeedback) continue
-
-    // Check if score differs from persisted value
-    const currentScore = currentRound.value.getScore(player.id)
-    const persistedValue =
-      currentScore && RoundScore.isEntered(currentScore) ? currentScore.value.value : null
-
-    if (persistedValue !== numericValue) {
-      try {
-        const updatedGame = await service.setScore(
-          player.id.value,
-          currentRoundIndex.value,
-          numericValue,
-        )
-        game.value = updatedGame
-      } catch {
-        toast.error('Failed to save score')
-      }
-    }
   }
 }
 
@@ -232,7 +201,7 @@ async function goNext() {
   if (!game.value || !currentRound.value) return
 
   // Save any unsaved scores before validating
-  await saveUnsavedScores()
+  await roundScores.saveUnsavedScores()
 
   // Re-check current round after saves
   if (!currentRound.value) return
@@ -257,48 +226,6 @@ function selectRound(index: number) {
   showRoundPicker.value = false
 }
 
-async function handleScoreBlur(playerId: string) {
-  const inputValue = scoreInputs.value[playerId]
-
-  // Clear error first
-  scoreErrors.value[playerId] = null
-
-  // Empty input is valid (just means no score entered yet)
-  if (inputValue === '' || inputValue === undefined) {
-    return
-  }
-
-  const numericValue = parseInt(inputValue, 10)
-
-  // Validate
-  if (isNaN(numericValue)) {
-    scoreErrors.value[playerId] = 'Enter a valid number'
-    return
-  }
-
-  const feedback = validateScore(numericValue)
-  if (feedback.hasFeedback) {
-    scoreErrors.value[playerId] = feedback.get('score')?.[0] ?? 'Invalid score'
-    return
-  }
-
-  // Save to service
-  try {
-    const updatedGame = await service.setScore(playerId, currentRoundIndex.value, numericValue)
-    game.value = updatedGame
-    showSaveFeedback(playerId)
-  } catch {
-    scoreErrors.value[playerId] = 'Failed to save score'
-  }
-}
-
-function showSaveFeedback(playerId: string) {
-  recentlySaved.value.add(playerId)
-  setTimeout(() => {
-    recentlySaved.value.delete(playerId)
-  }, 300)
-}
-
 async function handleMarkWinner(playerId: string) {
   if (!game.value) return
 
@@ -314,26 +241,26 @@ async function handleMarkWinner(playerId: string) {
 
     // Clear any existing winner's score
     for (const player of game.value.players) {
-      if (player.id.value !== playerId && scoreInputs.value[player.id.value] === '0') {
-        scoreInputs.value[player.id.value] = ''
+      if (player.id.value !== playerId && roundScores.scoreInputs.value[player.id.value] === '0') {
+        roundScores.scoreInputs.value[player.id.value] = ''
         const updatedGame = await service.clearScore(player.id.value, currentRoundIndex.value)
         game.value = updatedGame
       }
     }
 
     // Set new winner
-    scoreInputs.value[playerId] = '0'
-    scoreErrors.value[playerId] = null
+    roundScores.scoreInputs.value[playerId] = '0'
+    roundScores.scoreErrors.value[playerId] = null
     const updatedGame = await service.setScore(playerId, currentRoundIndex.value, 0)
     game.value = updatedGame
-    showSaveFeedback(playerId)
+    roundScores.showSaveFeedback(playerId)
   } catch {
-    scoreErrors.value[playerId] = 'Failed to save score'
+    roundScores.scoreErrors.value[playerId] = 'Failed to save score'
   }
 }
 
 function isWinner(player: Player): boolean {
-  const inputValue = scoreInputs.value[player.id.value]
+  const inputValue = roundScores.scoreInputs.value[player.id.value]
   return inputValue === '0'
 }
 
@@ -342,58 +269,6 @@ function isSkipped(player: Player): boolean {
   if (!currentRound.value) return false
   const score = currentRound.value.getScore(player.id)
   return score !== undefined && RoundScore.isSkipped(score)
-}
-
-// Open skip dialog for a player
-function openSkipDialog(player: Player) {
-  skipTargetPlayer.value = player
-  showSkipDialog.value = true
-}
-
-function closeSkipDialog() {
-  showSkipDialog.value = false
-  skipTargetPlayer.value = null
-}
-
-async function handleSkipRound() {
-  if (!skipTargetPlayer.value) return
-
-  try {
-    const updatedGame = await service.skipPlayer(
-      skipTargetPlayer.value.id.value,
-      currentRoundIndex.value,
-      false,
-    )
-    game.value = updatedGame
-    closeSkipDialog()
-  } catch {
-    toast.error('Failed to skip player')
-  }
-}
-
-async function handleSkipAll() {
-  if (!skipTargetPlayer.value) return
-
-  try {
-    const updatedGame = await service.skipPlayer(
-      skipTargetPlayer.value.id.value,
-      currentRoundIndex.value,
-      true,
-    )
-    game.value = updatedGame
-    closeSkipDialog()
-  } catch {
-    toast.error('Failed to skip player')
-  }
-}
-
-async function handleUnskip(player: Player) {
-  try {
-    const updatedGame = await service.unskipPlayer(player.id.value, currentRoundIndex.value)
-    game.value = updatedGame
-  } catch {
-    toast.error('Failed to unskip player')
-  }
 }
 
 // Skip entire round handler (skip all players and proceed)
@@ -437,7 +312,13 @@ async function handleEndGame() {
 <template>
   <div v-if="isLoading" class="score-entry-view__loading">Loading...</div>
 
-  <div v-else-if="loadError" class="score-entry-view__error">{{ loadError }}</div>
+  <div v-else-if="loadError" class="score-entry-view__error">
+    <p class="score-entry-view__error-message">{{ loadError }}</p>
+    <div class="score-entry-view__error-actions">
+      <UiButton variant="secondary" @click="loadGame">Try Again</UiButton>
+      <UiButton @click="goToSetup">Start New Game</UiButton>
+    </div>
+  </div>
 
   <main v-else-if="game && currentRound" class="score-entry-view">
     <header class="score-entry-view__header">
@@ -505,7 +386,11 @@ async function handleEndGame() {
           :key="player.id.value"
           :class="[
             'score-entry-view__player-card',
-            { 'score-entry-view__player-card--saved': recentlySaved.has(player.id.value) },
+            {
+              'score-entry-view__player-card--saved': roundScores.recentlySaved.value.has(
+                player.id.value,
+              ),
+            },
           ]"
         >
           <div class="score-entry-view__player-header">
@@ -518,16 +403,16 @@ async function handleEndGame() {
           <div class="score-entry-view__score-row">
             <UiInput
               v-if="!isSkipped(player)"
-              v-model="scoreInputs[player.id.value]"
+              v-model="roundScores.scoreInputs.value[player.id.value]"
               :label="`Score for ${player.name}`"
               :hide-label="true"
               type="number"
               inputmode="numeric"
               placeholder="—"
               :step="5"
-              :error="scoreErrors[player.id.value]"
+              :error="roundScores.scoreErrors.value[player.id.value]"
               :center="true"
-              @blur="handleScoreBlur(player.id.value)"
+              @blur="roundScores.handleScoreBlur(player.id.value)"
             />
             <div v-else class="score-entry-view__skipped-placeholder">—</div>
             <UiButton
@@ -545,7 +430,7 @@ async function handleEndGame() {
               size="icon"
               :class="{ 'score-entry-view__skip-button--active': isSkipped(player) }"
               :aria-label="isSkipped(player) ? 'Unskip player' : 'Skip player'"
-              @click="isSkipped(player) ? handleUnskip(player) : openSkipDialog(player)"
+              @click="isSkipped(player) ? skipPlayer.unskip(player) : skipPlayer.openDialog(player)"
             >
               <IconUserSlashOutline />
             </UiButton>
@@ -578,11 +463,11 @@ async function handleEndGame() {
     />
 
     <SkipPlayerDialog
-      :open="showSkipDialog"
-      :player-name="skipTargetPlayer?.name ?? ''"
-      @skip-round="handleSkipRound"
-      @skip-all="handleSkipAll"
-      @close="closeSkipDialog"
+      :open="skipPlayer.showDialog.value"
+      :player-name="skipPlayer.targetPlayer.value?.name ?? ''"
+      @skip-round="skipPlayer.skipRound"
+      @skip-all="skipPlayer.skipAll"
+      @close="skipPlayer.closeDialog"
     />
 
     <UiConfirmDialog
