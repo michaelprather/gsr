@@ -26,6 +26,8 @@
   border: 1px solid var(--standings-list-row-border);
   border-radius: var(--standings-list-row-radius);
   box-shadow: var(--elevation-1);
+  text-decoration: none;
+  color: inherit;
 }
 
 .standings-list__row--winner {
@@ -54,21 +56,6 @@
   height: var(--icon-sm);
 }
 
-.standings-list__player-link {
-  display: flex;
-  align-items: center;
-  gap: var(--space-2);
-  flex: 1;
-  min-width: 0;
-  text-decoration: none;
-  color: inherit;
-}
-
-.standings-list__player-info {
-  flex: 1;
-  min-width: 0;
-}
-
 .standings-list__chevron {
   width: var(--icon-sm);
   height: var(--icon-sm);
@@ -78,6 +65,8 @@
 }
 
 .standings-list__player-name {
+  flex: 1;
+  min-width: 0;
   font-size: var(--text-base);
   font-weight: var(--font-medium);
   color: var(--text);

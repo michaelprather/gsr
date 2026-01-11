@@ -18,24 +18,18 @@ function isWinner(rank: number): boolean {
 
 <template>
   <ol class="standings-list">
-    <li
-      v-for="player in rankings"
-      :key="player.playerId"
-      class="standings-list__row"
-      :class="{ 'standings-list__row--winner': isWinner(player.rank) }"
-    >
-      <span class="standings-list__rank">
-        <IconTrophy v-if="isWinner(player.rank)" class="standings-list__trophy-icon" />
-        <template v-else>{{ player.rank }}</template>
-      </span>
-
+    <li v-for="player in rankings" :key="player.playerId">
       <RouterLink
         :to="{ name: 'player', params: { id: player.playerId } }"
-        class="standings-list__player-link"
+        class="standings-list__row"
+        :class="{ 'standings-list__row--winner': isWinner(player.rank) }"
       >
-        <div class="standings-list__player-info">
-          <span class="standings-list__player-name">{{ player.playerName }}</span>
-        </div>
+        <span class="standings-list__rank">
+          <IconTrophy v-if="isWinner(player.rank)" class="standings-list__trophy-icon" />
+          <template v-else>{{ player.rank }}</template>
+        </span>
+
+        <span class="standings-list__player-name">{{ player.playerName }}</span>
 
         <span class="standings-list__total">{{ player.total }}</span>
 
