@@ -1,4 +1,4 @@
 export * from './calculatePlayerStats'
 export * from './calculatePlayerTotals'
 export * from './calculateRankings'
-export * from './findFirstInvalidRoundIndex'
+export * from './findFirstEmptyRoundIndex'
