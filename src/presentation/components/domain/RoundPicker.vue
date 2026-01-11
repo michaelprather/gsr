@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useId } from 'vue'
 import type { Player, Round } from '@/domain'
-import { validateRoundCompletion } from '@/domain'
+import { RoundScore } from '@/domain'
 import { IconCircleCheck } from '../icons'
 
 export interface RoundPickerProps {
@@ -22,9 +22,15 @@ const emit = defineEmits<RoundPickerEmits>()
 
 const titleId = useId()
 
-function isRoundComplete(round: Round, index: number): boolean {
-  const feedback = validateRoundCompletion(round, index, players)
-  return !feedback.hasFeedback
+function isRoundComplete(round: Round): boolean {
+  // A round is complete if it has exactly one winner (score = 0)
+  for (const player of players) {
+    const score = round.getScore(player.id)
+    if (score && RoundScore.isEntered(score) && score.value.value === 0) {
+      return true
+    }
+  }
+  return false
 }
 
 function handleSelect(index: number) {
@@ -74,7 +80,7 @@ function handleKeydown(event: KeyboardEvent) {
               <span class="round-picker__item-number">Round {{ index + 1 }}</span>
             </div>
             <span
-              v-if="isRoundComplete(round, index)"
+              v-if="isRoundComplete(round)"
               class="round-picker__item-status"
               aria-label="Complete"
             >

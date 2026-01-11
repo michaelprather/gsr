@@ -1,8 +1,12 @@
 import { ref, type Ref, type ComputedRef } from 'vue'
-import type { Game, Player, Round } from '@/domain'
-import { RoundScore, validateScore } from '@/domain'
+import type { Game, Round } from '@/domain'
+import { RoundScore } from '@/domain'
 import type { GameService } from '@/application'
 import type { UseToastReturn } from './useToast'
+
+const MIN_SCORE = 0
+const MAX_SCORE = 300
+const SCORE_INCREMENT = 5
 
 export interface UseRoundScoresOptions {
   game: Ref<Game | null>
@@ -14,10 +18,8 @@ export interface UseRoundScoresOptions {
 
 export interface UseRoundScoresReturn {
   scoreInputs: Ref<Record<string, string>>
-  scoreErrors: Ref<Record<string, string | null>>
   recentlySaved: Ref<Set<string>>
   initializeScoreInputs: () => void
-  validateScoreInput: (playerId: string) => void
   handleScoreBlur: (playerId: string) => Promise<void>
   saveUnsavedScores: () => Promise<void>
   showSaveFeedback: (playerId: string) => void
@@ -27,14 +29,12 @@ export function useRoundScores(options: UseRoundScoresOptions): UseRoundScoresRe
   const { game, currentRound, currentRoundIndex, service, toast } = options
 
   const scoreInputs = ref<Record<string, string>>({})
-  const scoreErrors = ref<Record<string, string | null>>({})
   const recentlySaved = ref<Set<string>>(new Set())
 
   function initializeScoreInputs(): void {
     if (!game.value || !currentRound.value) return
 
     const inputs: Record<string, string> = {}
-    const errors: Record<string, string | null> = {}
 
     for (const player of game.value.players) {
       const score = currentRound.value.getScore(player.id)
@@ -43,11 +43,14 @@ export function useRoundScores(options: UseRoundScoresOptions): UseRoundScoresRe
       } else {
         inputs[player.id.value] = ''
       }
-      errors[player.id.value] = null
     }
 
     scoreInputs.value = inputs
-    scoreErrors.value = errors
+  }
+
+  function normalizeScore(value: number): number {
+    const clamped = Math.max(MIN_SCORE, Math.min(MAX_SCORE, value))
+    return Math.round(clamped / SCORE_INCREMENT) * SCORE_INCREMENT
   }
 
   function showSaveFeedback(playerId: string): void {
@@ -57,70 +60,33 @@ export function useRoundScores(options: UseRoundScoresOptions): UseRoundScoresRe
     }, 300)
   }
 
-  function isSkipped(player: Player): boolean {
-    if (!currentRound.value) return false
-    const score = currentRound.value.getScore(player.id)
-    return score !== undefined && RoundScore.isSkipped(score)
-  }
-
-  function validateScoreInput(playerId: string): void {
-    const inputValue = scoreInputs.value[playerId]
-
-    // Empty input is valid (no score entered yet)
-    if (inputValue === '' || inputValue === undefined) {
-      scoreErrors.value[playerId] = null
-      return
-    }
-
-    const numericValue = parseInt(inputValue, 10)
-
-    if (isNaN(numericValue)) {
-      scoreErrors.value[playerId] = 'Enter a valid number'
-      return
-    }
-
-    const feedback = validateScore(numericValue)
-    if (feedback.hasFeedback) {
-      scoreErrors.value[playerId] = feedback.get('score')?.[0] ?? 'Invalid score'
-      return
-    }
-
-    // Valid - clear error
-    scoreErrors.value[playerId] = null
-  }
-
   async function handleScoreBlur(playerId: string): Promise<void> {
     const inputValue = scoreInputs.value[playerId]
 
-    // Clear error first
-    scoreErrors.value[playerId] = null
-
-    // Empty input is valid (just means no score entered yet)
+    // Empty input - no score entered yet
     if (inputValue === '' || inputValue === undefined) {
       return
     }
 
     const numericValue = parseInt(inputValue, 10)
 
-    // Validate
+    // Non-numeric input - clear it
     if (isNaN(numericValue)) {
-      scoreErrors.value[playerId] = 'Enter a valid number'
+      scoreInputs.value[playerId] = ''
       return
     }
 
-    const feedback = validateScore(numericValue)
-    if (feedback.hasFeedback) {
-      scoreErrors.value[playerId] = feedback.get('score')?.[0] ?? 'Invalid score'
-      return
-    }
+    // Normalize the score (clamp and round to increment)
+    const normalizedValue = normalizeScore(numericValue)
+    scoreInputs.value[playerId] = String(normalizedValue)
 
     // Save to service
     try {
-      const updatedGame = await service.setScore(playerId, currentRoundIndex.value, numericValue)
+      const updatedGame = await service.setScore(playerId, currentRoundIndex.value, normalizedValue)
       game.value = updatedGame
       showSaveFeedback(playerId)
     } catch {
-      scoreErrors.value[playerId] = 'Failed to save score'
+      toast.error('Failed to save score')
     }
   }
 
@@ -128,28 +94,25 @@ export function useRoundScores(options: UseRoundScoresOptions): UseRoundScoresRe
     if (!game.value || !currentRound.value) return
 
     for (const player of game.value.players) {
-      if (isSkipped(player)) continue
-
       const inputValue = scoreInputs.value[player.id.value]
       if (inputValue === '' || inputValue === undefined) continue
 
       const numericValue = parseInt(inputValue, 10)
       if (isNaN(numericValue)) continue
 
-      const feedback = validateScore(numericValue)
-      if (feedback.hasFeedback) continue
+      const normalizedValue = normalizeScore(numericValue)
 
       // Check if score differs from persisted value
       const currentScore = currentRound.value.getScore(player.id)
       const persistedValue =
         currentScore && RoundScore.isEntered(currentScore) ? currentScore.value.value : null
 
-      if (persistedValue !== numericValue) {
+      if (persistedValue !== normalizedValue) {
         try {
           const updatedGame = await service.setScore(
             player.id.value,
             currentRoundIndex.value,
-            numericValue,
+            normalizedValue,
           )
           game.value = updatedGame
         } catch {
@@ -161,10 +124,8 @@ export function useRoundScores(options: UseRoundScoresOptions): UseRoundScoresRe
 
   return {
     scoreInputs,
-    scoreErrors,
     recentlySaved,
     initializeScoreInputs,
-    validateScoreInput,
     handleScoreBlur,
     saveUnsavedScores,
     showSaveFeedback,

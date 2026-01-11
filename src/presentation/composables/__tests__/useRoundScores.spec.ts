@@ -70,7 +70,6 @@ describe('useRoundScores', () => {
       expect(Object.keys(roundScores.scoreInputs.value)).toHaveLength(2)
       for (const playerId of playerIds) {
         expect(roundScores.scoreInputs.value[playerId]).toBe('')
-        expect(roundScores.scoreErrors.value[playerId]).toBeNull()
       }
     })
 
@@ -112,7 +111,7 @@ describe('useRoundScores', () => {
   })
 
   describe('handleScoreBlur', () => {
-    it('clears error and does nothing for empty input', async () => {
+    it('does nothing for empty input', async () => {
       const roundScores = useRoundScores({
         game,
         currentRound,
@@ -123,15 +122,13 @@ describe('useRoundScores', () => {
 
       const playerId = game.value!.players[0]!.id.value
       roundScores.scoreInputs.value[playerId] = ''
-      roundScores.scoreErrors.value[playerId] = 'Previous error'
 
       await roundScores.handleScoreBlur(playerId)
 
-      expect(roundScores.scoreErrors.value[playerId]).toBeNull()
       expect(service.setScore).not.toHaveBeenCalled()
     })
 
-    it('sets error for non-numeric input', async () => {
+    it('clears input for non-numeric values', async () => {
       const roundScores = useRoundScores({
         game,
         currentRound,
@@ -145,11 +142,14 @@ describe('useRoundScores', () => {
 
       await roundScores.handleScoreBlur(playerId)
 
-      expect(roundScores.scoreErrors.value[playerId]).toBe('Enter a valid number')
+      expect(roundScores.scoreInputs.value[playerId]).toBe('')
       expect(service.setScore).not.toHaveBeenCalled()
     })
 
-    it('sets error for invalid score (not divisible by 5)', async () => {
+    it('normalizes score not divisible by 5 to nearest increment', async () => {
+      const updatedGame = createTestGame()
+      vi.mocked(service.setScore).mockResolvedValue(updatedGame)
+
       const roundScores = useRoundScores({
         game,
         currentRound,
@@ -163,8 +163,50 @@ describe('useRoundScores', () => {
 
       await roundScores.handleScoreBlur(playerId)
 
-      expect(roundScores.scoreErrors.value[playerId]).toBe('Score must be divisible by 5')
-      expect(service.setScore).not.toHaveBeenCalled()
+      expect(roundScores.scoreInputs.value[playerId]).toBe('55')
+      expect(service.setScore).toHaveBeenCalledWith(playerId, 0, 55)
+    })
+
+    it('clamps negative scores to 0', async () => {
+      const updatedGame = createTestGame()
+      vi.mocked(service.setScore).mockResolvedValue(updatedGame)
+
+      const roundScores = useRoundScores({
+        game,
+        currentRound,
+        currentRoundIndex,
+        service,
+        toast,
+      })
+
+      const playerId = game.value!.players[0]!.id.value
+      roundScores.scoreInputs.value[playerId] = '-10'
+
+      await roundScores.handleScoreBlur(playerId)
+
+      expect(roundScores.scoreInputs.value[playerId]).toBe('0')
+      expect(service.setScore).toHaveBeenCalledWith(playerId, 0, 0)
+    })
+
+    it('clamps scores above 300 to 300', async () => {
+      const updatedGame = createTestGame()
+      vi.mocked(service.setScore).mockResolvedValue(updatedGame)
+
+      const roundScores = useRoundScores({
+        game,
+        currentRound,
+        currentRoundIndex,
+        service,
+        toast,
+      })
+
+      const playerId = game.value!.players[0]!.id.value
+      roundScores.scoreInputs.value[playerId] = '350'
+
+      await roundScores.handleScoreBlur(playerId)
+
+      expect(roundScores.scoreInputs.value[playerId]).toBe('300')
+      expect(service.setScore).toHaveBeenCalledWith(playerId, 0, 300)
     })
 
     it('saves valid score and shows feedback', async () => {
@@ -185,11 +227,10 @@ describe('useRoundScores', () => {
       await roundScores.handleScoreBlur(playerId)
 
       expect(service.setScore).toHaveBeenCalledWith(playerId, 0, 50)
-      expect(roundScores.scoreErrors.value[playerId]).toBeNull()
       expect(roundScores.recentlySaved.value.has(playerId)).toBe(true)
     })
 
-    it('sets error when save fails', async () => {
+    it('shows toast error when save fails', async () => {
       vi.mocked(service.setScore).mockRejectedValue(new Error('Network error'))
 
       const roundScores = useRoundScores({
@@ -205,7 +246,7 @@ describe('useRoundScores', () => {
 
       await roundScores.handleScoreBlur(playerId)
 
-      expect(roundScores.scoreErrors.value[playerId]).toBe('Failed to save score')
+      expect(toast.error).toHaveBeenCalledWith('Failed to save score')
     })
   })
 
@@ -229,29 +270,6 @@ describe('useRoundScores', () => {
       await roundScores.saveUnsavedScores()
 
       expect(service.setScore).toHaveBeenCalledWith(playerId, 0, 100)
-    })
-
-    it('skips players with skipped status', async () => {
-      // Mark first player as skipped
-      const player = game.value!.players[0]!
-      const round = game.value!.rounds[0]!
-      const updatedRound = round.setScore(player.id, RoundScore.skipped())
-      game.value = game.value!.updateRound(0, updatedRound)
-
-      const roundScores = useRoundScores({
-        game,
-        currentRound,
-        currentRoundIndex,
-        service,
-        toast,
-      })
-
-      roundScores.initializeScoreInputs()
-      roundScores.scoreInputs.value[player.id.value] = '50'
-
-      await roundScores.saveUnsavedScores()
-
-      expect(service.setScore).not.toHaveBeenCalled()
     })
 
     it('shows toast error when save fails', async () => {

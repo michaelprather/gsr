@@ -1,7 +1,8 @@
 <script setup lang="ts">
+import { RouterLink } from 'vue-router'
 import type { Game } from '@/domain'
 import { calculateRankings } from '@/domain'
-import { IconTrophy, IconUserSlashOutline } from '../icons'
+import { IconChevronRight, IconTrophy } from '../icons'
 
 const { game, isEnded = false } = defineProps<{
   game: Game
@@ -28,17 +29,18 @@ function isWinner(rank: number): boolean {
         <template v-else>{{ player.rank }}</template>
       </span>
 
-      <div class="standings-list__player-info">
-        <span class="standings-list__player-name">
-          {{ player.playerName }}
-          <span v-if="player.hasSkippedRounds" class="standings-list__skipped-badge">
-            <IconUserSlashOutline class="standings-list__skipped-icon" />
-            Skipped
-          </span>
-        </span>
-      </div>
+      <RouterLink
+        :to="{ name: 'player', params: { id: player.playerId } }"
+        class="standings-list__player-link"
+      >
+        <div class="standings-list__player-info">
+          <span class="standings-list__player-name">{{ player.playerName }}</span>
+        </div>
 
-      <span class="standings-list__total">{{ player.total }}</span>
+        <span class="standings-list__total">{{ player.total }}</span>
+
+        <IconChevronRight class="standings-list__chevron" />
+      </RouterLink>
     </li>
   </ol>
 </template>

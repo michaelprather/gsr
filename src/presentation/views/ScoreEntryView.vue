@@ -1,18 +1,12 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, watch } from 'vue'
 import { useRouter } from 'vue-router'
-import type { Game, Player, Round } from '@/domain'
-import {
-  RoundScore,
-  calculatePlayerTotals,
-  findFirstInvalidRoundIndex,
-  validateRoundCompletion,
-} from '@/domain'
+import type { Game, Round } from '@/domain'
+import { findFirstInvalidRoundIndex, validateRoundCompletion } from '@/domain'
 import {
   useGameService,
   useNewGame,
   useRoundScores,
-  useSkipPlayer,
   useSwipe,
   useToast,
 } from '../composables'
@@ -22,11 +16,10 @@ import {
   IconCircleCheck,
   IconCrown,
   IconPlus,
-  IconUserSlashOutline,
 } from '../components/icons'
 import { UiButton, UiConfirmDialog, UiInput } from '../components/ui'
 import { AppBrand } from '../components/layout'
-import { RoundPicker, SkipPlayerDialog } from '../components/domain'
+import { RoundPicker } from '../components/domain'
 
 const router = useRouter()
 const service = useGameService()
@@ -53,38 +46,6 @@ const roundScores = useRoundScores({
   service,
   toast,
 })
-
-// Skip player composable
-const skipPlayer = useSkipPlayer({
-  game,
-  currentRoundIndex,
-  service,
-  toast,
-})
-
-// Swipe-to-skip
-const touchStartX = ref(0)
-const SWIPE_THRESHOLD = 50
-
-function handleCardTouchStart(e: TouchEvent) {
-  touchStartX.value = e.changedTouches[0]?.clientX ?? 0
-}
-
-function handleCardTouchEnd(e: TouchEvent, player: Player) {
-  const touchEndX = e.changedTouches[0]?.clientX ?? 0
-  const diff = touchStartX.value - touchEndX
-
-  if (diff < SWIPE_THRESHOLD) {
-    return
-  }
-
-  // Swiped left - trigger skip action directly
-  if (isSkipped(player)) {
-    skipPlayer.unskip(player)
-  } else {
-    skipPlayer.openDialog(player)
-  }
-}
 
 // Swipe navigation
 const contentRef = ref<HTMLElement | null>(null)
@@ -127,42 +88,6 @@ const canEndGame = computed(() => {
   if (!game.value) return false
   const isLastRound = currentRoundIndex.value === game.value.rounds.length - 1
   return isLastRound && allRoundsComplete.value
-})
-
-// Calculate cumulative totals for each player
-const playerTotals = computed<Record<string, number>>(() => {
-  if (!game.value) return {}
-  return calculatePlayerTotals(game.value)
-})
-
-// Get active (non-skipped) players for the current round
-const activePlayers = computed<Player[]>(() => {
-  if (!game.value) return []
-  return game.value.players.filter((p) => !isSkipped(p))
-})
-
-// Check if we should show the "winner required" hint
-const showWinnerHint = computed(() => {
-  if (!currentRound.value) return false
-
-  const activePlayerIds = activePlayers.value.map((p) => p.id.value)
-  if (activePlayerIds.length === 0) return false
-
-  // Check if all active players have entered values
-  const allHaveValues = activePlayerIds.every((id) => {
-    const input = roundScores.scoreInputs.value[id]
-    return input !== undefined && input !== ''
-  })
-
-  if (!allHaveValues) return false
-
-  // Check if any player has 0
-  const hasWinner = activePlayerIds.some((id) => {
-    const input = roundScores.scoreInputs.value[id]
-    return input === '0'
-  })
-
-  return !hasWinner
 })
 
 async function loadGame() {
@@ -253,16 +178,7 @@ function selectRound(index: number) {
 async function handleMarkWinner(playerId: string) {
   if (!game.value) return
 
-  const targetPlayer = game.value.players.find((p) => p.id.value === playerId)
-  if (!targetPlayer) return
-
   try {
-    // Unskip player if they are currently skipped
-    if (isSkipped(targetPlayer)) {
-      const updatedGame = await service.unskipPlayer(playerId, currentRoundIndex.value)
-      game.value = updatedGame
-    }
-
     // Clear any existing winner's score
     for (const player of game.value.players) {
       if (player.id.value !== playerId && roundScores.scoreInputs.value[player.id.value] === '0') {
@@ -274,47 +190,11 @@ async function handleMarkWinner(playerId: string) {
 
     // Set new winner
     roundScores.scoreInputs.value[playerId] = '0'
-    roundScores.scoreErrors.value[playerId] = null
     const updatedGame = await service.setScore(playerId, currentRoundIndex.value, 0)
     game.value = updatedGame
     roundScores.showSaveFeedback(playerId)
   } catch {
-    roundScores.scoreErrors.value[playerId] = 'Failed to save score'
-  }
-}
-
-function isWinner(player: Player): boolean {
-  const inputValue = roundScores.scoreInputs.value[player.id.value]
-  return inputValue === '0'
-}
-
-// Check if player is skipped for current round
-function isSkipped(player: Player): boolean {
-  if (!currentRound.value) return false
-  const score = currentRound.value.getScore(player.id)
-  return score !== undefined && RoundScore.isSkipped(score)
-}
-
-// Skip entire round handler (skip all players and proceed)
-async function handleSkipEntireRound() {
-  if (!game.value) return
-
-  try {
-    // Skip all non-skipped players for this round
-    let updatedGame = game.value
-    for (const player of game.value.players) {
-      if (!isSkipped(player)) {
-        updatedGame = await service.skipPlayer(player.id.value, currentRoundIndex.value, false)
-      }
-    }
-    game.value = updatedGame
-
-    // Proceed to next round if available
-    if (canGoNext.value) {
-      currentRoundIndex.value++
-    }
-  } catch {
-    toast.error('Failed to skip round')
+    toast.error('Failed to save score')
   }
 }
 
@@ -416,73 +296,39 @@ async function handleEndGame() {
               ),
             },
           ]"
-          @touchstart="handleCardTouchStart"
-          @touchend="(e) => handleCardTouchEnd(e, player)"
         >
-            <div class="score-entry-view__player-header">
-              <span class="score-entry-view__player-name">{{ player.name }}</span>
-              <span class="score-entry-view__player-total">
-                Total: {{ playerTotals[player.id.value] ?? 0 }}
-              </span>
-            </div>
-
-            <div class="score-entry-view__score-row">
-              <UiInput
-                v-if="!isSkipped(player)"
-                v-model="roundScores.scoreInputs.value[player.id.value]"
-                :label="`Score for ${player.name}`"
-                :hide-label="true"
-                type="number"
-                inputmode="numeric"
-                placeholder="—"
-                :step="5"
-                :error="roundScores.scoreErrors.value[player.id.value]"
-                :center="true"
-                @input="roundScores.validateScoreInput(player.id.value)"
-                @blur="roundScores.handleScoreBlur(player.id.value)"
-              />
-              <div v-else class="score-entry-view__skipped-placeholder">—</div>
-              <UiButton
-                variant="ghost"
-                size="icon"
-                :class="{
-                  'score-entry-view__winner-button--active': isWinner(player),
-                  'score-entry-view__winner-button--highlight':
-                    roundScores.scoreInputs.value[player.id.value] === '0',
-                }"
-                aria-label="Mark as round winner"
-                title="Mark as round winner"
-                @click="handleMarkWinner(player.id.value)"
-              >
-                <IconCrown />
-              </UiButton>
-              <UiButton
-                variant="ghost"
-                size="icon"
-                :class="{
-                  'score-entry-view__skip-button--active': isSkipped(player),
-                }"
-                :aria-label="isSkipped(player) ? 'Unskip player' : 'Skip player'"
-                :title="isSkipped(player) ? 'Unskip player' : 'Skip player'"
-                @click="
-                  isSkipped(player) ? skipPlayer.unskip(player) : skipPlayer.openDialog(player)
-                "
-              >
-                <IconUserSlashOutline />
-              </UiButton>
-            </div>
+          <span class="score-entry-view__player-name">{{ player.name }}</span>
+          <div class="score-entry-view__score-row">
+            <UiInput
+              v-model="roundScores.scoreInputs.value[player.id.value]"
+              :label="`Score for ${player.name}`"
+              :hide-label="true"
+              type="number"
+              inputmode="numeric"
+              :step="5"
+              :center="true"
+              @blur="roundScores.handleScoreBlur(player.id.value)"
+            />
+            <UiButton
+              variant="ghost"
+              size="icon"
+              :class="{
+                'score-entry-view__winner-button--active':
+                  roundScores.scoreInputs.value[player.id.value] === '0',
+              }"
+              aria-label="Mark as round winner"
+              title="Mark as round winner"
+              @click="handleMarkWinner(player.id.value)"
+            >
+              <IconCrown />
+            </UiButton>
+          </div>
         </div>
-      </div>
-
-
-      <div v-if="showWinnerHint" class="score-entry-view__hint" role="status">
-        Tap the crown to mark the round winner
       </div>
     </section>
 
     <footer class="score-entry-view__footer">
       <div class="score-entry-view__footer-actions">
-        <UiButton variant="secondary" @click="handleSkipEntireRound"> Skip Round </UiButton>
         <UiButton v-if="canEndGame" variant="primary" @click="showEndGameDialog = true">
           End Game
         </UiButton>
@@ -497,14 +343,6 @@ async function handleEndGame() {
       :current-index="currentRoundIndex"
       @select="selectRound"
       @close="showRoundPicker = false"
-    />
-
-    <SkipPlayerDialog
-      :open="skipPlayer.showDialog.value"
-      :player-name="skipPlayer.targetPlayer.value?.name ?? ''"
-      @skip-round="skipPlayer.skipRound"
-      @skip-all="skipPlayer.skipAll"
-      @close="skipPlayer.closeDialog"
     />
 
     <UiConfirmDialog

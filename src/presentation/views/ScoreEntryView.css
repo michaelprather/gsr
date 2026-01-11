@@ -10,12 +10,6 @@
   --score-entry-view-player-border: var(--border);
   --score-entry-view-player-radius: var(--radius-md);
 
-  --score-entry-view-total-color: var(--text-muted);
-
-  --score-entry-view-hint-bg: var(--warning-muted);
-  --score-entry-view-hint-color: var(--warning);
-  --score-entry-view-hint-border: var(--warning);
-
   --score-entry-view-complete-icon-color: var(--success);
 
   --score-entry-view-footer-bg: var(--surface);
@@ -143,22 +137,12 @@
   }
 }
 
-.score-entry-view__player-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: var(--space-3);
-}
-
 .score-entry-view__player-name {
+  display: block;
+  margin-bottom: var(--space-3);
   font-size: var(--text-base);
   font-weight: var(--font-medium);
   color: var(--text);
-}
-
-.score-entry-view__player-total {
-  font-size: var(--text-sm);
-  color: var(--score-entry-view-total-color);
 }
 
 .score-entry-view__score-row {
@@ -176,30 +160,9 @@
   font-weight: var(--font-bold);
 }
 
-.score-entry-view__skipped-placeholder {
-  flex: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-height: var(--size-12);
-  font-size: var(--text-xl);
-  color: var(--text-muted);
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-md);
-}
-
 .score-entry-view__winner-button--active {
   color: var(--accent);
-}
-
-.score-entry-view__winner-button--highlight {
-  color: var(--accent);
   animation: winner-pulse 0.4s var(--ease-out);
-}
-
-.score-entry-view__skip-button--active {
-  color: var(--warning);
 }
 
 @keyframes winner-pulse {
@@ -212,38 +175,6 @@
   100% {
     transform: scale(1);
   }
-}
-
-.score-entry-view__hint {
-  margin-top: var(--space-4);
-  padding: var(--space-3) var(--space-4);
-  font-size: var(--text-sm);
-  color: var(--score-entry-view-hint-color);
-  background: var(--score-entry-view-hint-bg);
-  border: 1px solid var(--score-entry-view-hint-border);
-  border-radius: var(--radius-md);
-}
-
-.score-entry-view__errors {
-  --score-entry-view-errors-bg: var(--error-muted);
-  --score-entry-view-errors-color: var(--error);
-  --score-entry-view-errors-border: var(--error);
-
-  margin-top: var(--space-4);
-  padding: var(--space-3) var(--space-4);
-  font-size: var(--text-sm);
-  color: var(--score-entry-view-errors-color);
-  background: var(--score-entry-view-errors-bg);
-  border: 1px solid var(--score-entry-view-errors-border);
-  border-radius: var(--radius-md);
-}
-
-.score-entry-view__errors p {
-  margin: 0;
-}
-
-.score-entry-view__errors p + p {
-  margin-top: var(--space-1);
 }
 
 .score-entry-view__loading,
