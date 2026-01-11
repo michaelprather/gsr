@@ -5,42 +5,52 @@ import { Game, RoundScore, Score } from '@/domain'
 describe('validateRoundCompletion', () => {
   it('returns no feedback when round is valid', () => {
     const game = Game.create(['Alice', 'Bob'])
-    const round = game.rounds[0]!
-      .setScore(game.players[0]!.id, RoundScore.entered(Score.zero()))
-      .setScore(game.players[1]!.id, RoundScore.entered(Score.create(25)))
+    const round = game.rounds[0]!.setScore(
+      game.players[0]!.id,
+      RoundScore.entered(Score.zero()),
+    ).setScore(game.players[1]!.id, RoundScore.entered(Score.create(25)))
 
     const feedback = validateRoundCompletion(round, 0, game.players)
     expect(feedback.hasFeedback).toBe(false)
   })
 
-  it('returns feedback when scores are missing', () => {
+  it('returns feedback when only one player has a score', () => {
     const game = Game.create(['Alice', 'Bob'])
-    const round = game.rounds[0]!.setScore(
-      game.players[0]!.id,
-      RoundScore.entered(Score.zero()),
-    )
+    // Alice wins, Bob has no score - invalid because can't play alone
+    const round = game.rounds[0]!.setScore(game.players[0]!.id, RoundScore.entered(Score.zero()))
 
     const feedback = validateRoundCompletion(round, 0, game.players)
     expect(feedback.hasFeedback).toBe(true)
-    expect(feedback.get('round')?.some((e) => e.includes('Missing scores'))).toBe(true)
+    expect(feedback.get('round')?.some((e) => e.includes('two players'))).toBe(true)
+  })
+
+  it('treats round with no scores as skipped (valid)', () => {
+    const game = Game.create(['Alice', 'Bob'])
+    // No scores entered at all
+    const round = game.rounds[0]!
+
+    const feedback = validateRoundCompletion(round, 0, game.players)
+    expect(feedback.hasFeedback).toBe(false)
   })
 
   it('returns feedback when no player has zero score', () => {
     const game = Game.create(['Alice', 'Bob'])
-    const round = game.rounds[0]!
-      .setScore(game.players[0]!.id, RoundScore.entered(Score.create(25)))
-      .setScore(game.players[1]!.id, RoundScore.entered(Score.create(50)))
+    const round = game.rounds[0]!.setScore(
+      game.players[0]!.id,
+      RoundScore.entered(Score.create(25)),
+    ).setScore(game.players[1]!.id, RoundScore.entered(Score.create(50)))
 
     const feedback = validateRoundCompletion(round, 0, game.players)
     expect(feedback.hasFeedback).toBe(true)
-    expect(feedback.get('round')?.some((e) => e.includes('score of 0'))).toBe(true)
+    expect(feedback.get('round')?.some((e) => e.includes('round winner'))).toBe(true)
   })
 
   it('returns feedback when multiple players have zero score', () => {
     const game = Game.create(['Alice', 'Bob'])
-    const round = game.rounds[0]!
-      .setScore(game.players[0]!.id, RoundScore.entered(Score.zero()))
-      .setScore(game.players[1]!.id, RoundScore.entered(Score.zero()))
+    const round = game.rounds[0]!.setScore(
+      game.players[0]!.id,
+      RoundScore.entered(Score.zero()),
+    ).setScore(game.players[1]!.id, RoundScore.entered(Score.zero()))
 
     const feedback = validateRoundCompletion(round, 0, game.players)
     expect(feedback.hasFeedback).toBe(true)
@@ -49,8 +59,7 @@ describe('validateRoundCompletion', () => {
 
   it('excludes skipped players from validation', () => {
     const game = Game.create(['Alice', 'Bob', 'Charlie'])
-    const round = game.rounds[0]!
-      .setScore(game.players[0]!.id, RoundScore.entered(Score.zero()))
+    const round = game.rounds[0]!.setScore(game.players[0]!.id, RoundScore.entered(Score.zero()))
       .setScore(game.players[1]!.id, RoundScore.entered(Score.create(25)))
       .setScore(game.players[2]!.id, RoundScore.skipped())
 

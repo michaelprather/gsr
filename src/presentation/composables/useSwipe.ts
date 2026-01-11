@@ -6,10 +6,7 @@ export interface UseSwipeOptions {
   onSwipeRight?: () => void
 }
 
-export function useSwipe(
-  elementRef: Ref<HTMLElement | null>,
-  options: UseSwipeOptions = {},
-) {
+export function useSwipe(elementRef: Ref<HTMLElement | null>, options: UseSwipeOptions = {}) {
   const { threshold = 50, onSwipeLeft, onSwipeRight } = options
 
   const touchStartX = ref(0)

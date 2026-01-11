@@ -1,3 +1,4 @@
+import { AppError } from '@/core'
 import { PlayerId } from '../valueObjects'
 
 export class Player {
@@ -9,7 +10,7 @@ export class Player {
   static create(name: string): Player {
     const trimmed = name.trim()
     if (!trimmed) {
-      throw new Error('Player name cannot be empty')
+      throw new AppError('Player name cannot be empty')
     }
     return new Player(PlayerId.generate(), trimmed)
   }

@@ -25,9 +25,10 @@ describe('GameMapper', () => {
     expect(aliceId).toBeDefined()
     expect(bobId).toBeDefined()
 
-    const round = game.rounds[0]!
-      .setScore(aliceId!, RoundScore.entered(Score.create(25)))
-      .setScore(bobId!, RoundScore.skipped())
+    const round = game.rounds[0]!.setScore(aliceId!, RoundScore.entered(Score.create(25))).setScore(
+      bobId!,
+      RoundScore.skipped(),
+    )
 
     const updatedGame = game.updateRound(0, round)
 

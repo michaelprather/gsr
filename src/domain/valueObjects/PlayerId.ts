@@ -1,9 +1,11 @@
+import { AppError } from '@/core'
+
 export class PlayerId {
   private constructor(readonly value: string) {}
 
   static create(value: string): PlayerId {
     if (!value.trim()) {
-      throw new Error('PlayerId cannot be empty')
+      throw new AppError('PlayerId cannot be empty')
     }
     return new PlayerId(value)
   }

@@ -3,6 +3,9 @@ import { createRouter, createWebHistory } from 'vue-router'
 import SetupView from '../views/SetupView.vue'
 import ScoreEntryView from '../views/ScoreEntryView.vue'
 import StandingsView from '../views/StandingsView.vue'
+import PlayerView from '../views/PlayerView.vue'
+import ImportView from '../views/ImportView.vue'
+import HelpView from '../views/HelpView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -25,6 +28,25 @@ const router = createRouter({
       path: '/standings',
       name: 'standings',
       component: StandingsView,
+    },
+    {
+      path: '/player/:id',
+      name: 'player',
+      component: PlayerView,
+    },
+    {
+      path: '/import',
+      name: 'import',
+      component: ImportView,
+    },
+    {
+      path: '/help',
+      name: 'help',
+      component: HelpView,
+    },
+    {
+      path: '/:pathMatch(.*)*',
+      redirect: { name: 'setup' },
     },
   ],
 })

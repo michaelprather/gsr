@@ -1,13 +1,14 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
-import { useAction, useGameService } from '../composables'
+import { useAction, useGameService, useToast } from '../composables'
 import { UiButton, UiInput } from '../components/ui'
 import { AppBrand } from '../components/layout'
 import { IconPlus, IconTrash } from '../components/icons'
 
 const router = useRouter()
 const service = useGameService()
+const toast = useToast()
 
 const playerNames = ref<string[]>([])
 const newPlayerName = ref('')
@@ -35,7 +36,10 @@ function addPlayer() {
   const isDuplicate = playerNames.value.some(
     (existing) => existing.toLowerCase() === name.toLowerCase(),
   )
-  if (isDuplicate) return
+  if (isDuplicate) {
+    toast.error(`${name} is already in the game`)
+    return
+  }
 
   playerNames.value.push(name)
   newPlayerName.value = ''
@@ -58,6 +62,10 @@ function handleKeydown(event: KeyboardEvent) {
     addPlayer()
   }
 }
+
+function goToHelp() {
+  router.push({ name: 'help' })
+}
 </script>
 
 <template>
@@ -76,12 +84,7 @@ function handleKeydown(event: KeyboardEvent) {
           placeholder="Enter player name"
           :maxlength="20"
         />
-        <UiButton
-          size="icon"
-          :disabled="!canAddPlayer"
-          aria-label="Add player"
-          @click="addPlayer"
-        >
+        <UiButton size="icon" :disabled="!canAddPlayer" aria-label="Add player" @click="addPlayer">
           <IconPlus />
         </UiButton>
       </div>
@@ -92,11 +95,7 @@ function handleKeydown(event: KeyboardEvent) {
         name="list"
         class="setup-view__player-list"
       >
-        <li
-          v-for="(name, index) in playerNames"
-          :key="name"
-          class="setup-view__player-item"
-        >
+        <li v-for="(name, index) in playerNames" :key="name" class="setup-view__player-item">
           <span class="setup-view__player-name">{{ name }}</span>
           <UiButton
             variant="ghost"
@@ -109,15 +108,9 @@ function handleKeydown(event: KeyboardEvent) {
         </li>
       </TransitionGroup>
 
-      <p v-else class="setup-view__empty-state">
-        Add at least 2 players to start
-      </p>
+      <p v-else class="setup-view__empty-state">Who's playing?</p>
 
-      <div
-        v-if="startGameAction.state.value.isInvalid"
-        class="setup-view__error"
-        role="alert"
-      >
+      <div v-if="startGameAction.state.value.isInvalid" class="setup-view__error" role="alert">
         {{ startGameAction.state.value.feedback?.get('players')?.[0] }}
       </div>
     </section>
@@ -131,6 +124,9 @@ function handleKeydown(event: KeyboardEvent) {
       >
         {{ startGameAction.state.value.isPending ? 'Starting...' : 'Start Game' }}
       </UiButton>
+      <button type="button" class="setup-view__help-link" @click="goToHelp">
+        How to Play
+      </button>
     </footer>
   </main>
 </template>

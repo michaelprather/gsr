@@ -17,7 +17,7 @@ Mobile-first, offline-capable scorekeeper for George Street Rummy.
 
 ## Icons
 
-Icon components in `src/components/icons/`. When choosing icons:
+Icon components in `src/presentation/components/icons/`. When choosing icons:
 
 | Element Type | Style | Naming |
 |--------------|-------|--------|

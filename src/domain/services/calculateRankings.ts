@@ -6,13 +6,15 @@ export interface PlayerRanking {
   readonly playerName: string
   readonly rank: number
   readonly total: number
+  readonly roundsPlayed: number
   readonly hasSkippedRounds: boolean
 }
 
 export function calculateRankings(game: Game): PlayerRanking[] {
-  // Calculate totals and check for skipped rounds
+  // Calculate totals, rounds played, and check for skipped rounds
   const playerData = game.players.map((player) => {
     let total = 0
+    let roundsPlayed = 0
     let hasSkippedRounds = false
 
     for (const round of game.rounds) {
@@ -21,6 +23,7 @@ export function calculateRankings(game: Game): PlayerRanking[] {
 
       if (score && RoundScore.isEntered(score)) {
         total += score.value.value
+        roundsPlayed++
       } else if (score && RoundScore.isSkipped(score)) {
         hasSkippedRounds = true
       }
@@ -30,12 +33,18 @@ export function calculateRankings(game: Game): PlayerRanking[] {
       playerId: player.id.value,
       playerName: player.name,
       total,
+      roundsPlayed,
       hasSkippedRounds,
     }
   })
 
-  // Sort by total ascending (lowest score wins in golf)
-  const sorted = [...playerData].sort((a, b) => a.total - b.total)
+  // Sort by rounds played DESC (more rounds = better), then by total ASC (lower score = better)
+  const sorted = [...playerData].sort((a, b) => {
+    if (a.roundsPlayed !== b.roundsPlayed) {
+      return b.roundsPlayed - a.roundsPlayed
+    }
+    return a.total - b.total
+  })
 
   // Assign ranks with tie handling
   const rankings: PlayerRanking[] = []
@@ -48,8 +57,15 @@ export function calculateRankings(game: Game): PlayerRanking[] {
     const previousPlayer = sorted[i - 1]
     const previousRanking = rankings[i - 1]
 
-    // If tied with previous player, use the same rank
-    if (i > 0 && previousPlayer && previousRanking && player.total === previousPlayer.total) {
+    // If tied with previous player (same rounds played AND same total), use the same rank
+    const isTied =
+      i > 0 &&
+      previousPlayer &&
+      previousRanking &&
+      player.roundsPlayed === previousPlayer.roundsPlayed &&
+      player.total === previousPlayer.total
+
+    if (isTied) {
       rankings.push({
         ...player,
         rank: previousRanking.rank,

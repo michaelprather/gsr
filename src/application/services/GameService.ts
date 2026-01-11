@@ -1,5 +1,13 @@
 import { Feedback, ValidationError } from '@/core'
-import { Game, Player, Round, RoundScore, Score, validatePlayerNames, validateScore } from '@/domain'
+import {
+  Game,
+  Player,
+  Round,
+  RoundScore,
+  Score,
+  validatePlayerNames,
+  validateScore,
+} from '@/domain'
 import type { GameRepository } from '@/domain'
 
 export class GameService {
@@ -11,7 +19,10 @@ export class GameService {
       throw new ValidationError(feedback)
     }
 
-    const game = Game.create(playerNames)
+    const sortedNames = [...playerNames].sort((a, b) =>
+      a.localeCompare(b, undefined, { sensitivity: 'base' }),
+    )
+    const game = Game.create(sortedNames)
     await this.repo.save(game)
     return game
   }
@@ -45,11 +56,7 @@ export class GameService {
     return updatedGame
   }
 
-  async skipPlayer(
-    playerId: string,
-    roundIndex: number,
-    allFuture: boolean,
-  ): Promise<Game> {
+  async skipPlayer(playerId: string, roundIndex: number, allFuture: boolean): Promise<Game> {
     const game = await this.requireGame()
     const player = this.getPlayer(game, playerId)
 
@@ -126,6 +133,10 @@ export class GameService {
 
   async clearGame(): Promise<void> {
     await this.repo.clear()
+  }
+
+  async importGame(game: Game): Promise<void> {
+    await this.repo.save(game)
   }
 
   private async requireGame(): Promise<Game> {

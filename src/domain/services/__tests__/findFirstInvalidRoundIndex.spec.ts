@@ -39,14 +39,14 @@ describe('findFirstInvalidRoundIndex', () => {
     expect(result).toBe(-1)
   })
 
-  it('returns 0 when first round is invalid', () => {
+  it('treats rounds with no scores as skipped (valid)', () => {
     const game = Game.create(['Alice', 'Bob'])
-    // No scores entered - round is invalid
+    // No scores entered - round is skipped, treated as valid
     const result = findFirstInvalidRoundIndex(game)
-    expect(result).toBe(0)
+    expect(result).toBe(-1)
   })
 
-  it('returns index of first invalid round when middle round is invalid', () => {
+  it('returns -1 when remaining rounds have no scores (skipped)', () => {
     const game = Game.create(['Alice', 'Bob'])
     const alice = game.players[0]!
     const bob = game.players[1]!
@@ -62,11 +62,9 @@ describe('findFirstInvalidRoundIndex', () => {
       updated.rounds[0]!.setScore(bob.id, RoundScore.entered(Score.create(50))),
     )
 
-    // Leave round 1 incomplete
-    // Round 1 has no scores
-
+    // Round 1 has no scores = skipped
     const result = findFirstInvalidRoundIndex(updated)
-    expect(result).toBe(1)
+    expect(result).toBe(-1)
   })
 
   it('treats rounds where all players are skipped as valid', () => {
@@ -76,14 +74,8 @@ describe('findFirstInvalidRoundIndex', () => {
 
     // Skip all players in round 0
     let updated = game
-    updated = updated.updateRound(
-      0,
-      updated.rounds[0]!.setScore(alice.id, RoundScore.skipped()),
-    )
-    updated = updated.updateRound(
-      0,
-      updated.rounds[0]!.setScore(bob.id, RoundScore.skipped()),
-    )
+    updated = updated.updateRound(0, updated.rounds[0]!.setScore(alice.id, RoundScore.skipped()))
+    updated = updated.updateRound(0, updated.rounds[0]!.setScore(bob.id, RoundScore.skipped()))
 
     // Complete round 1 with valid scores
     updated = updated.updateRound(
@@ -99,26 +91,19 @@ describe('findFirstInvalidRoundIndex', () => {
     expect(result).toBe(-1)
   })
 
-  it('skips all-skipped rounds and finds first actually invalid round', () => {
+  it('skips explicitly-skipped rounds and empty rounds', () => {
     const game = Game.create(['Alice', 'Bob'])
     const alice = game.players[0]!
     const bob = game.players[1]!
 
     // Skip all players in round 0
     let updated = game
-    updated = updated.updateRound(
-      0,
-      updated.rounds[0]!.setScore(alice.id, RoundScore.skipped()),
-    )
-    updated = updated.updateRound(
-      0,
-      updated.rounds[0]!.setScore(bob.id, RoundScore.skipped()),
-    )
+    updated = updated.updateRound(0, updated.rounds[0]!.setScore(alice.id, RoundScore.skipped()))
+    updated = updated.updateRound(0, updated.rounds[0]!.setScore(bob.id, RoundScore.skipped()))
 
-    // Round 1 is incomplete (no scores)
-
+    // Round 1 has no scores = also skipped
     const result = findFirstInvalidRoundIndex(updated)
-    expect(result).toBe(1)
+    expect(result).toBe(-1)
   })
 
   it('returns first invalid round when no round winner exists', () => {
@@ -141,11 +126,11 @@ describe('findFirstInvalidRoundIndex', () => {
     expect(result).toBe(0)
   })
 
-  it('returns first invalid round when only some players have scores', () => {
+  it('treats round as invalid when only one player has a score', () => {
     const game = Game.create(['Alice', 'Bob'])
     const alice = game.players[0]!
 
-    // Only Alice has a score
+    // Alice wins (score 0), Bob has no score - invalid because can't play alone
     let updated = game
     updated = updated.updateRound(
       0,
@@ -153,7 +138,7 @@ describe('findFirstInvalidRoundIndex', () => {
     )
 
     const result = findFirstInvalidRoundIndex(updated)
-    expect(result).toBe(0)
+    expect(result).toBe(0) // Round 0 invalid - at least two players must have scores
   })
 
   it('handles game with no players', () => {
@@ -163,19 +148,16 @@ describe('findFirstInvalidRoundIndex', () => {
     expect(result).toBe(-1)
   })
 
-  it('treats partial skip as invalid when remaining players have no scores', () => {
+  it('treats round with only skip markers as skipped (valid)', () => {
     const game = Game.create(['Alice', 'Bob', 'Charlie'])
     const alice = game.players[0]!
-    const bob = game.players[1]!
 
-    // Alice is skipped, Bob and Charlie have no scores
+    // Alice has explicit skip, Bob and Charlie have no scores
+    // No entered scores = round is skipped
     let updated = game
-    updated = updated.updateRound(
-      0,
-      updated.rounds[0]!.setScore(alice.id, RoundScore.skipped()),
-    )
+    updated = updated.updateRound(0, updated.rounds[0]!.setScore(alice.id, RoundScore.skipped()))
 
     const result = findFirstInvalidRoundIndex(updated)
-    expect(result).toBe(0)
+    expect(result).toBe(-1)
   })
 })

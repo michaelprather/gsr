@@ -1,0 +1,275 @@
+.player-view {
+  --player-view-padding: var(--space-4);
+  --player-view-max-width: var(--size-112);
+
+  --player-view-header-bg: var(--surface);
+  --player-view-title-color: var(--text);
+  --player-view-subtitle-color: var(--text-muted);
+
+  --player-view-card-bg: var(--surface-raised);
+  --player-view-card-border: var(--border);
+  --player-view-card-radius: var(--radius-md);
+
+  --player-view-stat-value-color: var(--text);
+  --player-view-stat-label-color: var(--text-muted);
+
+  --player-view-win-color: var(--success);
+  --player-view-worst-color: var(--danger);
+
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.player-view__header {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding: var(--space-3) var(--player-view-padding);
+  background: var(--player-view-header-bg);
+  border-bottom: 1px solid var(--border);
+}
+
+.player-view__title-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.player-view__title-bar .ui-button svg {
+  width: var(--icon-md);
+  height: var(--icon-md);
+}
+
+.player-view__nav {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.player-view__nav .ui-button svg {
+  width: var(--icon-lg);
+  height: var(--icon-lg);
+}
+
+.player-view__title-area {
+  flex: 1;
+  text-align: center;
+}
+
+.player-view__title {
+  margin: 0;
+  font-size: var(--text-xl);
+  font-weight: var(--font-semibold);
+  color: var(--player-view-title-color);
+}
+
+.player-view__subtitle {
+  display: block;
+  margin-top: var(--space-1);
+  font-size: var(--text-sm);
+  color: var(--player-view-subtitle-color);
+}
+
+.player-view__spacer {
+  width: var(--size-10);
+}
+
+.player-view__content {
+  flex: 1;
+  width: 100%;
+  max-width: var(--player-view-max-width);
+  margin: 0 auto;
+  padding: var(--space-4) var(--player-view-padding);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+}
+
+.player-view__summary {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.player-view__stat-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-1);
+  padding: var(--space-4);
+  background: var(--player-view-card-bg);
+  border: 1px solid var(--player-view-card-border);
+  border-radius: var(--player-view-card-radius);
+  box-shadow: var(--elevation-1);
+}
+
+.player-view__stat-card--primary {
+  padding: var(--space-6);
+}
+
+.player-view__stat-card--primary .player-view__stat-value {
+  font-size: 3rem;
+}
+
+.player-view__stat-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-3);
+}
+
+.player-view__stat-value {
+  font-size: var(--text-2xl);
+  font-weight: var(--font-bold);
+  color: var(--player-view-stat-value-color);
+}
+
+.player-view__stat-label {
+  font-size: var(--text-sm);
+  color: var(--player-view-stat-label-color);
+}
+
+.player-view__section-title {
+  margin: 0 0 var(--space-3) 0;
+  font-size: var(--text-lg);
+  font-weight: var(--font-semibold);
+  color: var(--player-view-title-color);
+}
+
+.player-view__highlight-cards {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-3);
+}
+
+.player-view__highlight-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-1);
+  padding: var(--space-4);
+  background: var(--player-view-card-bg);
+  border: 1px solid var(--player-view-card-border);
+  border-radius: var(--player-view-card-radius);
+  box-shadow: var(--elevation-1);
+}
+
+.player-view__highlight-label {
+  font-size: var(--text-xs);
+  font-weight: var(--font-medium);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--player-view-stat-label-color);
+}
+
+.player-view__highlight-round {
+  font-size: var(--text-sm);
+  color: var(--player-view-stat-label-color);
+}
+
+.player-view__highlight-score {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  font-size: var(--text-xl);
+  font-weight: var(--font-bold);
+}
+
+.player-view__highlight-score--best {
+  color: var(--player-view-win-color);
+}
+
+.player-view__highlight-score--worst {
+  color: var(--player-view-worst-color);
+}
+
+.player-view__round-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.player-view__round-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  background: var(--player-view-card-bg);
+  border: 1px solid var(--player-view-card-border);
+  border-radius: var(--player-view-card-radius);
+}
+
+.player-view__round-item--win {
+  --player-view-card-bg: var(--success-muted);
+  --player-view-card-border: var(--success);
+}
+
+.player-view__round-number {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--size-8);
+  height: var(--size-8);
+  font-size: var(--text-sm);
+  font-weight: var(--font-medium);
+  color: var(--player-view-stat-label-color);
+  background: var(--surface);
+  border-radius: var(--radius-full);
+  flex-shrink: 0;
+}
+
+.player-view__round-name {
+  flex: 1;
+  font-size: var(--text-sm);
+  color: var(--text);
+}
+
+.player-view__round-score {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  font-size: var(--text-base);
+  font-weight: var(--font-semibold);
+  color: var(--text);
+}
+
+.player-view__round-item--win .player-view__round-score {
+  color: var(--player-view-win-color);
+}
+
+.player-view__win-icon {
+  width: var(--icon-sm);
+  height: var(--icon-sm);
+}
+
+.player-view__skipped-notice {
+  text-align: center;
+  padding: var(--space-3);
+  font-size: var(--text-sm);
+  color: var(--player-view-stat-label-color);
+  background: var(--surface);
+  border-radius: var(--player-view-card-radius);
+}
+
+.player-view__loading,
+.player-view__error {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-4);
+  min-height: 100vh;
+  padding: var(--space-4);
+  color: var(--text-muted);
+}
+
+.player-view__error-message {
+  margin: 0;
+  font-size: var(--text-lg);
+}

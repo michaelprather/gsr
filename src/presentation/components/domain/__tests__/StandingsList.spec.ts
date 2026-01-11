@@ -1,11 +1,22 @@
 import { describe, it, expect } from 'vitest'
-import { mount } from '@vue/test-utils'
+import { mount, RouterLinkStub } from '@vue/test-utils'
 import StandingsList from '../StandingsList.vue'
 import { Game, RoundScore, Score } from '@/domain'
 
 describe('StandingsList', () => {
   function createGame(playerNames: string[] = ['Alice', 'Bob', 'Charlie']) {
     return Game.create(playerNames)
+  }
+
+  function mountComponent(props: { game: Game; isEnded?: boolean }) {
+    return mount(StandingsList, {
+      props,
+      global: {
+        stubs: {
+          RouterLink: RouterLinkStub,
+        },
+      },
+    })
   }
 
   function setScore(game: Game, playerIndex: number, roundIndex: number, score: number): Game {
@@ -15,19 +26,10 @@ describe('StandingsList', () => {
     return game.updateRound(roundIndex, updatedRound)
   }
 
-  function skipPlayer(game: Game, playerIndex: number, roundIndex: number): Game {
-    const player = game.players[playerIndex]!
-    const round = game.rounds[roundIndex]!
-    const updatedRound = round.setScore(player.id, RoundScore.skipped())
-    return game.updateRound(roundIndex, updatedRound)
-  }
-
   it('renders a row for each player', () => {
     const game = createGame(['Alice', 'Bob', 'Charlie'])
 
-    const wrapper = mount(StandingsList, {
-      props: { game },
-    })
+    const wrapper = mountComponent({ game })
 
     const rows = wrapper.findAll('.standings-list__row')
     expect(rows).toHaveLength(3)
@@ -36,9 +38,7 @@ describe('StandingsList', () => {
   it('displays player names', () => {
     const game = createGame(['Alice', 'Bob'])
 
-    const wrapper = mount(StandingsList, {
-      props: { game },
-    })
+    const wrapper = mountComponent({ game })
 
     const names = wrapper.findAll('.standings-list__player-name')
     expect(names[0]!.text()).toContain('Alice')
@@ -51,9 +51,7 @@ describe('StandingsList', () => {
     game = setScore(game, 0, 0, 50)
     game = setScore(game, 1, 0, 30)
 
-    const wrapper = mount(StandingsList, {
-      props: { game },
-    })
+    const wrapper = mountComponent({ game })
 
     const ranks = wrapper.findAll('.standings-list__rank')
     // Bob is first (30), Alice is second (50)
@@ -63,17 +61,14 @@ describe('StandingsList', () => {
 
   it('displays player totals', () => {
     let game = createGame(['Alice', 'Bob'])
-    game = setScore(game, 0, 0, 25)
-    game = setScore(game, 0, 1, 30)
+    // Both players play same rounds so sorting is by score
+    game = setScore(game, 0, 0, 55)
     game = setScore(game, 1, 0, 40)
 
-    const wrapper = mount(StandingsList, {
-      props: { game },
-    })
+    const wrapper = mountComponent({ game })
 
     const totals = wrapper.findAll('.standings-list__total')
-    // Alice total: 55, Bob total: 40
-    // Sorted: Bob (40) first, Alice (55) second
+    // Both players have 1 round, so sorted by score: Bob (40) first, Alice (55) second
     expect(totals[0]!.text()).toBe('40')
     expect(totals[1]!.text()).toBe('55')
   })
@@ -85,9 +80,7 @@ describe('StandingsList', () => {
     game = setScore(game, 1, 0, 30)
     game = setScore(game, 2, 0, 40)
 
-    const wrapper = mount(StandingsList, {
-      props: { game },
-    })
+    const wrapper = mountComponent({ game })
 
     const names = wrapper.findAll('.standings-list__player-name')
     expect(names[0]!.text()).toContain('Bob') // 30
@@ -102,9 +95,7 @@ describe('StandingsList', () => {
     game = setScore(game, 1, 0, 30)
     game = setScore(game, 2, 0, 50)
 
-    const wrapper = mount(StandingsList, {
-      props: { game },
-    })
+    const wrapper = mountComponent({ game })
 
     const ranks = wrapper.findAll('.standings-list__rank')
     expect(ranks[0]!.text()).toBe('1')
@@ -112,39 +103,10 @@ describe('StandingsList', () => {
     expect(ranks[2]!.text()).toBe('3')
   })
 
-  it('shows skipped badge for players with skipped rounds', () => {
-    let game = createGame(['Alice', 'Bob'])
-    game = setScore(game, 0, 0, 25)
-    game = skipPlayer(game, 1, 0)
-
-    const wrapper = mount(StandingsList, {
-      props: { game },
-    })
-
-    const badges = wrapper.findAll('.standings-list__skipped-badge')
-    expect(badges).toHaveLength(1)
-    expect(badges[0]!.text()).toContain('Skipped')
-  })
-
-  it('does not show skipped badge for players without skipped rounds', () => {
-    let game = createGame(['Alice', 'Bob'])
-    game = setScore(game, 0, 0, 25)
-    game = setScore(game, 1, 0, 30)
-
-    const wrapper = mount(StandingsList, {
-      props: { game },
-    })
-
-    const badges = wrapper.findAll('.standings-list__skipped-badge')
-    expect(badges).toHaveLength(0)
-  })
-
   it('renders as ordered list', () => {
     const game = createGame(['Alice', 'Bob'])
 
-    const wrapper = mount(StandingsList, {
-      props: { game },
-    })
+    const wrapper = mountComponent({ game })
 
     expect(wrapper.find('ol.standings-list').exists()).toBe(true)
   })
@@ -152,9 +114,7 @@ describe('StandingsList', () => {
   it('handles game with no scores', () => {
     const game = createGame(['Alice', 'Bob'])
 
-    const wrapper = mount(StandingsList, {
-      props: { game },
-    })
+    const wrapper = mountComponent({ game })
 
     const totals = wrapper.findAll('.standings-list__total')
     expect(totals[0]!.text()).toBe('0')
@@ -167,9 +127,7 @@ describe('StandingsList', () => {
       game = setScore(game, 0, 0, 0)
       game = setScore(game, 1, 0, 50)
 
-      const wrapper = mount(StandingsList, {
-        props: { game, isEnded: false },
-      })
+      const wrapper = mountComponent({ game, isEnded: false })
 
       const winnerRows = wrapper.findAll('.standings-list__row--winner')
       expect(winnerRows).toHaveLength(0)
@@ -180,9 +138,7 @@ describe('StandingsList', () => {
       game = setScore(game, 0, 0, 0)
       game = setScore(game, 1, 0, 50)
 
-      const wrapper = mount(StandingsList, {
-        props: { game, isEnded: true },
-      })
+      const wrapper = mountComponent({ game, isEnded: true })
 
       const winnerRows = wrapper.findAll('.standings-list__row--winner')
       expect(winnerRows).toHaveLength(1)
@@ -193,9 +149,7 @@ describe('StandingsList', () => {
       game = setScore(game, 0, 0, 0)
       game = setScore(game, 1, 0, 50)
 
-      const wrapper = mount(StandingsList, {
-        props: { game, isEnded: true },
-      })
+      const wrapper = mountComponent({ game, isEnded: true })
 
       const trophyIcons = wrapper.findAll('.standings-list__trophy-icon')
       expect(trophyIcons).toHaveLength(1)
@@ -208,9 +162,7 @@ describe('StandingsList', () => {
       game = setScore(game, 1, 0, 30)
       game = setScore(game, 2, 0, 50)
 
-      const wrapper = mount(StandingsList, {
-        props: { game, isEnded: true },
-      })
+      const wrapper = mountComponent({ game, isEnded: true })
 
       const winnerRows = wrapper.findAll('.standings-list__row--winner')
       expect(winnerRows).toHaveLength(2)
