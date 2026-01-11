@@ -11,9 +11,11 @@ describe('useOnlineStatus', () => {
     vi.resetModules()
     eventHandlers = new Map()
 
-    addEventListenerSpy = vi.spyOn(window, 'addEventListener').mockImplementation((event, handler) => {
-      eventHandlers.set(event as string, handler as () => void)
-    })
+    addEventListenerSpy = vi
+      .spyOn(window, 'addEventListener')
+      .mockImplementation((event, handler) => {
+        eventHandlers.set(event as string, handler as () => void)
+      })
 
     removeEventListenerSpy = vi.spyOn(window, 'removeEventListener').mockImplementation((event) => {
       eventHandlers.delete(event as string)

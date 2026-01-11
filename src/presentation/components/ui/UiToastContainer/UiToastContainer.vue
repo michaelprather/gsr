@@ -13,12 +13,7 @@ const orderedToasts = computed(() => [...toasts.value])
   <Teleport to="body">
     <div class="ui-toast-container" aria-live="polite" aria-label="Notifications">
       <TransitionGroup name="toast">
-        <UiToast
-          v-for="toast in orderedToasts"
-          :key="toast.id"
-          :toast="toast"
-          @dismiss="dismiss"
-        />
+        <UiToast v-for="toast in orderedToasts" :key="toast.id" :toast="toast" @dismiss="dismiss" />
       </TransitionGroup>
     </div>
   </Teleport>

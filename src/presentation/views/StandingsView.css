@@ -91,9 +91,21 @@
 .standings-view__loading,
 .standings-view__error {
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
+  gap: var(--space-4);
   min-height: 100vh;
   padding: var(--space-4);
   color: var(--text-muted);
+}
+
+.standings-view__error-message {
+  margin: 0;
+  font-size: var(--text-lg);
+}
+
+.standings-view__error-actions {
+  display: flex;
+  gap: var(--space-3);
 }

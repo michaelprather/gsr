@@ -85,10 +85,7 @@ describe('calculatePlayerTotals', () => {
       0,
       updated.rounds[0]!.setScore(alice.id, RoundScore.entered(Score.create(50))),
     )
-    updated = updated.updateRound(
-      0,
-      updated.rounds[0]!.setScore(bob.id, RoundScore.skipped()),
-    )
+    updated = updated.updateRound(0, updated.rounds[0]!.setScore(bob.id, RoundScore.skipped()))
 
     const totals = calculatePlayerTotals(updated)
 

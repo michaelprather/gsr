@@ -23,7 +23,11 @@ const emit = defineEmits<UiToastEmits>()
   <div class="ui-toast" :class="`ui-toast--${toast.variant}`" role="alert">
     <div class="ui-toast__accent" aria-hidden="true" />
     <IconCircleCheck v-if="toast.variant === 'success'" class="ui-toast__icon" aria-hidden="true" />
-    <IconCircleExclamation v-else-if="toast.variant === 'error'" class="ui-toast__icon" aria-hidden="true" />
+    <IconCircleExclamation
+      v-else-if="toast.variant === 'error'"
+      class="ui-toast__icon"
+      aria-hidden="true"
+    />
     <IconCircleInfo v-else class="ui-toast__icon" aria-hidden="true" />
     <span class="ui-toast__message">{{ toast.message }}</span>
     <button

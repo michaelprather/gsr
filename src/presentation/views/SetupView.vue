@@ -84,12 +84,7 @@ function goToHelp() {
           placeholder="Enter player name"
           :maxlength="20"
         />
-        <UiButton
-          size="icon"
-          :disabled="!canAddPlayer"
-          aria-label="Add player"
-          @click="addPlayer"
-        >
+        <UiButton size="icon" :disabled="!canAddPlayer" aria-label="Add player" @click="addPlayer">
           <IconPlus />
         </UiButton>
       </div>
@@ -100,11 +95,7 @@ function goToHelp() {
         name="list"
         class="setup-view__player-list"
       >
-        <li
-          v-for="(name, index) in playerNames"
-          :key="name"
-          class="setup-view__player-item"
-        >
+        <li v-for="(name, index) in playerNames" :key="name" class="setup-view__player-item">
           <span class="setup-view__player-name">{{ name }}</span>
           <UiButton
             variant="ghost"
@@ -117,15 +108,9 @@ function goToHelp() {
         </li>
       </TransitionGroup>
 
-      <p v-else class="setup-view__empty-state">
-        Add at least 2 players to start
-      </p>
+      <p v-else class="setup-view__empty-state">Add at least 2 players to start</p>
 
-      <div
-        v-if="startGameAction.state.value.isInvalid"
-        class="setup-view__error"
-        role="alert"
-      >
+      <div v-if="startGameAction.state.value.isInvalid" class="setup-view__error" role="alert">
         {{ startGameAction.state.value.feedback?.get('players')?.[0] }}
       </div>
     </section>
@@ -139,9 +124,7 @@ function goToHelp() {
       >
         {{ startGameAction.state.value.isPending ? 'Starting...' : 'Start Game' }}
       </UiButton>
-      <UiButton block variant="secondary" @click="goToHelp">
-        How to Play
-      </UiButton>
+      <UiButton block variant="secondary" @click="goToHelp"> How to Play </UiButton>
     </footer>
   </main>
 </template>

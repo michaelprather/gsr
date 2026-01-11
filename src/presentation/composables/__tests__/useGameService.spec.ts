@@ -44,5 +44,4 @@ describe('useGameService', () => {
 
     expect(service).toBe(mockService)
   })
-
 })

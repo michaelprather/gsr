@@ -62,7 +62,8 @@
   }
   100% {
     opacity: 0;
-    transform: translateY(100vh) translateX(var(--confetti-drift)) rotate(calc(var(--confetti-rotation) + 720deg)) scale(0.5);
+    transform: translateY(100vh) translateX(var(--confetti-drift))
+      rotate(calc(var(--confetti-rotation) + 720deg)) scale(0.5);
   }
 }
 
@@ -120,7 +121,8 @@
 }
 
 @keyframes trophy-pulse {
-  0%, 100% {
+  0%,
+  100% {
     box-shadow: 0 0 8px var(--winner-celebration-trophy-glow);
     transform: scale(1);
   }

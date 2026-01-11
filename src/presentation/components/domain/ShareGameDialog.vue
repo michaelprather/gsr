@@ -89,9 +89,7 @@ onMounted(() => {
       </p>
 
       <div class="share-game-dialog__qr-container">
-        <div v-if="isGenerating" class="share-game-dialog__loading">
-          Generating...
-        </div>
+        <div v-if="isGenerating" class="share-game-dialog__loading">Generating...</div>
         <img
           v-else-if="qrDataUrl"
           :src="qrDataUrl"
@@ -100,9 +98,7 @@ onMounted(() => {
         />
       </div>
 
-      <p class="share-game-dialog__fallback-text">
-        Or copy the share link:
-      </p>
+      <p class="share-game-dialog__fallback-text">Or copy the share link:</p>
     </div>
 
     <template #actions>

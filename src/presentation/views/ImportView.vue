@@ -85,9 +85,7 @@ function goToSetup() {
     </header>
 
     <section class="import-view__content">
-      <div v-if="isLoading" class="import-view__loading">
-        Importing game...
-      </div>
+      <div v-if="isLoading" class="import-view__loading">Importing game...</div>
 
       <div v-else-if="error" class="import-view__error">
         <p class="import-view__error-message">{{ error }}</p>
@@ -107,45 +105,4 @@ function goToSetup() {
   </main>
 </template>
 
-<style>
-.import-view {
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
-  min-height: 100dvh;
-  padding: var(--space-4);
-}
-
-.import-view__header {
-  display: flex;
-  justify-content: center;
-  padding: var(--space-4) 0;
-}
-
-.import-view__content {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: var(--space-4);
-}
-
-.import-view__loading {
-  color: var(--text-muted);
-  font-size: var(--text-lg);
-}
-
-.import-view__error {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: var(--space-4);
-  text-align: center;
-}
-
-.import-view__error-message {
-  color: var(--error);
-  font-size: var(--text-lg);
-}
-</style>
+<style src="./ImportView.css"></style>

@@ -36,10 +36,7 @@ const emit = defineEmits<UiConfirmDialogEmits>()
       <UiButton variant="secondary" @click="emit('cancel')">
         {{ cancelLabel }}
       </UiButton>
-      <UiButton
-        :variant="destructive ? 'destructive' : 'primary'"
-        @click="emit('confirm')"
-      >
+      <UiButton :variant="destructive ? 'destructive' : 'primary'" @click="emit('confirm')">
         {{ confirmLabel }}
       </UiButton>
     </template>

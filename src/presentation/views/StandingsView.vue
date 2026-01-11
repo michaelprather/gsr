@@ -7,7 +7,12 @@ import { useGameService, useNewGame, useOrientation, useToast } from '../composa
 import { IconChevronLeft, IconPlus } from '../components/icons'
 import { UiButton, UiConfirmDialog } from '../components/ui'
 import { AppBrand } from '../components/layout'
-import { GameScorecard, ShareGameDialog, StandingsList, WinnerCelebration } from '../components/domain'
+import {
+  GameScorecard,
+  ShareGameDialog,
+  StandingsList,
+  WinnerCelebration,
+} from '../components/domain'
 import type { Winner } from '../components/domain'
 
 const router = useRouter()
@@ -33,13 +38,16 @@ const winners = computed<Winner[]>(() => {
   const topRank = rankings.find((r) => r.rank === 1)
   if (!topRank) return []
 
-  return rankings
-    .filter((r) => r.rank === 1)
-    .map((r) => ({ name: r.playerName, score: r.total }))
+  return rankings.filter((r) => r.rank === 1).map((r) => ({ name: r.playerName, score: r.total }))
 })
 
 const shouldShowCelebration = computed(() => {
-  return isEnded.value && showCelebration.value && !celebrationDismissed.value && winners.value.length > 0
+  return (
+    isEnded.value &&
+    showCelebration.value &&
+    !celebrationDismissed.value &&
+    winners.value.length > 0
+  )
 })
 
 const currentRoundNumber = computed(() => {
@@ -57,7 +65,9 @@ const totalRounds = computed(() => {
   return game.value?.rounds.length ?? 0
 })
 
-onMounted(async () => {
+async function loadGame() {
+  isLoading.value = true
+  loadError.value = null
   try {
     const loadedGame = await service.loadGame()
     if (!loadedGame) {
@@ -77,6 +87,14 @@ onMounted(async () => {
   } finally {
     isLoading.value = false
   }
+}
+
+function goToSetup() {
+  router.push({ name: 'setup' })
+}
+
+onMounted(() => {
+  loadGame()
 })
 
 function handleCelebrationDismiss() {
@@ -106,7 +124,13 @@ async function handleEditScores() {
 <template>
   <div v-if="isLoading" class="standings-view__loading">Loading...</div>
 
-  <div v-else-if="loadError" class="standings-view__error">{{ loadError }}</div>
+  <div v-else-if="loadError" class="standings-view__error">
+    <p class="standings-view__error-message">{{ loadError }}</p>
+    <div class="standings-view__error-actions">
+      <UiButton variant="secondary" @click="loadGame">Try Again</UiButton>
+      <UiButton @click="goToSetup">Start New Game</UiButton>
+    </div>
+  </div>
 
   <main v-else-if="game" class="standings-view" :class="`standings-view--${orientation}`">
     <header class="standings-view__header">
@@ -138,24 +162,23 @@ async function handleEditScores() {
           <span v-if="!isEnded" class="standings-view__round-indicator">
             Round {{ currentRoundNumber }} of {{ totalRounds }}
           </span>
-          <span v-else class="standings-view__round-indicator">
-            Game Complete
-          </span>
+          <span v-else class="standings-view__round-indicator"> Game Complete </span>
         </div>
 
         <div class="standings-view__spacer" />
       </div>
     </header>
 
-    <section class="standings-view__content" :class="{ 'standings-view__content--landscape': orientation === 'landscape' }">
+    <section
+      class="standings-view__content"
+      :class="{ 'standings-view__content--landscape': orientation === 'landscape' }"
+    >
       <StandingsList v-if="orientation === 'portrait'" :game="game" :is-ended="isEnded" />
       <GameScorecard v-else :game="game" />
     </section>
 
     <footer v-if="orientation === 'portrait'" class="standings-view__footer">
-      <UiButton block variant="secondary" @click="showShareDialog = true">
-        Share Game
-      </UiButton>
+      <UiButton block variant="secondary" @click="showShareDialog = true"> Share Game </UiButton>
     </footer>
 
     <UiConfirmDialog
@@ -174,11 +197,7 @@ async function handleEditScores() {
       @dismiss="handleCelebrationDismiss"
     />
 
-    <ShareGameDialog
-      :open="showShareDialog"
-      :game="game"
-      @close="showShareDialog = false"
-    />
+    <ShareGameDialog :open="showShareDialog" :game="game" @close="showShareDialog = false" />
   </main>
 </template>
 
