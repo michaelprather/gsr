@@ -108,7 +108,7 @@ function goToHelp() {
         </li>
       </TransitionGroup>
 
-      <p v-else class="setup-view__empty-state">Add at least 2 players to start</p>
+      <p v-else class="setup-view__empty-state">Who's playing?</p>
 
       <div v-if="startGameAction.state.value.isInvalid" class="setup-view__error" role="alert">
         {{ startGameAction.state.value.feedback?.get('players')?.[0] }}
@@ -124,7 +124,9 @@ function goToHelp() {
       >
         {{ startGameAction.state.value.isPending ? 'Starting...' : 'Start Game' }}
       </UiButton>
-      <UiButton block variant="secondary" @click="goToHelp"> How to Play </UiButton>
+      <button type="button" class="setup-view__help-link" @click="goToHelp">
+        How to Play
+      </button>
     </footer>
   </main>
 </template>
