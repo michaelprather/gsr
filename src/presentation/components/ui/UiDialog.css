@@ -1,12 +1,12 @@
 .ui-dialog {
   --ui-dialog-backdrop: var(--overlay);
   --ui-dialog-bg: var(--surface-overlay);
-  --ui-dialog-border: var(--gray-200);
+  --ui-dialog-border: var(--border);
   --ui-dialog-radius: 1.5rem;
   --ui-dialog-max-width: var(--size-80);
 
   --ui-dialog-title-color: var(--text);
-  --ui-dialog-divider: var(--gray-200);
+  --ui-dialog-divider: var(--border);
 
   position: fixed;
   inset: 0;

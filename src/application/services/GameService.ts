@@ -19,7 +19,10 @@ export class GameService {
       throw new ValidationError(feedback)
     }
 
-    const game = Game.create(playerNames)
+    const sortedNames = [...playerNames].sort((a, b) =>
+      a.localeCompare(b, undefined, { sensitivity: 'base' }),
+    )
+    const game = Game.create(sortedNames)
     await this.repo.save(game)
     return game
   }
