@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { useToast } from '@/presentation/composables'
-import { UiToast } from '../UiToast'
+import UiToast from './UiToast.vue'
 
 const { toasts, dismiss } = useToast()
 
