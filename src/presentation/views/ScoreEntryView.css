@@ -120,57 +120,12 @@
   gap: var(--space-3);
 }
 
-.score-entry-view__player-wrapper {
-  display: flex;
-  overflow: hidden;
-  border-radius: var(--score-entry-view-player-radius);
-}
-
 .score-entry-view__player-card {
-  flex-shrink: 0;
-  width: 100%;
   padding: var(--space-4);
   background: var(--score-entry-view-player-bg);
   border: 1px solid var(--score-entry-view-player-border);
   border-radius: var(--score-entry-view-player-radius);
   box-shadow: var(--elevation-1);
-  transition: transform var(--duration-normal) var(--ease-out);
-}
-
-.score-entry-view__player-card--revealed {
-  transform: translateX(-5rem);
-}
-
-.score-entry-view__skip-action {
-  flex-shrink: 0;
-  width: 5rem;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: var(--space-1);
-  background: var(--warning);
-  color: var(--white);
-  font-size: var(--text-xs);
-  font-weight: var(--font-medium);
-  transition: background-color var(--duration-fast) var(--ease-out);
-}
-
-.score-entry-view__skip-action:hover {
-  background: var(--warning-hover, var(--amber-700));
-}
-
-.score-entry-view__skip-action--active {
-  background: var(--success);
-}
-
-.score-entry-view__skip-action--active:hover {
-  background: var(--success-hover);
-}
-
-.score-entry-view__skip-action svg {
-  width: var(--icon-md);
-  height: var(--icon-md);
 }
 
 .score-entry-view__player-card--saved {
@@ -243,6 +198,10 @@
   animation: winner-pulse 0.4s var(--ease-out);
 }
 
+.score-entry-view__skip-button--active {
+  color: var(--warning);
+}
+
 @keyframes winner-pulse {
   0% {
     transform: scale(1);
@@ -253,13 +212,6 @@
   100% {
     transform: scale(1);
   }
-}
-
-.score-entry-view__swipe-hint {
-  margin-top: var(--space-2);
-  font-size: var(--text-xs);
-  color: var(--text-subtle);
-  text-align: center;
 }
 
 .score-entry-view__hint {

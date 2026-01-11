@@ -17,6 +17,7 @@ export interface UseRoundScoresReturn {
   scoreErrors: Ref<Record<string, string | null>>
   recentlySaved: Ref<Set<string>>
   initializeScoreInputs: () => void
+  validateScoreInput: (playerId: string) => void
   handleScoreBlur: (playerId: string) => Promise<void>
   saveUnsavedScores: () => Promise<void>
   showSaveFeedback: (playerId: string) => void
@@ -60,6 +61,32 @@ export function useRoundScores(options: UseRoundScoresOptions): UseRoundScoresRe
     if (!currentRound.value) return false
     const score = currentRound.value.getScore(player.id)
     return score !== undefined && RoundScore.isSkipped(score)
+  }
+
+  function validateScoreInput(playerId: string): void {
+    const inputValue = scoreInputs.value[playerId]
+
+    // Empty input is valid (no score entered yet)
+    if (inputValue === '' || inputValue === undefined) {
+      scoreErrors.value[playerId] = null
+      return
+    }
+
+    const numericValue = parseInt(inputValue, 10)
+
+    if (isNaN(numericValue)) {
+      scoreErrors.value[playerId] = 'Enter a valid number'
+      return
+    }
+
+    const feedback = validateScore(numericValue)
+    if (feedback.hasFeedback) {
+      scoreErrors.value[playerId] = feedback.get('score')?.[0] ?? 'Invalid score'
+      return
+    }
+
+    // Valid - clear error
+    scoreErrors.value[playerId] = null
   }
 
   async function handleScoreBlur(playerId: string): Promise<void> {
@@ -137,6 +164,7 @@ export function useRoundScores(options: UseRoundScoresOptions): UseRoundScoresRe
     scoreErrors,
     recentlySaved,
     initializeScoreInputs,
+    validateScoreInput,
     handleScoreBlur,
     saveUnsavedScores,
     showSaveFeedback,

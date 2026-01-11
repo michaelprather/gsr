@@ -62,8 +62,7 @@ const skipPlayer = useSkipPlayer({
   toast,
 })
 
-// Swipe-to-reveal for skip action
-const revealedPlayerId = ref<string | null>(null)
+// Swipe-to-skip
 const touchStartX = ref(0)
 const SWIPE_THRESHOLD = 50
 
@@ -71,31 +70,15 @@ function handleCardTouchStart(e: TouchEvent) {
   touchStartX.value = e.changedTouches[0]?.clientX ?? 0
 }
 
-function handleCardTouchEnd(e: TouchEvent, playerId: string) {
+function handleCardTouchEnd(e: TouchEvent, player: Player) {
   const touchEndX = e.changedTouches[0]?.clientX ?? 0
   const diff = touchStartX.value - touchEndX
 
-  if (Math.abs(diff) < SWIPE_THRESHOLD) {
+  if (diff < SWIPE_THRESHOLD) {
     return
   }
 
-  if (diff > 0) {
-    // Swiped left - reveal skip action
-    revealedPlayerId.value = playerId
-  } else {
-    // Swiped right - hide skip action
-    if (revealedPlayerId.value === playerId) {
-      revealedPlayerId.value = null
-    }
-  }
-}
-
-function hideRevealedAction() {
-  revealedPlayerId.value = null
-}
-
-function handleSkipAction(player: Player) {
-  revealedPlayerId.value = null
+  // Swiped left - trigger skip action directly
   if (isSkipped(player)) {
     skipPlayer.unskip(player)
   } else {
@@ -420,28 +403,22 @@ async function handleEndGame() {
       </div>
     </header>
 
-    <section ref="contentRef" class="score-entry-view__content" @click="hideRevealedAction">
+    <section ref="contentRef" class="score-entry-view__content">
       <div class="score-entry-view__player-list">
         <div
           v-for="player in game.players"
           :key="player.id.value"
-          class="score-entry-view__player-wrapper"
+          :class="[
+            'score-entry-view__player-card',
+            {
+              'score-entry-view__player-card--saved': roundScores.recentlySaved.value.has(
+                player.id.value,
+              ),
+            },
+          ]"
+          @touchstart="handleCardTouchStart"
+          @touchend="(e) => handleCardTouchEnd(e, player)"
         >
-          <div
-            :class="[
-              'score-entry-view__player-card',
-              {
-                'score-entry-view__player-card--saved': roundScores.recentlySaved.value.has(
-                  player.id.value,
-                ),
-                'score-entry-view__player-card--revealed':
-                  revealedPlayerId === player.id.value,
-              },
-            ]"
-            @touchstart="handleCardTouchStart"
-            @touchend="(e) => handleCardTouchEnd(e, player.id.value)"
-            @click.stop
-          >
             <div class="score-entry-view__player-header">
               <span class="score-entry-view__player-name">{{ player.name }}</span>
               <span class="score-entry-view__player-total">
@@ -461,6 +438,7 @@ async function handleEndGame() {
                 :step="5"
                 :error="roundScores.scoreErrors.value[player.id.value]"
                 :center="true"
+                @input="roundScores.validateScoreInput(player.id.value)"
                 @blur="roundScores.handleScoreBlur(player.id.value)"
               />
               <div v-else class="score-entry-view__skipped-placeholder">—</div>
@@ -478,23 +456,24 @@ async function handleEndGame() {
               >
                 <IconCrown />
               </UiButton>
+              <UiButton
+                variant="ghost"
+                size="icon"
+                :class="{
+                  'score-entry-view__skip-button--active': isSkipped(player),
+                }"
+                :aria-label="isSkipped(player) ? 'Unskip player' : 'Skip player'"
+                :title="isSkipped(player) ? 'Unskip player' : 'Skip player'"
+                @click="
+                  isSkipped(player) ? skipPlayer.unskip(player) : skipPlayer.openDialog(player)
+                "
+              >
+                <IconUserSlashOutline />
+              </UiButton>
             </div>
-          </div>
-
-          <button
-            type="button"
-            class="score-entry-view__skip-action"
-            :class="{ 'score-entry-view__skip-action--active': isSkipped(player) }"
-            :aria-label="isSkipped(player) ? 'Unskip player' : 'Skip player'"
-            @click="handleSkipAction(player)"
-          >
-            <IconUserSlashOutline />
-            <span>{{ isSkipped(player) ? 'Unskip' : 'Skip' }}</span>
-          </button>
         </div>
       </div>
 
-      <p class="score-entry-view__swipe-hint">Swipe left on a player to skip</p>
 
       <div v-if="showWinnerHint" class="score-entry-view__hint" role="status">
         Tap the crown to mark the round winner
