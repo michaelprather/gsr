@@ -113,13 +113,15 @@ ol {
   --font-bold: 700;
 
   /* Typography - Font families */
-  --font-family-system: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI',
-    Roboto, 'Helvetica Neue', Arial, sans-serif;
-  --font-family-rounded: 'SF Pro Rounded', 'SF Pro', system-ui, -apple-system,
-    BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-family-system:
+    system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial,
+    sans-serif;
+  --font-family-rounded:
+    'SF Pro Rounded', 'SF Pro', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+    sans-serif;
   --font-family-serif: Georgia, 'Times New Roman', Times, serif;
-  --font-family-mono: 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas,
-    'Courier New', monospace;
+  --font-family-mono:
+    'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
 
   /* Sizing */
   --size-4: 1rem;
@@ -235,6 +237,11 @@ ol {
   --warning: var(--yellow-600);
   --warning-muted: rgba(234, 179, 8, 0.1);
 
+  /* Accent - gold/amber for highlights like winner crown */
+  --accent: var(--amber-600);
+  --accent-hover: var(--amber-700);
+  --accent-muted: var(--amber-50);
+
   /* Overlay */
   --overlay: rgba(0, 0, 0, 0.5);
   --overlay-blur: 8px;
@@ -319,6 +326,11 @@ ol {
     /* Warning */
     --warning: var(--yellow-500);
     --warning-muted: rgba(234, 179, 8, 0.15);
+
+    /* Accent - gold/amber for highlights like winner crown */
+    --accent: var(--amber-500);
+    --accent-hover: var(--amber-400);
+    --accent-muted: rgba(245, 158, 11, 0.15);
 
     /* Overlay */
     --overlay: rgba(0, 0, 0, 0.7);
