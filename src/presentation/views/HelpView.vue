@@ -32,7 +32,13 @@ function goBack() {
     </header>
 
     <section class="help-view__content">
-      <article class="help-view__section">
+      <nav class="help-view__toc" aria-label="Table of contents">
+        <a href="#how-to-play" class="help-view__toc-link">How to Play</a>
+        <a href="#scoring" class="help-view__toc-link">Scoring</a>
+        <a href="#using-the-app" class="help-view__toc-link">Using the App</a>
+      </nav>
+
+      <article id="how-to-play" class="help-view__section">
         <h2 class="help-view__section-title">How to Play</h2>
 
         <h3 class="help-view__subsection-title">Objective</h3>
@@ -105,7 +111,7 @@ function goBack() {
         </p>
       </article>
 
-      <article class="help-view__section">
+      <article id="scoring" class="help-view__section">
         <h2 class="help-view__section-title">Scoring</h2>
 
         <h3 class="help-view__subsection-title">Card Values</h3>
@@ -128,7 +134,7 @@ function goBack() {
         </p>
       </article>
 
-      <article class="help-view__section">
+      <article id="using-the-app" class="help-view__section">
         <h2 class="help-view__section-title">Using the App</h2>
 
         <h3 class="help-view__subsection-title">Starting a Game</h3>

@@ -70,7 +70,41 @@
   padding-bottom: var(--space-8);
 }
 
+.help-view__toc {
+  display: flex;
+  gap: var(--space-2);
+  padding: var(--space-3);
+  background: var(--surface-raised);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+}
+
+.help-view__toc-link {
+  flex: 1;
+  padding: var(--space-2) var(--space-3);
+  font-size: var(--text-sm);
+  font-weight: var(--font-medium);
+  text-align: center;
+  color: var(--text-muted);
+  background: var(--surface);
+  border-radius: var(--radius-md);
+  transition:
+    color var(--duration-fast) var(--ease-out),
+    background-color var(--duration-fast) var(--ease-out);
+}
+
+.help-view__toc-link:hover {
+  color: var(--text);
+  background: var(--interactive-muted);
+}
+
+.help-view__toc-link:focus-visible {
+  outline: 2px solid var(--interactive);
+  outline-offset: 2px;
+}
+
 .help-view__section {
+  scroll-margin-top: var(--space-4);
   background: var(--help-view-section-bg);
   border: 1px solid var(--help-view-section-border);
   border-radius: var(--help-view-section-radius);
