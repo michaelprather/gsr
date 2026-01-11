@@ -38,6 +38,10 @@ const router = createRouter({
       name: 'help',
       component: HelpView,
     },
+    {
+      path: '/:pathMatch(.*)*',
+      redirect: { name: 'setup' },
+    },
   ],
 })
 
