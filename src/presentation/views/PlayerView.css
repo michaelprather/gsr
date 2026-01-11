@@ -19,6 +19,7 @@
   display: flex;
   flex-direction: column;
   min-height: 100vh;
+  min-height: 100dvh;
 }
 
 .player-view__header {
@@ -265,6 +266,7 @@
   justify-content: center;
   gap: var(--space-4);
   min-height: 100vh;
+  min-height: 100dvh;
   padding: var(--space-4);
   color: var(--text-muted);
 }
