@@ -6,6 +6,8 @@ import StandingsView from '../views/StandingsView.vue'
 import PlayerView from '../views/PlayerView.vue'
 import ImportView from '../views/ImportView.vue'
 import HelpView from '../views/HelpView.vue'
+import NotFoundView from '../views/NotFoundView.vue'
+import ErrorView from '../views/ErrorView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -45,8 +47,14 @@ const router = createRouter({
       component: HelpView,
     },
     {
+      path: '/error',
+      name: 'error',
+      component: ErrorView,
+    },
+    {
       path: '/:pathMatch(.*)*',
-      redirect: { name: 'setup' },
+      name: 'not-found',
+      component: NotFoundView,
     },
   ],
 })
