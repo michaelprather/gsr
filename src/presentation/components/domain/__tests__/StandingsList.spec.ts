@@ -63,8 +63,8 @@ describe('StandingsList', () => {
 
   it('displays player totals', () => {
     let game = createGame(['Alice', 'Bob'])
-    game = setScore(game, 0, 0, 25)
-    game = setScore(game, 0, 1, 30)
+    // Both players play same rounds so sorting is by score
+    game = setScore(game, 0, 0, 55)
     game = setScore(game, 1, 0, 40)
 
     const wrapper = mount(StandingsList, {
@@ -72,8 +72,7 @@ describe('StandingsList', () => {
     })
 
     const totals = wrapper.findAll('.standings-list__total')
-    // Alice total: 55, Bob total: 40
-    // Sorted: Bob (40) first, Alice (55) second
+    // Both players have 1 round, so sorted by score: Bob (40) first, Alice (55) second
     expect(totals[0]!.text()).toBe('40')
     expect(totals[1]!.text()).toBe('55')
   })
