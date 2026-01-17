@@ -7,7 +7,10 @@
   min-height: 100vh;
   min-height: 100dvh;
   padding: var(--splash-view-padding);
-  background: radial-gradient(ellipse at 50% 0%, color-mix(in srgb, var(--interactive) 15%, transparent) 0%, transparent 60%);
+  padding-top: calc(var(--splash-view-padding) + env(safe-area-inset-top, 0px));
+  background:
+    radial-gradient(ellipse at 50% 0%, color-mix(in srgb, var(--interactive) 15%, transparent) 0%, transparent 60%),
+    var(--surface);
 }
 
 .splash-view__hero {
