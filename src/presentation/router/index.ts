@@ -6,6 +6,7 @@ import StandingsView from '../views/StandingsView.vue'
 import PlayerView from '../views/PlayerView.vue'
 import ImportView from '../views/ImportView.vue'
 import HelpView from '../views/HelpView.vue'
+import RoundView from '../views/RoundView.vue'
 import NotFoundView from '../views/NotFoundView.vue'
 import ErrorView from '../views/ErrorView.vue'
 
@@ -45,6 +46,11 @@ const router = createRouter({
       path: '/help',
       name: 'help',
       component: HelpView,
+    },
+    {
+      path: '/rounds',
+      name: 'rounds',
+      component: RoundView,
     },
     {
       path: '/error',
