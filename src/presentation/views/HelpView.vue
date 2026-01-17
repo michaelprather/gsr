@@ -159,8 +159,8 @@ useSwipe(carouselRef, {
 
             <h3 class="help-view__subsection-title">Card Values</h3>
             <ul class="help-view__list">
-              <li><strong>Number cards (2-10):</strong> Face value</li>
-              <li><strong>Face cards (J, Q, K):</strong> 10 points</li>
+              <li><strong>Number cards (2-9):</strong> 5 points</li>
+              <li><strong>10, J, Q, K:</strong> 10 points</li>
               <li><strong>Aces:</strong> 15 points</li>
               <li><strong>Jokers:</strong> 25 points</li>
             </ul>
