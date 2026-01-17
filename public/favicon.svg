@@ -1,20 +1,29 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
-  <!-- Playing card - centered -->
-  <g transform="translate(1.5, 0)">
-    <!-- Card background -->
-    <rect x="5" y="2" width="20" height="28" rx="2.5" fill="#7c3aed" opacity="0.15"/>
-    <rect x="5" y="2" width="20" height="28" rx="2.5" stroke="#7c3aed" stroke-width="1.25" fill="none"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="35 28 130 144">
+  <defs>
+    <linearGradient id="cardGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#6366f1;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#8b5cf6;stop-opacity:1" />
+    </linearGradient>
+  </defs>
 
-    <!-- Road surface -->
-    <path d="M9 26 L13 6 L16 6 L20 26 Z" fill="#7c3aed" opacity="0.35"/>
+  <!-- Back card (tilted right) -->
+  <g transform="rotate(15 100 100)">
+    <rect x="58" y="40" width="84" height="120" rx="10"
+          fill="url(#cardGradient)" opacity="0.3"/>
+  </g>
 
-    <!-- Road edges -->
-    <line x1="9" y1="26" x2="13" y2="6" stroke="#7c3aed" stroke-width="1.5"/>
-    <line x1="20" y1="26" x2="16" y2="6" stroke="#7c3aed" stroke-width="1.5"/>
+  <!-- Middle card (straight) -->
+  <g transform="rotate(0 100 100)">
+    <rect x="58" y="40" width="84" height="120" rx="10"
+          fill="url(#cardGradient)" opacity="0.6"/>
+  </g>
 
-    <!-- Center dashed line -->
-    <line x1="14.5" y1="8" x2="14.5" y2="12" stroke="#7c3aed" stroke-width="1.5"/>
-    <line x1="14.5" y1="15" x2="14.5" y2="19" stroke="#7c3aed" stroke-width="1.5"/>
-    <line x1="14.5" y1="22" x2="14.5" y2="26" stroke="#7c3aed" stroke-width="1.5"/>
+  <!-- Front card (tilted left) with diamond -->
+  <g transform="rotate(-15 100 100)">
+    <rect x="58" y="40" width="84" height="120" rx="10"
+          fill="url(#cardGradient)"/>
+    <!-- Diamond shape -->
+    <path d="M 100,76 L 121,100 L 100,124 L 79,100 Z"
+          fill="white" opacity="0.95"/>
   </g>
 </svg>

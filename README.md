@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="public/icon.svg" alt="George Street Rummy" width="120" height="120">
+</p>
+
 # George Street Rummy Scorekeeper
 
 Mobile-first, offline-capable scorekeeper for George Street Rummy.

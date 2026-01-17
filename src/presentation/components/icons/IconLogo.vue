@@ -1,26 +1,38 @@
 <template>
-  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" fill="currentColor">
-    <!-- Playing card background -->
-    <rect x="4" y="2" width="24" height="28" rx="3" fill="currentColor" opacity="0.08" />
-    <rect
-      x="4"
-      y="2"
-      width="24"
-      height="28"
-      rx="3"
-      stroke="currentColor"
-      stroke-width="1.25"
-      fill="none"
-    />
-    <!-- Street - perspective view going into distance -->
-    <!-- Road surface -->
-    <path d="M8 26 L14 6 L18 6 L24 26 Z" fill="currentColor" opacity="0.3" />
-    <!-- Road edges -->
-    <line x1="8" y1="26" x2="14" y2="6" stroke="currentColor" stroke-width="1.5" />
-    <line x1="24" y1="26" x2="18" y2="6" stroke="currentColor" stroke-width="1.5" />
-    <!-- Center dashed line -->
-    <line x1="16" y1="8" x2="16" y2="12" stroke="currentColor" stroke-width="1.5" />
-    <line x1="16" y1="15" x2="16" y2="19" stroke="currentColor" stroke-width="1.5" />
-    <line x1="16" y1="22" x2="16" y2="26" stroke="currentColor" stroke-width="1.5" />
+  <svg viewBox="35 28 130 144" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <linearGradient id="cardGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" style="stop-color: #6366f1; stop-opacity: 1" />
+        <stop offset="100%" style="stop-color: #8b5cf6; stop-opacity: 1" />
+      </linearGradient>
+      <filter id="shadow">
+        <feDropShadow dx="0" dy="4" stdDeviation="6" flood-opacity="0.3" />
+      </filter>
+    </defs>
+
+    <!-- Back card (tilted right) -->
+    <g transform="rotate(15 100 100)">
+      <rect x="58" y="40" width="84" height="120" rx="10" fill="url(#cardGradient)" opacity="0.3" />
+    </g>
+
+    <!-- Middle card (straight) -->
+    <g transform="rotate(0 100 100)">
+      <rect x="58" y="40" width="84" height="120" rx="10" fill="url(#cardGradient)" opacity="0.6" />
+    </g>
+
+    <!-- Front card (tilted left) with diamond -->
+    <g transform="rotate(-15 100 100)">
+      <rect
+        x="58"
+        y="40"
+        width="84"
+        height="120"
+        rx="10"
+        fill="url(#cardGradient)"
+        filter="url(#shadow)"
+      />
+      <!-- Diamond shape - centered at card center (100, 100) -->
+      <path d="M 100,76 L 121,100 L 100,124 L 79,100 Z" fill="white" opacity="0.95" />
+    </g>
   </svg>
 </template>
