@@ -98,13 +98,13 @@ useSwipe(carouselRef, {
               has requirements that must be met before laying down cards:
             </p>
             <ul class="help-view__list">
-              <li><strong>Round 1:</strong> 2 books</li>
-              <li><strong>Round 2:</strong> 1 book and 1 run</li>
-              <li><strong>Round 3:</strong> 2 runs</li>
-              <li><strong>Round 4:</strong> 3 books</li>
-              <li><strong>Round 5:</strong> 2 books and 1 run</li>
-              <li><strong>Round 6:</strong> 1 book and 2 runs</li>
-              <li><strong>Round 7:</strong> 3 runs (no discard to go out)</li>
+              <li><strong>Round 1:</strong> 2 Books</li>
+              <li><strong>Round 2:</strong> 1 Book 1 Run</li>
+              <li><strong>Round 3:</strong> 2 Runs</li>
+              <li><strong>Round 4:</strong> 2 Books 1 Run</li>
+              <li><strong>Round 5:</strong> 2 Runs 1 Book</li>
+              <li><strong>Round 6:</strong> 3 Books</li>
+              <li><strong>Round 7:</strong> 3 Runs and Out</li>
             </ul>
           </div>
         </article>
