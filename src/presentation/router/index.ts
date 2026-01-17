@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 
+import SplashView from '../views/SplashView.vue'
 import SetupView from '../views/SetupView.vue'
 import ScoreEntryView from '../views/ScoreEntryView.vue'
 import StandingsView from '../views/StandingsView.vue'
@@ -15,7 +16,8 @@ const router = createRouter({
   routes: [
     {
       path: '/',
-      redirect: { name: 'setup' },
+      name: 'home',
+      component: SplashView,
     },
     {
       path: '/setup',

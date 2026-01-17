@@ -10,3 +10,7 @@
 .app-brand--small {
   --app-brand-size: var(--icon-xl);
 }
+
+.app-brand--large {
+  --app-brand-size: 10rem;
+}

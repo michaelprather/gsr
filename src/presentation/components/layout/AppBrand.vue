@@ -2,7 +2,7 @@
 import { IconLogo } from '../icons'
 
 export interface AppBrandProps {
-  size?: 'small' | 'default'
+  size?: 'small' | 'default' | 'large'
 }
 
 const { size = 'default' } = defineProps<AppBrandProps>()
@@ -11,7 +11,10 @@ const { size = 'default' } = defineProps<AppBrandProps>()
 <template>
   <IconLogo
     class="app-brand"
-    :class="{ 'app-brand--small': size === 'small' }"
+    :class="{
+      'app-brand--small': size === 'small',
+      'app-brand--large': size === 'large',
+    }"
     role="img"
     aria-label="George Street Rummy"
     title="George Street Rummy"

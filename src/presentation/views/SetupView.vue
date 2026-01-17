@@ -62,10 +62,6 @@ function handleKeydown(event: KeyboardEvent) {
     addPlayer()
   }
 }
-
-function goToHelp() {
-  router.push({ name: 'help' })
-}
 </script>
 
 <template>
@@ -124,9 +120,6 @@ function goToHelp() {
       >
         {{ startGameAction.state.value.isPending ? 'Starting...' : 'Start Game' }}
       </UiButton>
-      <button type="button" class="setup-view__help-link" @click="goToHelp">
-        How to Play
-      </button>
     </footer>
   </main>
 </template>
