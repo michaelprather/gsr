@@ -73,12 +73,15 @@ export function calculatePlayerStats(game: Game, playerId: PlayerId): PlayerStat
   const winRate = roundsPlayed > 0 ? roundsWon / roundsPlayed : 0
   const averageScore = roundsPlayed > 0 ? totalScore / roundsPlayed : 0
 
-  // Find best/worst rounds (excluding wins for best non-win comparison)
+  // Find best/worst rounds (wins are always the best outcome)
+  const winResults = roundResults.filter((r) => r.isWin)
   const nonWinResults = roundResults.filter((r) => !r.isWin)
   const bestRound =
-    nonWinResults.length > 0
-      ? nonWinResults.reduce((best, r) => (r.score < best.score ? r : best))
-      : roundResults.find((r) => r.isWin) ?? null
+    winResults.length > 0
+      ? winResults[0]!
+      : nonWinResults.length > 0
+        ? nonWinResults.reduce((best, r) => (r.score < best.score ? r : best))
+        : null
   const worstRound =
     nonWinResults.length > 0
       ? nonWinResults.reduce((worst, r) => (r.score > worst.score ? r : worst))
