@@ -1,6 +1,6 @@
 {
   "name": "George Street Rummy",
-  "short_name": "GSR",
+  "short_name": "George Street",
   "description": "Mobile-first scorekeeper for George Street Rummy",
   "start_url": "/",
   "display": "standalone",

@@ -82,32 +82,10 @@
 }
 
 .setup-view__footer {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: var(--space-3);
   width: 100%;
   max-width: var(--setup-view-max-width);
   margin: 0 auto;
   padding: var(--space-4) 0;
-}
-
-.setup-view__help-link {
-  padding: var(--space-2) var(--space-4);
-  font-size: var(--text-sm);
-  font-weight: var(--font-medium);
-  color: var(--text-muted);
-  transition: color var(--duration-fast) var(--ease-out);
-}
-
-.setup-view__help-link:hover {
-  color: var(--interactive);
-}
-
-.setup-view__help-link:focus-visible {
-  outline: 2px solid var(--interactive);
-  outline-offset: 2px;
-  border-radius: var(--radius-sm);
 }
 
 /* List transitions */
