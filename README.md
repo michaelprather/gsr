@@ -43,3 +43,13 @@ pnpm test:unit  # Run tests
 ## Tech Stack
 
 Vue 3 + TypeScript + Vite + Vue Router + Vitest + vite-plugin-pwa
+
+## Deployment
+
+Requires Docker and Docker Compose.
+
+```sh
+docker compose up -d
+```
+
+The app will be available on port 3000. To use a different port, change the port mapping in `docker-compose.yml`.
