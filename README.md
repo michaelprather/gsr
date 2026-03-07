@@ -48,8 +48,29 @@ Vue 3 + TypeScript + Vite + Vue Router + Vitest + vite-plugin-pwa
 
 Requires Docker and Docker Compose.
 
+### Build
+
 ```sh
+# Build for the target platform (e.g. linux/amd64)
+docker buildx build --platform linux/amd64 -t gsr:latest --output type=docker,dest=gsr.tar .
+
+# Copy the image and docker-compose.yml to the server
+scp gsr.tar docker-compose.yml username@server:~/gsr/
+```
+
+### Run
+
+On the server, load the image and start the stack:
+
+```sh
+docker load -i gsr.tar
 docker compose up -d
+```
+
+Create a `.env` file alongside `docker-compose.yml` with the required environment variables:
+
+```
+CLOUDFLARE_TUNNEL_TOKEN=<your-token>
 ```
 
 The app will be available on port 3000. To use a different port, change the port mapping in `docker-compose.yml`.

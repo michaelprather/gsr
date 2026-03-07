@@ -1,6 +1,24 @@
 services:
   gsr:
-    build: .
+    image: gsr
     ports:
-      - "3000:80"
+      - '3000:80'
     restart: unless-stopped
+    networks:
+      - default
+      - proxy
+
+  cloudflared:
+    image: cloudflare/cloudflared:latest
+    restart: unless-stopped
+    command: tunnel run
+    environment:
+      TUNNEL_TOKEN: ${CLOUDFLARE_TUNNEL_TOKEN}
+    depends_on:
+      - gsr
+    networks:
+      - proxy
+
+networks:
+  proxy:
+    external: true
